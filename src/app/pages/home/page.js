@@ -37,13 +37,6 @@ const Home = () => {
                   <td><button>Download</button></td>
                 </tr>
               ))}
-              {/* <td>Abdul Rehman</td>
-                <td>20-1-2020</td>
-                <td>Jr. React Js Developer</td>
-                <td>
-                  <p>Confirmed</p>
-                </td>
-                <td><button>Download</button></td> */}
 
             </tbody>
           </table>
