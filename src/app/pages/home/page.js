@@ -1,4 +1,4 @@
-import Dropdown from '@/common/Dropdown'
+import { Dropdown } from '@/app/components'
 import { expOptions, stackOptions, tableData, techOptions } from '@/constant'
 import React from 'react'
 

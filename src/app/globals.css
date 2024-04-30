@@ -82,7 +82,6 @@
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
 }
 
 a {
@@ -94,6 +93,62 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.card {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 30px;
+  border-radius: 10px;
+  width: 70%;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.input-parent {
+  width: 100%;
+}
+
+.input-parent > div,
+.input-parent > input {
+  margin-top: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #cccccc;
+}
+
+button.btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #fff;
+  background: #5a5af3;
+  cursor: pointer;
+}
+
+button.btn:hover {
+  background: #fff;
+  color: #5a5af3;
+  border: 1px solid #5a5af3;
 }
 
 /* Home Page starts */
