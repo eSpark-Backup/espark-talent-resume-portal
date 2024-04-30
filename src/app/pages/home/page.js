@@ -1,8 +1,48 @@
+import Dropdown from '@/common/Dropdown'
+import { expOptions, stackOptions, tableData, techOptions } from '@/constant'
 import React from 'react'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className='home-main'>
+      <div className="jobs-container">
+        <h1>Candidates List</h1>
+        <div className='dropdowns-parent'>
+          <Dropdown label={"Stack"} options={stackOptions} />
+          <Dropdown label={"Experience"} options={expOptions} />
+          <Dropdown label={"Technologies"} options={techOptions} />
+        </div>
+        <div className="table-parent">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Desination</th>
+                <th>Status</th>
+                <th>
+                  <button>Download All</button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item?.name}</td>
+                  <td>{item?.date}</td>
+                  <td>{item?.designation}</td>
+                  <td>
+                    <p className={`${item?.status}`}>{item?.status}</p>
+                  </td>
+                  <td><button>Download</button></td>
+                </tr>
+              ))}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   )
 }
 
