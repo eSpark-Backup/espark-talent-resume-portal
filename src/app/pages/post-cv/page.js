@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Dropdown, Input, ImgUploader } from "../../components";
-import { designationOptions } from "@/app/constant";
+import { designationOptions } from "@/constant";
 
 const PostCV = () => {
   const [loading] = useState(false);
