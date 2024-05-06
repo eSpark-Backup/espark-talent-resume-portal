@@ -27,22 +27,53 @@ const PostCV = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { value } = form.designation
-    const { data, error } = await supabase
-      .from('Applicants')
-      .insert({
-        ...form,
-        designation: value
-      })
 
-    if (error) {
-      console.log(error?.message)
-      toast.error("Something went wrong. Please try again")
+    const formData = new FormData();
+    formData.append('file', form.cv);
+    
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      console.log('Response:', response);
+      setForm(prev => (
+        {
+          ...prev,
+          resume: null
+        }
+      ))
+
+      const { value } = form.designation
+      const { data, error } = await supabase
+        .from('Applicants')
+        .insert({
+          ...form,
+          designation: value
+        })
+  
+      if (error) {
+        console.log(error?.message)
+        toast.error("Something went wrong. Please try again")
+      }
+  
+      if (data) {
+        toast.success("Application posted successfully")
+      }
+
+
+    } catch (error) {
+      toast.error('Something went wrong. Please try again')
+      setForm(prev => (
+        {
+          ...prev,
+          resume: null
+        }
+      ))
     }
 
-    if (data) {
-      toast.success("Application posted successfully")
-    }
+
   };
 
   return (
