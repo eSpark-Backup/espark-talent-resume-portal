@@ -29,35 +29,30 @@ const PostCV = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('file', form.cv);
-    
+    formData.append('file', form.resume);
+
     try {
       const response = await fetch('/api', {
         method: 'POST',
         body: formData,
       });
-      
-      console.log('Response:', response);
-      setForm(prev => (
-        {
-          ...prev,
-          resume: null
-        }
-      ))
+
+      const { imageUrl } = await response.json();
 
       const { value } = form.designation
       const { data, error } = await supabase
         .from('Applicants')
         .insert({
           ...form,
+          resume: imageUrl || null,
           designation: value
         })
-  
+
       if (error) {
         console.log(error?.message)
         toast.error("Something went wrong. Please try again")
       }
-  
+
       if (data) {
         toast.success("Application posted successfully")
       }
