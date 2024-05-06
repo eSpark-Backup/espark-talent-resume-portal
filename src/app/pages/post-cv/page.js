@@ -41,7 +41,6 @@ const PostCV = () => {
     }
 
     if (data) {
-      localStorage.removeItem("job-data")
       toast.success("Application posted successfully")
     }
   };
