@@ -1,9 +1,40 @@
 "use client"
 import { Dropdown } from '@/app/components'
 import { expOptions, stackOptions, tableData, techOptions } from '@/constant'
-import React from 'react'
+import useFetchCandidates from '@/hooks/useFetchCandidates'
+import { DateMonthYear } from '@/utility/DataConverter'
+import React, { useEffect } from 'react'
+import { BallTriangle } from 'react-loader-spinner'
+import { toast } from "react-toastify";
 
 const Home = () => {
+  const { candidates, loading, error } = useFetchCandidates()
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error)
+    }
+
+  }, [error])
+
+  if (loading) {
+    return (
+      <div className='home-main'>
+        <div className='load-conatiner'>
+          <BallTriangle
+            height={100}
+            width={100}
+            radius={5}
+            color="#0f0f0f"
+            ariaLabel="ball-triangle-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      </div>
+    )
+  }
   return (
     <div className='home-main'>
       <div className="jobs-container">
@@ -27,13 +58,14 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {tableData.map((item, index) => (
+              {candidates?.map((item, index) => (
                 <tr key={index}>
-                  <td>{item?.name}</td>
-                  <td>{item?.date}</td>
+                  <td>{item?.full_name}</td>
+                  <td>{DateMonthYear(item?.created_at)}</td>
                   <td>{item?.designation}</td>
                   <td>
-                    <p className={`${item?.status}`}>{item?.status}</p>
+                    {/* <p className={`${item?.status}`}>{item?.status}</p> */}
+                    <p className={`pending`}>pending</p>
                   </td>
                   <td><button>Download</button></td>
                 </tr>
