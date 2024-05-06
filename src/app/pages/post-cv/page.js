@@ -37,14 +37,14 @@ const PostCV = () => {
         body: formData,
       });
 
-      const { imageUrl } = await response.json();
+      const { itemUrl } = await response.json();
 
       const { value } = form.designation
       const { data, error } = await supabase
         .from('Applicants')
         .insert({
           ...form,
-          resume: imageUrl || null,
+          resume: itemUrl || null,
           designation: value
         })
 
