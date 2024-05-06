@@ -3,15 +3,17 @@
 import React, { useState } from "react";
 import { Dropdown, Input, ImgUploader } from "../../components";
 import { designationOptions } from "@/constant";
+import supabase from "@/app/services/supabaseClient";
+import { toast } from "react-toastify";
 
 const PostCV = () => {
   const [loading] = useState(false);
   const [form, setForm] = useState({
-    fullName: "",
+    full_name: "",
     email: "",
-    phoneNo: "",
+    phone_num: "",
     designation: "",
-    cv: "",
+    resume: "",
   });
 
   const handleChange = (name, value) => {
@@ -25,32 +27,48 @@ const PostCV = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      const formData = new FormData();
-      formData.append('file', form.cv);
-      
-      try {
-        const response = await fetch('/api', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        console.log('Response:', response);
-        setForm(prev => (
-          {
-            ...prev,
-            cv: null
-          }
-        ))
-        ////supa base integration
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        setForm(prev => (
-          {
-            ...prev,
-            cv: null
-          }
-        ))
+
+    const formData = new FormData();
+    formData.append('file', form.resume);
+
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const { itemUrl } = await response.json();
+
+      const { value } = form.designation
+      const { data, error } = await supabase
+        .from('Applicants')
+        .insert({
+          ...form,
+          resume: itemUrl || null,
+          designation: value
+        })
+
+      if (error) {
+        console.log(error?.message)
+        toast.error("Something went wrong. Please try again")
       }
+
+      if (data) {
+        toast.success("Application posted successfully")
+      }
+
+
+    } catch (error) {
+      toast.error('Something went wrong. Please try again')
+      setForm(prev => (
+        {
+          ...prev,
+          resume: null
+        }
+      ))
+    }
+
+
   };
 
   return (
@@ -59,11 +77,11 @@ const PostCV = () => {
         <div className="card">
           <form className="form" onSubmit={handleSubmit}>
             <Input
-              name="fullName"
+              name="full_name"
               label="Full Name"
               placeholder="Enter Your Full Name"
               type="text"
-              value={form.fullName}
+              value={form.full_name}
               onChange={handleChange}
             />
             <Input
@@ -75,11 +93,11 @@ const PostCV = () => {
               onChange={handleChange}
             />
             <Input
-              name="phoneNo"
+              name="phone_num"
               label="Phone No"
               placeholder="Enter Your Phone No"
               type="number"
-              value={form.phoneNo}
+              value={form.phone_num}
               onChange={handleChange}
             />
             <Dropdown
@@ -90,7 +108,7 @@ const PostCV = () => {
               value={form.designation}
               onChange={handleChange}
             />
-            <ImgUploader onFileChange={(value) => handleChange("cv", value)} />
+            <ImgUploader onFileChange={(value) => handleChange("resume", value)} />
             <button disabled={loading} className="btn" type="submit">
               {loading ? "Loading" : "Submit"}
             </button>

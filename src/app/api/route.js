@@ -28,9 +28,9 @@ export async function POST(req) {
             })
         );
 
-        const imageUrl = `https://${process.env.BUCKET_NAME}.${process.env.END_POINT.replace(/^https?:\/\//, '')}/${file.name}`;
+        const itemUrl = `https://${process.env.BUCKET_NAME}.${process.env.END_POINT.replace(/^https?:\/\//, '')}/${file.name}`;
 
-        return NextResponse.json({ Message: "Success", imageUrl }, { status: 201 });
+        return NextResponse.json({ Message: "Success", itemUrl }, { status: 201 });
     } catch (error) {
         console.error('Error uploading file:', error);
         return NextResponse.json({ Message: "Failed" }, { status: 500 });
