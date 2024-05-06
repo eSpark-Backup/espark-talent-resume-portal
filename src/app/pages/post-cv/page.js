@@ -23,9 +23,34 @@ const PostCV = () => {
     ))
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form, "handle submit");
+      const formData = new FormData();
+      formData.append('file', form.cv);
+      
+      try {
+        const response = await fetch('/api', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        console.log('Response:', response);
+        setForm(prev => (
+          {
+            ...prev,
+            cv: null
+          }
+        ))
+        ////supa base integration
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setForm(prev => (
+          {
+            ...prev,
+            cv: null
+          }
+        ))
+      }
   };
 
   return (
