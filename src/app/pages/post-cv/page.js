@@ -3,15 +3,17 @@
 import React, { useState } from "react";
 import { Dropdown, Input, ImgUploader } from "../../components";
 import { designationOptions } from "@/constant";
+import supabase from "@/app/services/supabaseClient";
+import { toast } from "react-toastify";
 
 const PostCV = () => {
   const [loading] = useState(false);
   const [form, setForm] = useState({
-    fullName: "",
+    full_name: "",
     email: "",
-    phoneNo: "",
+    phone_num: "",
     designation: "",
-    cv: "",
+    resume: "",
   });
 
   const handleChange = (name, value) => {
@@ -23,9 +25,26 @@ const PostCV = () => {
     ))
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form, "handle submit");
+    const { value } = form.designation
+    const { data, error } = await supabase
+      .from('Applicants')
+      .insert({
+        ...form,
+        designation: value
+      })
+
+    if (error) {
+      console.log(error?.message)
+      toast.error("Something went wrong. Please try again")
+    }
+
+    if (data) {
+      localStorage.removeItem("job-data")
+      toast.success("Job posted successfully")
+      navigate("/")
+    }
   };
 
   return (
@@ -34,11 +53,11 @@ const PostCV = () => {
         <div className="card">
           <form className="form" onSubmit={handleSubmit}>
             <Input
-              name="fullName"
+              name="full_name"
               label="Full Name"
               placeholder="Enter Your Full Name"
               type="text"
-              value={form.fullName}
+              value={form.full_name}
               onChange={handleChange}
             />
             <Input
@@ -50,11 +69,11 @@ const PostCV = () => {
               onChange={handleChange}
             />
             <Input
-              name="phoneNo"
+              name="phone_num"
               label="Phone No"
               placeholder="Enter Your Phone No"
               type="number"
-              value={form.phoneNo}
+              value={form.phone_num}
               onChange={handleChange}
             />
             <Dropdown
@@ -65,7 +84,7 @@ const PostCV = () => {
               value={form.designation}
               onChange={handleChange}
             />
-            <ImgUploader onFileChange={(value) => handleChange("cv", value)} />
+            <ImgUploader onFileChange={(value) => handleChange("resume", value)} />
             <button disabled={loading} className="btn" type="submit">
               {loading ? "Loading" : "Submit"}
             </button>
