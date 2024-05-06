@@ -1,19 +1,19 @@
 export const stackOptions = [
     {
         value: "mern",
-        name: "MERN"
+        label: "MERN"
     },
     {
         value: "mean",
-        name: "MEAN"
+        label: "MEAN"
     },
     {
         value: "ror",
-        name: "Ruby on Rails"
+        label: "Ruby on Rails"
     },
     {
         value: "lamp",
-        name: "LAMP"
+        label: "LAMP"
     }
 ]
 
@@ -22,42 +22,42 @@ export const stackOptions = [
 export const expOptions = [
     {
         value: "0",
-        name: "0 - 6 Months"
+        label: "0 - 6 Months"
     },
     {
         value: "1year",
-        name: "1year"
+        label: "1year"
     },
     {
         value: "2year",
-        name: "1year"
+        label: "2year"
     },
     {
         value: "3year",
-        name: "1year"
+        label: "3year"
     },
     {
         value: "3+",
-        name: "3+"
+        label: "3+"
     },
 ]
 
 export const techOptions = [
     {
         value: "react",
-        name: "React Js"
+        label: "React Js"
     },
     {
         value: "angular",
-        name: "Angular Js"
+        label: "Angular Js"
     },
     {
         value: "vue",
-        name: "Vue Js"
+        label: "Vue Js"
     },
     {
         value: "php",
-        name: "PHP"
+        label: "PHP"
     },
 ]
 
