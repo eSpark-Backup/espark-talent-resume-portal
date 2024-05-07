@@ -104,8 +104,9 @@ const Home = () => {
                 <th>Date</th>
                 <th>Desination</th>
                 <th>Status</th>
-                <th>
-                  <button onClick={xportAll}>Download All</button>
+                <th className='action-cell'>
+                  <button onClick={xportAll}>Download Selected</button>
+                  <input type='checkbox' />
                 </th>
               </tr>
             </thead>
@@ -118,7 +119,10 @@ const Home = () => {
                   <td>
                     <p className={`pending`}>pending</p>
                   </td>
-                  <td><button onClick={() => xportSelected(item)}>Download</button></td>
+                  <td className='action-cell'>
+                    <button onClick={() => xportSelected(item)}>Download</button>
+                    <input type='checkbox' />
+                  </td>
                 </tr>
               ))}
 
