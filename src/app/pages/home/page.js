@@ -76,6 +76,7 @@ const Home = () => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
+      newRow.resume = `localhost:3000/api?resume=${newRow?.resume}`
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -86,6 +87,7 @@ const Home = () => {
       "Phone No",
       "Designation",
       "Resume",
+
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
