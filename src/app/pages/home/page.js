@@ -1,9 +1,10 @@
 "use client"
 import { Dropdown } from '@/app/components'
+import { utils, writeFileXLSX } from "xlsx";
 import { expOptions, stackOptions, tableData, techOptions } from '@/constant'
 import useFetchCandidates from '@/hooks/useFetchCandidates'
 import { DateMonthYear } from '@/utility/DataConverter'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
 
@@ -16,6 +17,57 @@ const Home = () => {
     }
 
   }, [error])
+
+  const xportAll = useCallback(async () => {
+    const columnIndexToRemove = 0;
+    const formattedData = candidates.map((row) => {
+      const newRow = { ...row };
+      delete newRow[Object.keys(newRow)[columnIndexToRemove]];
+      newRow.created_at = DateMonthYear(newRow?.created_at);
+      return newRow;
+    });
+    const ws = utils.json_to_sheet(formattedData);
+    const headers = [
+      "Date",
+      "Name",
+      "Email",
+      "Phone No",
+      "Designation",
+      "Resume",
+    ];
+    headers.forEach((header, index) => {
+      ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
+    });
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Data");
+    writeFileXLSX(wb, "data.xlsx");
+  });
+
+  const xportSelected = useCallback(async (obj) => {
+    const arr = [obj]
+    const columnIndexToRemove = 0;
+    const formattedData = arr.map((row) => {
+      const newRow = { ...row };
+      delete newRow[Object.keys(newRow)[columnIndexToRemove]];
+      newRow.created_at = DateMonthYear(newRow?.created_at);
+      return newRow;
+    });
+    const ws = utils.json_to_sheet(formattedData);
+    const headers = [
+      "Date",
+      "Name",
+      "Email",
+      "Phone No",
+      "Designation",
+      "Resume",
+    ];
+    headers.forEach((header, index) => {
+      ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
+    });
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Data");
+    writeFileXLSX(wb, `${obj?.full_name}.xlsx`);
+  });
 
   if (loading) {
     return (
@@ -53,7 +105,7 @@ const Home = () => {
                 <th>Desination</th>
                 <th>Status</th>
                 <th>
-                  <button>Download All</button>
+                  <button onClick={xportAll}>Download All</button>
                 </th>
               </tr>
             </thead>
@@ -66,7 +118,7 @@ const Home = () => {
                   <td>
                     <p className={`pending`}>pending</p>
                   </td>
-                  <td><button>Download</button></td>
+                  <td><button onClick={() => xportSelected(item)}>Download</button></td>
                 </tr>
               ))}
 
