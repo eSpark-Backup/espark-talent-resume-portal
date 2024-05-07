@@ -4,23 +4,49 @@ import { utils, writeFileXLSX } from "xlsx";
 import { expOptions, stackOptions, tableData, techOptions } from '@/constant'
 import useFetchCandidates from '@/hooks/useFetchCandidates'
 import { DateMonthYear } from '@/utility/DataConverter'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
 
 const Home = () => {
+  const [data, setData] = useState([])
+  const [allCheck, setAllCheck] = useState(false)
   const { candidates, loading, error } = useFetchCandidates()
+  const handleCheck = (obj) => {
+    const temp = data.map(item => {
+      if(item.id === obj.id) {
+        return {...item, checked: !item.checked}
+      }
+      return {...item}
+    })
+    setData(temp)
+  }
+
+  const handleAllCheck = () => {
+    if(allCheck) {
+      setAllCheck(false)
+      setData(candidates.map(item => ({...item, checked: false})))
+    } else {
+      setAllCheck(true)
+      setData(candidates.map(item => ({...item, checked: true})))
+    }
+  }
 
   useEffect(() => {
     if (error) {
       toast.error(error)
     }
-
-  }, [error])
+    setData(candidates.map(item => ({...item, checked: false})))
+  }, [error, candidates])
 
   const xportAll = useCallback(async () => {
     const columnIndexToRemove = 0;
-    const formattedData = candidates.map((row) => {
+    const selectedData = data.filter(item => item.checked)
+    const finalArr = selectedData.map(item => {
+      const { checked, ...rest } = item;
+      return rest;
+    });
+    const formattedData = finalArr.map((row) => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
@@ -97,7 +123,7 @@ const Home = () => {
           <Dropdown label={"Technologies"} options={techOptions} name={"technologies"} onChange={(name, value) => { console.log(name, value) }} />
         </div>
         <div className="table-parent">
-          {candidates && candidates.length > 0 ? <table>
+          {data && data.length > 0 ? <table>
             <thead>
               <tr>
                 <th>Name</th>
@@ -106,12 +132,12 @@ const Home = () => {
                 <th>Status</th>
                 <th className='action-cell'>
                   <button onClick={xportAll}>Download Selected</button>
-                  <input type='checkbox' />
+                  <input checked={allCheck} onChange={handleAllCheck} type='checkbox' />
                 </th>
               </tr>
             </thead>
             <tbody>
-              {candidates?.map((item, index) => (
+              {data?.map((item, index) => (
                 <tr key={index}>
                   <td>{item?.full_name}</td>
                   <td>{DateMonthYear(item?.created_at)}</td>
@@ -121,7 +147,7 @@ const Home = () => {
                   </td>
                   <td className='action-cell'>
                     <button onClick={() => xportSelected(item)}>Download</button>
-                    <input type='checkbox' />
+                    <input checked={item?.checked} onChange={() => handleCheck(item)} type='checkbox' />
                   </td>
                 </tr>
               ))}
