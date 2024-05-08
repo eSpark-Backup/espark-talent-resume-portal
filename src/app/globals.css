@@ -359,3 +359,20 @@ tr td:first-child {
 input[type="checkbox"] {
   accent-color: rgb(190, 190, 190);
 }
+
+.jobs-header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.jobs-header button{
+  height: 45px;
+  background-color: lightgray;
+  border: 1px solid white;
+  color: rgb(0, 0, 0);
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 90px;
+  font-size: 17px;
+}
