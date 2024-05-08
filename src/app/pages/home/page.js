@@ -7,6 +7,7 @@ import { DateMonthYear } from '@/utility/DataConverter'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
+import Link from 'next/link';
 
 const Home = () => {
   const [data, setData] = useState([])
@@ -14,21 +15,21 @@ const Home = () => {
   const { candidates, loading, error } = useFetchCandidates()
   const handleCheck = (obj) => {
     const temp = data.map(item => {
-      if(item.id === obj.id) {
-        return {...item, checked: !item.checked}
+      if (item.id === obj.id) {
+        return { ...item, checked: !item.checked }
       }
-      return {...item}
+      return { ...item }
     })
     setData(temp)
   }
 
   const handleAllCheck = () => {
-    if(allCheck) {
+    if (allCheck) {
       setAllCheck(false)
-      setData(candidates.map(item => ({...item, checked: false})))
+      setData(candidates.map(item => ({ ...item, checked: false })))
     } else {
       setAllCheck(true)
-      setData(candidates.map(item => ({...item, checked: true})))
+      setData(candidates.map(item => ({ ...item, checked: true })))
     }
   }
 
@@ -36,7 +37,7 @@ const Home = () => {
     if (error) {
       toast.error(error)
     }
-    setData(candidates.map(item => ({...item, checked: false})))
+    setData(candidates.map(item => ({ ...item, checked: false })))
   }, [error, candidates])
 
   const xportAll = useCallback(async () => {
@@ -118,7 +119,12 @@ const Home = () => {
   return (
     <div className='home-main'>
       <div className="jobs-container">
-        <h1>Candidates List</h1>
+        <div className='jobs-header'>
+          <h1>Candidates List</h1>
+          <Link href={"/pages/post-cv"}>
+            <button>Post CV</button>
+          </Link>
+        </div>
         <div className='dropdowns-parent'>
           <Dropdown label={"Stack"} options={stackOptions} name={"stack"} onChange={(name, value) => { console.log(name, value) }} />
           <Dropdown label={"Experience"} options={expOptions} name={"experience"} onChange={(name, value) => { console.log(name, value) }} />
