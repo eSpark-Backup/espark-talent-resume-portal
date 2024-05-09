@@ -50,6 +50,11 @@ const Home = () => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
+      newRow.resume = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.resume}`}", "Download")`,
+        t: 'n',
+        v: `http://localhost:3000/api?resume=${newRow?.resume}`
+      }
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -70,13 +75,18 @@ const Home = () => {
   });
 
   const xportSelected = useCallback(async (obj) => {
+    delete obj.checked;
     const arr = [obj]
     const columnIndexToRemove = 0;
     const formattedData = arr.map((row) => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
-      newRow.resume = `localhost:3000/api?resume=${newRow?.resume}`
+      newRow.resume = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.resume}`}", "Download")`,
+        t: 'n',
+        v: `http://localhost:3000/api?resume=${newRow?.resume}`
+      }
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
