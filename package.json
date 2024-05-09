@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.567.0",
+    "@mui/icons-material": "^5.15.2",
+    "@mui/material": "^5.15.2",
     "@supabase/supabase-js": "^1.35.6",
     "dotenv": "^16.4.5",
     "moment": "^2.30.1",
