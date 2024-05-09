@@ -21,24 +21,32 @@ export const stackOptions = [
 
 export const expOptions = [
     {
-        value: "0",
+        value: "0-6",
         label: "0 - 6 Months"
     },
     {
-        value: "1year",
-        label: "1year"
+        value: "6-11",
+        label: "6 - 11 Months"
     },
     {
-        value: "2year",
-        label: "2year"
+        value: "1-2year",
+        label: "1 - 2 Years"
     },
     {
-        value: "3year",
-        label: "3year"
+        value: "2-3year",
+        label: "2 - 3 Years"
     },
     {
-        value: "3+",
-        label: "3+"
+        value: "3-5years",
+        label: "3 - 5 Years"
+    },
+    {
+        value: "5-10years",
+        label: "5 - 10 Years"
+    },
+    {
+        value: "10+years",
+        label: "10+ Years"
     },
 ]
 
@@ -133,27 +141,212 @@ export const tableData = [
 
 export const designationOptions = [
     {
-      label: "React JS",
-      value: "react",
+        label: "React JS",
+        value: "react",
     },
     {
-      label: "Vue JS",
-      value: "vue",
+        label: "Vue JS",
+        value: "vue",
     },
     {
-      label: "Angular JS",
-      value: "angular",
+        label: "Angular JS",
+        value: "angular",
     },
     {
-      label: "Node JS",
-      value: "node",
+        label: "Node JS",
+        value: "node",
     },
     {
-      label: "MERN Stack",
-      value: "mern",
+        label: "MERN Stack",
+        value: "mern",
     },
     {
-      label: "MEAN Stack",
-      value: "mean",
+        label: "MEAN Stack",
+        value: "mean",
     },
 ];
+
+
+
+export const inputsData = [
+    {
+        label: "Name",
+        type: "text",
+        name: "name",
+        placeholder: "Enter Name"
+    },
+    {
+        label: "Email",
+        type: "email",
+        name: "email",
+        placeholder: "Enter Email"
+    },
+    {
+        label: "Phone Number",
+        type: "tel",
+        name: "phone",
+        placeholder: "Enter Phone Number"
+    },
+    {
+        label: "CNIC",
+        type: "number",
+        name: "cnic",
+        placeholder: "Enter CNIC Number"
+    },
+    {
+        label: "LinkedIn Profile Link",
+        type: "url",
+        name: "linkedinLink",
+        placeholder: "Enter LinkedIn Profile Link"
+    },
+    {
+        label: "Salary Expectation",
+        type: "number",
+        name: "salary",
+        placeholder: "Enter Expected Salary"
+    },
+    {
+        type: "select",
+        name: "Experience",
+        label: "Experience",
+        placeholder: "Experience",
+        options: [{
+            value: "0-6",
+            label: "0 - 6 Months"
+        },
+        {
+            value: "6-11",
+            label: "6 - 11 Months"
+        },
+        {
+            value: "1-2year",
+            label: "1 - 2 Years"
+        },
+        {
+            value: "2-3year",
+            label: "2 - 3 Years"
+        },
+        {
+            value: "3-5years",
+            label: "3 - 5 Years"
+        },
+        {
+            value: "5-10years",
+            label: "5 - 10 Years"
+        },
+        {
+            value: "10+years",
+            label: "10+ Years"
+        },]
+
+    },
+    {
+        type: "select",
+        name: "Availability",
+        label: "Availability",
+        placeholder: "Availability",
+        options: [
+            {
+                label: "Less then 1 month",
+                value: "Less then 1 month"
+            },
+            {
+                label: "1 Month",
+                value: "1 Month"
+            },
+            {
+                label: "2 Months",
+                value: "2 Months"
+            },
+            {
+                label: "More then 2 Months",
+                value: "More then 2 Months"
+            },
+        ]
+    },
+    {
+        type: "select",
+        name: "Prefrences",
+        label: "Prefrences",
+        placeholder: "Prefrences",
+        options: [
+            {
+                label: "On - Site",
+                value: "onsite",
+            },
+            {
+                label: "Hybrid",
+                value: "hybrid",
+            },
+            {
+                label: "Remote",
+                value: "remote",
+            },
+        ]
+    },
+    {
+        type: "tags"
+    },
+    {
+        type: "select",
+        name: "Education",
+        label: "Education",
+        placeholder: "Education",
+        options:[
+            {
+                label:"Intermediate",
+                value:"Intermediate"
+            },
+            {
+                label:"Bachelor",
+                value:"Bachelor"
+            },
+            {
+                label:"Master",
+                value:"Master"
+            },
+        ]
+    },
+    {
+        label: "Github Link",
+        type: "url",
+        name: "githubLink",
+        placeholder: "Enter Github Link"
+    },
+]
+
+
+export const prefOptions = [
+    {
+        label: "Hybrid",
+        value: "hybrid",
+    },
+    {
+        label: "Remote",
+        value: "remote",
+    },
+    {
+        label: "On-Site",
+        value: "onsite",
+    },
+]
+
+export const availibilityOptions = [
+    {
+        label: "Less then 1 month",
+        value: "Less then 1 month"
+    },
+    {
+        label: "1 Month",
+        value: "1 Month"
+    },
+    {
+        label: "2 Months",
+        value: "2 Months"
+    },
+    {
+        label: "More then 2 Months",
+        value: "More then 2 Months"
+    },
+]
+

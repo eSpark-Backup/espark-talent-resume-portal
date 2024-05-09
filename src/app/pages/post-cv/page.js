@@ -2,28 +2,21 @@
 
 import React, { useState } from "react";
 import { Dropdown, Input, ImgUploader } from "../../components";
-import { designationOptions } from "@/constant";
+import { inputsData } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
+import CustomInput from "@/common/CustomInput";
+import { Box, Typography } from "@mui/material";
+import { useTheme } from '@mui/material/styles';
+import { TagsInput } from "react-tag-input-component";
 
 const PostCV = () => {
   const [loading] = useState(false);
   const [form, setForm] = useState({
-    full_name: "",
-    email: "",
-    phone_num: "",
-    designation: "",
-    resume: "",
+    tags: []
   });
 
-  const handleChange = (name, value) => {
-    setForm(prev => (
-      {
-        ...prev,
-        [name]: value
-      }
-    ))
-  };
+  const [tags, setTags] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,50 +64,65 @@ const PostCV = () => {
 
   };
 
+  const theme = useTheme();
+
   return (
     <>
       <div className="container">
         <div className="card">
-          <form className="form" onSubmit={handleSubmit}>
-            <Input
-              name="full_name"
-              label="Full Name"
-              placeholder="Enter Your Full Name"
-              type="text"
-              value={form.full_name}
-              onChange={handleChange}
-            />
-            <Input
-              name="email"
-              label="Email"
-              placeholder="Enter Your Email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-            />
-            <Input
-              name="phone_num"
-              label="Phone No"
-              placeholder="Enter Your Phone No"
-              type="number"
-              value={form.phone_num}
-              onChange={handleChange}
-            />
-            <Dropdown
-              name="designation"
-              label="Select Designation"
-              placeholder="Select Your Designation"
-              options={designationOptions}
-              value={form.designation}
-              onChange={handleChange}
-            />
-            <ImgUploader onFileChange={(value) => handleChange("resume", value)} />
-            <button disabled={loading} className="btn" type="submit">
-              {loading ? "Loading" : "Submit"}
-            </button>
-          </form>
+          <Box sx={{
+            display: "flex", justifyContent: "space-between", flexWrap: "wrap",
+            [theme.breakpoints.up('xs')]: {
+              flexDirection: 'column',
+              padding: "20px 10px",
+              rowGap: "10px"
+            },
+            [theme.breakpoints.up('md')]: {
+              flexDirection: 'row',
+              padding: "30px"
+            }
+          }} >
+            {inputsData?.map((item, index) => (
+              <Box sx={{
+                [theme.breakpoints.up('xs')]: {
+                  width: "100%"
+                },
+                [theme.breakpoints.up('md')]: {
+                  width: "30%"
+                }
+              }}>
+
+                {item?.type !== "select" && item?.type !== "tags" ?
+                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} />
+                  :
+                  item?.type !== "tags" ?
+                    <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={item?.options} onChange={(name, value) => { console.log(name, value) }} />
+                    :
+                    <Box>
+                      <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
+                      <TagsInput
+                        value={tags}
+                        onChange={setTags}
+                        name="skills"
+                        placeHolder="Start with #"
+                        beforeAddValidate={(tag) => {
+                          if (tag.trim().startsWith("#")) {
+                            return true;
+                          } else {
+                            return false;
+                          }
+                        }}
+                      />
+                    </Box>
+                }
+              </Box>
+            ))}
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <button>Submit</button>
+          </Box>
         </div>
-      </div>
+      </div >
     </>
   );
 };

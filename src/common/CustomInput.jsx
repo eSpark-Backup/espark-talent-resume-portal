@@ -3,8 +3,8 @@ import React from 'react'
 
 const CustomInput = ({ label, type, name, onChange, placeholder }) => {
     return (
-        <Stack direction={"column"} gap={2}>
-            <Typography mb={1} textAlign="left">{label}</Typography>
+        <Stack direction={"column"}>
+            <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
             <TextField
                 name={name}
                 onChange={(e) => onChange(e)}
