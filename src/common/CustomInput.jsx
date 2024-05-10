@@ -7,7 +7,7 @@ const CustomInput = ({ label, type, name, onChange, placeholder }) => {
             <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
             <TextField
                 name={name}
-                onChange={(e) => onChange(name, e.target.value)}
+                onChange={(e) => onChange(name, type ==="file" ? e.target.files[0] : e.target.value)}
                 type={type ? type : "text"}
                 placeholder={placeholder}
             />

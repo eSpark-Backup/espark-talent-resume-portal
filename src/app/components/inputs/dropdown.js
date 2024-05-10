@@ -1,4 +1,3 @@
-import { Fields_ENUMS } from "@/constant";
 import React from "react";
 import Select from "react-select";
 
@@ -23,7 +22,7 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
         isSearchable={true}
         onChange={(e) => onChange(name, e)}
         defaultValue={
-          name === Fields_ENUMS.SUB_FIELD || name === Fields_ENUMS.POSITION
+          name === "subField" || name === "position"
             ? ""
             : options[0]
         }

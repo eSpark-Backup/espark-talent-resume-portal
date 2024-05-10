@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dropdown, Input, ImgUploader } from "../../components";
-import { Fields_ENUMS, cities, inputsData } from "@/constant";
+import { Dropdown } from "../../components";
+import { inputsData } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
 import CustomInput from "@/common/CustomInput";
@@ -15,19 +15,30 @@ const PostCV = () => {
   const [loading] = useState(false);
   const [prefrence, setPrefrence] = useState("")
   const [form, setForm] = useState({
-    tags: []
+    name: "",
+    email: "",
+    phone: "",
+    cnic: "",
+    linkedinLink: "",
+    salary: "",
+    experience: "",
+    availability: "",
+    prefrences: "",
+    education: "",
+    githubLink: "",
+    city: "",
+    field: "",
+    subField: "",
+    position: "",
+    tags: [],
+    cv: ""
   });
-  const [tags, setTags] = useState([]);
-  const [selectedField, setSelectedField] = useState(null);
-  const [selectedSubfield, setSelectedSubfield] = useState(null);
-  const [selectedState, setSelectedState] = useState(null);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('file', form.resume);
+    formData.append('file', form.cv);
 
     try {
       const response = await fetch('/api', {
@@ -37,13 +48,13 @@ const PostCV = () => {
 
       const { fileKey } = await response.json();
 
-      const { value } = form.designation
+      const { value } = form.position
       const { data, error } = await supabase
         .from('Applicants')
         .insert({
           ...form,
-          resume: fileKey || null,
-          designation: value
+          cv: fileKey || null,
+          position: value
         })
 
       if (error) {
@@ -61,7 +72,7 @@ const PostCV = () => {
       setForm(prev => (
         {
           ...prev,
-          resume: null
+          cv: null
         }
       ))
     }
@@ -69,21 +80,34 @@ const PostCV = () => {
 
   };
 
-  const handleDropdowns = (name, value) => {
+  const handleChange = (name, value) => {
     switch (name) {
       case 'field':
-        setSelectedField(value);
-        setSelectedSubfield(null);
-        setSelectedState(null);
+        setForm(prev => ({
+          ...prev,
+          [name]: value,
+          subField: "",
+          position: ""
+        }))
         break;
-      case 'SUB_FIELD':
-        setSelectedSubfield(value);
-        setSelectedState(null);
+      case 'subField':
+        setForm(prev => ({
+          ...prev,
+          [name]: value,
+          position: ""
+        }))
         break;
-      case 'POSITION':
-        setSelectedState(value);
+      case 'position':
+        setForm(prev => ({
+          ...prev,
+          [name]: value
+        }))
         break;
       default:
+        setForm(prev => ({
+          ...prev,
+          [name]: value
+        }))
         break;
     }
   };
@@ -122,25 +146,26 @@ const PostCV = () => {
                 }}>
 
                 {item?.type !== "select" && item?.type !== "tags" ?
-                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={(name, value) => console.log(e)} />
+                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={handleChange} />
                   :
                   item?.type !== "tags" ?
                     <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={
-                      item?.name === Fields_ENUMS.SUB_FIELD ? item?.options[selectedField?.value] :
-                        item?.name === Fields_ENUMS.POSITION ? item?.options[selectedSubfield?.value] : item?.options
+                      item?.name === "subField" ? item?.options[form?.field?.value] :
+                        item?.name === "position" ? item?.options[form?.subField?.value] : item?.options
                     }
-                      onChange={(name, value) => handleDropdowns(name, value)}
+                      onChange={handleChange}
                       className={
-                        item?.name === Fields_ENUMS.SUB_FIELD && !selectedField ? "hide" :
-                          item?.name === Fields_ENUMS.POSITION && !selectedSubfield ? "hide" : ""
+                        item?.name === "subField" && !form.field ? "hide" :
+                          item?.name === "position" && !form.subField ? "hide" :
+                          item?.name === "position" && form.subField && form?.field?.value !== "Software Engineering" ? "hide" : ""
                       }
                     />
                     :
                     <Box>
                       <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
                       <TagsInput
-                        value={tags}
-                        onChange={setTags}
+                        value={form.tags}
+                        onChange={(e) => handleChange("tags", e)}
                         name="skills"
                         placeHolder="Start with #"
                         beforeAddValidate={(tag) => {
@@ -168,9 +193,9 @@ const PostCV = () => {
                 :
                 prefrence === "file"
                   ?
-                  <CustomInput type={"file"} placeholder={"Resume"} label={"Resume"} name={"cv"} />
+                  <CustomInput onChange={handleChange} type={"file"} placeholder={"Resume"} label={"Resume"} name={"cv"} />
                   :
-                  <CustomInput type={"url"} placeholder={"Resume Link"} label={"Resume"} name={"cv"} />
+                  <CustomInput onChange={handleChange} type={"url"} placeholder={"Resume Link"} label={"Resume"} name={"cv"} />
               }
             </Box>
           </Box>

@@ -7,11 +7,6 @@ const citiesWithLabelValue = cities.map(city => ({
     value: city.toLowerCase() // Assuming value should be in lowercase
 }));
 
-export const Fields_ENUMS = {
-    SUB_FIELD: "SUB_FIELD",
-    POSITION: "POSITION"
-}
-
 const field = [
     { value: 'Software Engineering', label: 'Software Engineering' },
     { value: 'Hardware Design', label: 'Hardware Design' },
@@ -442,7 +437,7 @@ export const inputsData = [
     },
     {
         type: "select",
-        name: "Experience",
+        name: "experience",
         label: "Experience",
         placeholder: "Experience",
         options: [{
@@ -477,7 +472,7 @@ export const inputsData = [
     },
     {
         type: "select",
-        name: "Availability",
+        name: "availability",
         label: "Availability",
         placeholder: "Availability",
         options: [
@@ -501,7 +496,7 @@ export const inputsData = [
     },
     {
         type: "select",
-        name: "Prefrences",
+        name: "prefrences",
         label: "Prefrences",
         placeholder: "Prefrences",
         options: [
@@ -524,7 +519,7 @@ export const inputsData = [
     },
     {
         type: "select",
-        name: "Education",
+        name: "education",
         label: "Education",
         placeholder: "Education",
         options: [
@@ -565,14 +560,14 @@ export const inputsData = [
     },
     {
         type: "select",
-        name: Fields_ENUMS.SUB_FIELD,
+        name: "subField",
         label: "Sub-Field",
         placeholder: "Select Sub Field",
         options: subField
     },
     {
         type: "select",
-        name: Fields_ENUMS.POSITION,
+        name: "position",
         label: "Position",
         placeholder: "Select position",
         options: positionBysubfields
