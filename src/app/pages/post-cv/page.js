@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import { Dropdown, Input, ImgUploader } from "../../components";
-import { inputsData } from "@/constant";
+import { cities, inputsData } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
 import CustomInput from "@/common/CustomInput";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { TagsInput } from "react-tag-input-component";
 
@@ -65,6 +65,11 @@ const PostCV = () => {
   };
 
   const theme = useTheme();
+  const citiesWithLabelValue = cities.map(city => ({
+    label: city,
+    value: city.toLowerCase() // Assuming value should be in lowercase
+  }));
+  const [prefrence, setPrefrence] = useState("")
 
   return (
     <>
@@ -72,25 +77,30 @@ const PostCV = () => {
         <div className="card">
           <Box sx={{
             display: "flex", justifyContent: "space-between", flexWrap: "wrap",
+
             [theme.breakpoints.up('xs')]: {
               flexDirection: 'column',
               padding: "20px 10px",
               rowGap: "10px"
             },
+
             [theme.breakpoints.up('md')]: {
               flexDirection: 'row',
               padding: "30px"
             }
+
           }} >
             {inputsData?.map((item, index) => (
-              <Box sx={{
-                [theme.breakpoints.up('xs')]: {
-                  width: "100%"
-                },
-                [theme.breakpoints.up('md')]: {
-                  width: "30%"
-                }
-              }}>
+              <Box
+                sx={{
+                  [theme.breakpoints.up('xs')]: {
+                    width: "100%"
+                  },
+                  
+                  [theme.breakpoints.up('md')]: {
+                    width: "30%"
+                  }
+                }}>
 
                 {item?.type !== "select" && item?.type !== "tags" ?
                   <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} />
@@ -117,7 +127,27 @@ const PostCV = () => {
                 }
               </Box>
             ))}
+            <Dropdown name={"city"} label={'Select Your City'} placeholder={'Select Your City'} options={citiesWithLabelValue} onChange={(name, value) => { console.log(name, value) }} />
+            <Box sx={{ width: "100%" }}>
+              {prefrence === "" ?
+                <Box>
+                  <Typography sx={{ color: "black" }}>Resume</Typography>
+                  <Stack direction={"row"} gap={1}>
+                    <Typography sx={{ color: "rgb(0, 69, 166)", cursor: "pointer" }} onClick={() => setPrefrence("file")}>Attach Resume</Typography>
+                    <Typography sx={{ color: "black" }}>or</Typography>
+                    <Typography sx={{ color: "rgb(0, 69, 166)", cursor: "pointer" }} onClick={() => setPrefrence("link")}>Paste Resume</Typography>
+                  </Stack>
+                </Box>
+                :
+                prefrence === "file"
+                  ?
+                  <CustomInput type={"file"} placeholder={"Resume"} label={"Resume"} name={"cv"} />
+                  :
+                  <CustomInput type={"url"} placeholder={"Resume Link"} label={"Resume"} name={"cv"} />
+              }
+            </Box>
           </Box>
+
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <button>Submit</button>
           </Box>
