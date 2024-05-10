@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Dropdown, Input, ImgUploader } from "../../components";
-import { cities, inputsData } from "@/constant";
+import { Fields_ENUMS, cities, inputsData } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
 import CustomInput from "@/common/CustomInput";
@@ -11,12 +11,17 @@ import { useTheme } from '@mui/material/styles';
 import { TagsInput } from "react-tag-input-component";
 
 const PostCV = () => {
+  const theme = useTheme();
   const [loading] = useState(false);
+  const [prefrence, setPrefrence] = useState("")
   const [form, setForm] = useState({
     tags: []
   });
-
   const [tags, setTags] = useState([]);
+  const [selectedField, setSelectedField] = useState(null);
+  const [selectedSubfield, setSelectedSubfield] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,12 +69,26 @@ const PostCV = () => {
 
   };
 
-  const theme = useTheme();
-  const citiesWithLabelValue = cities.map(city => ({
-    label: city,
-    value: city.toLowerCase() // Assuming value should be in lowercase
-  }));
-  const [prefrence, setPrefrence] = useState("")
+  const handleDropdowns = (name, value) => {
+    switch (name) {
+      case 'field':
+        setSelectedField(value);
+        setSelectedSubfield(null);
+        setSelectedState(null);
+        break;
+      case 'SUB_FIELD':
+        setSelectedSubfield(value);
+        setSelectedState(null);
+        break;
+      case 'POSITION':
+        setSelectedState(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+
 
   return (
     <>
@@ -96,17 +115,26 @@ const PostCV = () => {
                   [theme.breakpoints.up('xs')]: {
                     width: "100%"
                   },
-                  
+
                   [theme.breakpoints.up('md')]: {
-                    width: "30%"
+                    width: item?.name === "city" ? "100%" : "30%"
                   }
                 }}>
 
                 {item?.type !== "select" && item?.type !== "tags" ?
-                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} />
+                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={(name, value) => console.log(e)} />
                   :
                   item?.type !== "tags" ?
-                    <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={item?.options} onChange={(name, value) => { console.log(name, value) }} />
+                    <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={
+                      item?.name === Fields_ENUMS.SUB_FIELD ? item?.options[selectedField?.value] :
+                        item?.name === Fields_ENUMS.POSITION ? item?.options[selectedSubfield?.value] : item?.options
+                    }
+                      onChange={(name, value) => handleDropdowns(name, value)}
+                      className={
+                        item?.name === Fields_ENUMS.SUB_FIELD && !selectedField ? "hide" :
+                          item?.name === Fields_ENUMS.POSITION && !selectedSubfield ? "hide" : ""
+                      }
+                    />
                     :
                     <Box>
                       <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
@@ -127,7 +155,6 @@ const PostCV = () => {
                 }
               </Box>
             ))}
-            <Dropdown name={"city"} label={'Select Your City'} placeholder={'Select Your City'} options={citiesWithLabelValue} onChange={(name, value) => { console.log(name, value) }} />
             <Box sx={{ width: "100%" }}>
               {prefrence === "" ?
                 <Box>

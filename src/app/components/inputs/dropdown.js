@@ -1,7 +1,8 @@
+import { Fields_ENUMS } from "@/constant";
 import React from "react";
 import Select from "react-select";
 
-const Dropdown = ({ name, label, placeholder, options, onChange, value }) => {
+const Dropdown = ({ name, label, placeholder, options, onChange, value, className }) => {
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -13,7 +14,7 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value }) => {
     }),
   };
   return (
-    <div className="input-parent">
+    <div className={className}>
       {label && <label style={{ color: "black" }}>{label}</label>}
       <Select
         styles={customStyles}
@@ -21,7 +22,11 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value }) => {
         options={options}
         isSearchable={true}
         onChange={(e) => onChange(name, e)}
-        defaultValue={options[0]}
+        defaultValue={
+          name === Fields_ENUMS.SUB_FIELD || name === Fields_ENUMS.POSITION
+            ? ""
+            : options[0]
+        }
         value={value}
       />
     </div>
