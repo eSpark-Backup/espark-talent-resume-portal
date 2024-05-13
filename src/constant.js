@@ -2,12 +2,61 @@ export const cities = [
     "Islamabad", "Ahmed Nager", "Ahmadpur East", "Ali Khan", "Alipur", "Arifwala", "Attock", "Bhera", "Bhalwal", "Bahawalnagar", "Bahawalpur", "Bhakkar", "Burewala", "Chillianwala", "Chakwal", "Chichawatni", "Chiniot", "Chishtian", "Daska", "Darya Khan", "Dera Ghazi", "Dhaular", "Dina", "Dinga", "Dipalpur", "Faisalabad", "Fateh Jhang", "Ghakhar Mandi", "Gojra", "Gujranwala", "Gujrat", "Gujar Khan", "Hafizabad", "Haroonabad", "Hasilpur", "Haveli", "Lakha", "Jalalpur", "Jattan", "Jampur", "Jaranwala", "Jhang", "Jhelum", "Kalabagh", "Karor Lal", "Kasur", "Kamalia", "Kamoke", "Khanewal", "Khanpur", "Kharian", "Khushab", "Kot Adu", "Jauharabad", "Lahore", "Lalamusa", "Layyah", "Liaquat Pur", "Lodhran", "Malakwal", "Mamoori", "Mailsi", "Mandi Bahauddin", "mian Channu", "Mianwali", "Multan", "Murree", "Muridke", "Mianwali Bangla", "Muzaffargarh", "Narowal", "Okara", "Renala Khurd", "Pakpattan", "Pattoki", "Pir Mahal", "Qaimpur", "Qila Didar", "Rabwah", "Raiwind", "Rajanpur", "Rahim Yar", "Rawalpindi", "Sadiqabad", "Safdarabad", "Sahiwal", "Sangla Hill", "Sarai Alamgir", "Sargodha", "Shakargarh", "Sheikhupura", "Sialkot", "Sohawa", "Soianwala", "Siranwali", "Talagang", "Taxila", "Toba Tek", "Vehari", "Wah Cantonment", "Wazirabad", "Badin", "Bhirkan", "Rajo Khanani", "Chak", "Dadu", "Digri", "Diplo", "Dokri", "Ghotki", "Haala", "Hyderabad", "Islamkot", "Jacobabad", "Jamshoro", "Jungshahi", "Kandhkot", "Kandiaro", "Karachi", "Kashmore", "Keti Bandar", "Khairpur", "Kotri", "Larkana", "Matiari", "Mehar", "Mirpur Khas", "Mithani", "Mithi", "Mehrabpur", "Moro", "Nagarparkar", "Naudero", "Naushahro Feroze", "Naushara", "Nawabshah", "Nazimabad", "Qambar", "Qasimabad", "Ranipur", "Ratodero", "Rohri", "Sakrand", "Sanghar", "Shahbandar", "Shahdadkot", "Shahdadpur", "Shahpur Chakar", "Shikarpaur", "Sukkur", "Tangwani", "Tando Adam", "Tando Allahyar", "Tando Muhammad", "Thatta", "Umerkot", "Warah", "Abbottabad", "Adezai", "Alpuri", "Akora Khattak", "Ayubia", "Banda Daud", "Bannu", "Batkhela", "Battagram", "Birote", "Chakdara", "Charsadda", "Chitral", "Daggar", "Dargai", "Darya Khan", "dera Ismail", "Doaba", "Dir", "Drosh", "Hangu", "Haripur", "Karak", "Kohat", "Kulachi", "Lakki Marwat", "Latamber", "Madyan", "Mansehra", "Mardan", "Mastuj", "Mingora", "Nowshera", "Paharpur", "Pabbi", "Peshawar", "Saidu Sharif", "Shorkot", "Shewa Adda", "Swabi", "Swat", "Tangi", "Tank", "Thall", "Timergara", "Tordher", "Awaran", "Barkhan", "Chagai", "Dera Bugti", "Gwadar", "Harnai", "Jafarabad", "Jhal Magsi", "Kacchi", "Kalat", "Kech", "Kharan", "Khuzdar", "Killa Abdullah", "Killa Saifullah", "Kohlu", "Lasbela", "Lehri", "Loralai", "Mastung", "Musakhel", "Nasirabad", "Nushki", "Panjgur", "Pishin valley", "Quetta", "Sherani", "Sibi", "Sohbatpur", "Washuk", "Zhob", "Ziarat"
 ];
 
-const citiesWithLabelValue = cities.map(city => ({
+export const citiesWithLabelValue = cities.map(city => ({
     label: city,
     value: city.toLowerCase() // Assuming value should be in lowercase
 }));
 
-const field = [
+export const prefOptions = [
+    {
+        label: "On - Site",
+        value: "onsite",
+    },
+    {
+        label: "Hybrid",
+        value: "hybrid",
+    },
+    {
+        label: "Remote",
+        value: "remote",
+    },
+]
+
+export const availibilityOptions = [
+    {
+        label: "Less then 1 month",
+        value: "Less then 1 month"
+    },
+    {
+        label: "1 Month",
+        value: "1 Month"
+    },
+    {
+        label: "2 Months",
+        value: "2 Months"
+    },
+    {
+        label: "More then 2 Months",
+        value: "More then 2 Months"
+    },
+]
+
+export const educationOption = [
+    {
+        label: "Intermediate",
+        value: "Intermediate"
+    },
+    {
+        label: "Bachelor",
+        value: "Bachelor"
+    },
+    {
+        label: "Master",
+        value: "Master"
+    },
+]
+
+export const field = [
     { value: 'Software Engineering', label: 'Software Engineering' },
     { value: 'Hardware Design', label: 'Hardware Design' },
     { value: 'Mechanical', label: 'Mechanical' },
@@ -17,7 +66,7 @@ const field = [
 ];
 
 
-const subField = {
+export const subField = {
     ['Software Engineering']: [
         { value: 'Principal Engineer', label: 'Principal Engineer' },
         { value: 'Cyber Security Engineer', label: 'Cyber Security Engineer' },
@@ -167,7 +216,7 @@ const subField = {
     ],
 };
 
-const positionBysubfields = {
+export const positionBysubfields = {
     ['Principal Engineer']: [
         { value: 'Technical Leadership and Vision', label: 'Technical Leadership and Vision' },
         { value: 'Architecture Design and Review', label: 'Architecture Design and Review' },
@@ -442,34 +491,7 @@ export const inputsData = [
         name: "experience",
         label: "Experience",
         placeholder: "Experience",
-        options: [{
-            value: "0-6",
-            label: "0 - 6 Months"
-        },
-        {
-            value: "6-11",
-            label: "6 - 11 Months"
-        },
-        {
-            value: "1-2year",
-            label: "1 - 2 Years"
-        },
-        {
-            value: "2-3year",
-            label: "2 - 3 Years"
-        },
-        {
-            value: "3-5years",
-            label: "3 - 5 Years"
-        },
-        {
-            value: "5-10years",
-            label: "5 - 10 Years"
-        },
-        {
-            value: "10+years",
-            label: "10+ Years"
-        },]
+        options: expOptions
 
     },
     {
@@ -477,44 +499,14 @@ export const inputsData = [
         name: "availability",
         label: "Availability",
         placeholder: "Availability",
-        options: [
-            {
-                label: "Less then 1 month",
-                value: "Less then 1 month"
-            },
-            {
-                label: "1 Month",
-                value: "1 Month"
-            },
-            {
-                label: "2 Months",
-                value: "2 Months"
-            },
-            {
-                label: "More then 2 Months",
-                value: "More then 2 Months"
-            },
-        ]
+        options: availibilityOptions
     },
     {
         type: "select",
         name: "prefrences",
         label: "Prefrences",
         placeholder: "Prefrences",
-        options: [
-            {
-                label: "On - Site",
-                value: "onsite",
-            },
-            {
-                label: "Hybrid",
-                value: "hybrid",
-            },
-            {
-                label: "Remote",
-                value: "remote",
-            },
-        ]
+        options: prefOptions
     },
     {
         type: "tags"
@@ -524,20 +516,7 @@ export const inputsData = [
         name: "education",
         label: "Education",
         placeholder: "Education",
-        options: [
-            {
-                label: "Intermediate",
-                value: "Intermediate"
-            },
-            {
-                label: "Bachelor",
-                value: "Bachelor"
-            },
-            {
-                label: "Master",
-                value: "Master"
-            },
-        ]
+        options: educationOption
     },
     {
         label: "Github Link",
@@ -573,41 +552,6 @@ export const inputsData = [
         label: "Position",
         placeholder: "Select position",
         options: positionBysubfields
-    },
-]
-
-
-export const prefOptions = [
-    {
-        label: "Hybrid",
-        value: "hybrid",
-    },
-    {
-        label: "Remote",
-        value: "remote",
-    },
-    {
-        label: "On-Site",
-        value: "onsite",
-    },
-]
-
-export const availibilityOptions = [
-    {
-        label: "Less then 1 month",
-        value: "Less then 1 month"
-    },
-    {
-        label: "1 Month",
-        value: "1 Month"
-    },
-    {
-        label: "2 Months",
-        value: "2 Months"
-    },
-    {
-        label: "More then 2 Months",
-        value: "More then 2 Months"
     },
 ]
 

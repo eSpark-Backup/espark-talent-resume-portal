@@ -6,6 +6,15 @@ function useFetchCandidates() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [candidates, setCandidates] = useState([])
+    const [filter, setFilter] = useState({
+        city: "",
+        experience: "",
+        availability: "",
+        prefrences: "",
+        education: "",
+        field: "",
+        position: "",
+      });
 
     useEffect(() => {
         const fetchAllCandidates = async () => {
@@ -31,7 +40,7 @@ function useFetchCandidates() {
         fetchAllCandidates();
     }, []);
 
-    return { candidates, loading, error };
+    return { candidates, loading, error, filter, setFilter };
 }
 
 export default useFetchCandidates;
