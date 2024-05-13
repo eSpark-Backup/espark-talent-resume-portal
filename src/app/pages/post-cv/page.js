@@ -34,11 +34,62 @@ const PostCV = () => {
     cv: ""
   });
 
-  const handleSubmit = async (e) => {
-    console.log(form, "form");
-    e.preventDefault();
 
-    console.log(form, "form");
+
+
+  const handleChange = (name, value) => {
+    switch (name) {
+      case 'field':
+        setForm(prev => ({
+          ...prev,
+          [name]: value,
+          subField: "",
+          position: ""
+        }))
+        break;
+      case 'subField':
+        setForm(prev => ({
+          ...prev,
+          [name]: value,
+          position: ""
+        }))
+        break;
+      case 'position':
+        setForm(prev => ({
+          ...prev,
+          [name]: value
+        }))
+        break;
+      default:
+        setForm(prev => ({
+          ...prev,
+          [name]: value
+        }))
+        break;
+    }
+  };
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    if (form?.experience === "" || form?.availability === "" || form?.prefrences === "" || form?.tags.length <= 0 || form?.education === "" || form?.city === "" || form?.cv === "") {
+      toast?.error("All Fields Are Required")
+      return
+    }
+    if ((form?.cnic?.length || 0) !== 13) {
+      
+      toast?.error("Invalid CNIC Number");
+      return;
+    }
+    if ((form?.phone_num?.length || 0) !== 11) {
+      console.log(form?.phone_num?.length)
+      toast?.error("Invalid Contact Number");
+      return;
+    }
+
+    if (form?.salary_expection <= 0) {
+      toast?.error("Invalid Salary");
+      return;
+    }
 
     if (form.cv instanceof File) {
       const formData = new FormData();
@@ -113,67 +164,6 @@ const PostCV = () => {
         }
       ))
     }
-
-
-  };
-
-
-
-
-  const handleChange = (name, value) => {
-    switch (name) {
-      case 'field':
-        setForm(prev => ({
-          ...prev,
-          [name]: value,
-          subField: "",
-          position: ""
-        }))
-        break;
-      case 'subField':
-        setForm(prev => ({
-          ...prev,
-          [name]: value,
-          position: ""
-        }))
-        break;
-      case 'position':
-        setForm(prev => ({
-          ...prev,
-          [name]: value
-        }))
-        break;
-      default:
-        setForm(prev => ({
-          ...prev,
-          [name]: value
-        }))
-        break;
-    }
-  };
-
-  const HandleSubmit = (e) => {
-    e.preventDefault();
-    if (form?.experience === "" || form?.availability === "" || form?.prefrences === "" || form?.tags.length <= 0 || form?.education === "" || form?.city === "" || form?.cv === "") {
-      toast?.error("All Fields Are Required")
-      return
-    }
-    if ((form?.cnic?.length || 0) !== 13) {
-      toast?.error("Invalid CNIC Number");
-      return;
-    }
-    if ((form?.phone?.length || 0) !== 11) {
-      toast?.error("Invalid Contact Number");
-      return;
-    }
-
-    if (form?.salary <= 0) {
-      toast?.error("Invalid Salary");
-      return;
-    }
-
-
-    console.log(form)
   }
 
 
@@ -265,7 +255,7 @@ const PostCV = () => {
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <button onClick={handleSubmit} type="submit" >Submit</button>
+            <button type="submit">Submit</button>
           </Box>
         </form>
       </div >
