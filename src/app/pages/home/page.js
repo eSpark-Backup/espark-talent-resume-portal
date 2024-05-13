@@ -132,7 +132,7 @@ const Home = () => {
     if (filter.field?.value === "Software Engineering") {
       const subFieldsArr = subField[filter.field?.value];
       const positionArr = subFieldsArr.map(({ value }) => {
-        return  positionBysubfields[value]
+        return positionBysubfields[value]
       });
       setPositionOptions(Object.values(positionArr).flat());
     } else {
@@ -168,55 +168,69 @@ const Home = () => {
           </Link>
         </div>
         <div className='dropdowns-parent'>
-          <Dropdown
-            label={"Location"}
-            options={citiesWithLabelValue}
-            value={filter.city}
-            name={"city"}
-            onChange={handleFilter}
-          />
-          <Dropdown
-            label={"Experience"}
-            options={expOptions}
-            value={filter.experience}
-            name={"experience"}
-            onChange={handleFilter}
-          />
-          <Dropdown
-            label={"Availability"}
-            options={availibilityOptions}
-            value={filter.availability}
-            name={"availability"}
-            onChange={handleFilter}
-          />
-          <Dropdown
-            label={"Preference"}
-            options={prefOptions}
-            value={filter.prefrences}
-            name={"prefrences"}
-            onChange={handleFilter}
-          />
-          <Dropdown
-            label={"Education"}
-            options={educationOption}
-            value={filter.education}
-            name={"education"}
-            onChange={handleFilter}
-          />
-          <Dropdown
-            label={"Field"}
-            options={field}
-            value={filter.field}
-            name={"field"}
-            onChange={handleFilter}
-          />
-          <Dropdown
-            label={"position"}
-            options={positionOptions}
-            value={filter.position}
-            name={"position"}
-            onChange={handleFilter}
-          />
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Location"}
+              options={citiesWithLabelValue}
+              value={filter.city}
+              name={"city"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Experience"}
+              options={expOptions}
+              value={filter.experience}
+              name={"experience"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Availability"}
+              options={availibilityOptions}
+              value={filter.availability}
+              name={"availability"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Preference"}
+              options={prefOptions}
+              value={filter.prefrences}
+              name={"prefrences"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Education"}
+              options={educationOption}
+              value={filter.education}
+              name={"education"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Field"}
+              options={field}
+              value={filter.field}
+              name={"field"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"position"}
+              options={positionOptions}
+              value={filter.position}
+              name={"position"}
+              onChange={handleFilter}
+            />
+          </div>
         </div>
         <div className="table-parent">
           {data && data.length > 0 ? <table>
