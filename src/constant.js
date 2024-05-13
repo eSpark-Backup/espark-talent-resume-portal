@@ -413,15 +413,17 @@ export const inputsData = [
     },
     {
         label: "Phone Number",
-        type: "tel",
+        type: "number",
         name: "phone",
-        placeholder: "Enter Phone Number"
+        placeholder: "Enter Phone Number",
+        maxLength:11
     },
     {
         label: "CNIC",
         type: "number",
         name: "cnic",
-        placeholder: "Enter CNIC Number"
+        placeholder: "Enter CNIC Number",
+        maxLength:13
     },
     {
         label: "LinkedIn Profile Link",

@@ -112,12 +112,36 @@ const PostCV = () => {
     }
   };
 
+  const HandleSubmit = (e) => {
+    e.preventDefault();
+    if (form?.experience === "" || form?.availability === "" || form?.prefrences === "" || form?.tags.length <= 0 || form?.education === "" || form?.city === "" || form?.cv === "") {
+      toast?.error("All Fields Are Required")
+      return
+    }
+    if ((form?.cnic?.length || 0) !== 13) {
+      toast?.error("Invalid CNIC Number");
+      return;
+    }
+    if ((form?.phone?.length || 0) !== 11) {
+      toast?.error("Invalid Contact Number");
+      return;
+    }
+    
+    if(form?.salary <= 0){
+      toast?.error("Invalid Salary");
+      return;
+    }
+    
+
+    console.log(form)
+  }
+
 
 
   return (
     <>
       <div className="container">
-        <div className="card">
+        <form className="card" onSubmit={HandleSubmit}>
           <Box sx={{
             display: "flex", justifyContent: "space-between", flexWrap: "wrap",
 
@@ -146,7 +170,7 @@ const PostCV = () => {
                 }}>
 
                 {item?.type !== "select" && item?.type !== "tags" ?
-                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={handleChange} />
+                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={handleChange} maxLength={item?.maxLength && item?.maxLength} />
                   :
                   item?.type !== "tags" ?
                     <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={
@@ -157,7 +181,7 @@ const PostCV = () => {
                       className={
                         item?.name === "subField" && !form.field ? "hide" :
                           item?.name === "position" && !form.subField ? "hide" :
-                          item?.name === "position" && form.subField && form?.field?.value !== "Software Engineering" ? "hide" : ""
+                            item?.name === "position" && form.subField && form?.field?.value !== "Software Engineering" ? "hide" : ""
                       }
                     />
                     :
@@ -201,9 +225,9 @@ const PostCV = () => {
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <button>Submit</button>
+            <button type="submit">Submit</button>
           </Box>
-        </div>
+        </form>
       </div >
     </>
   );
