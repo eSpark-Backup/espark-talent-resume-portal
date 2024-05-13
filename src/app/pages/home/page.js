@@ -25,6 +25,7 @@ const Home = () => {
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
   const { candidates, loading, error, filter, setFilter } = useFetchCandidates()
+  
   const handleCheck = (obj) => {
     const temp = data.map(item => {
       if (item.id === obj.id) {

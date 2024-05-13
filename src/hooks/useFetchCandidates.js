@@ -14,14 +14,24 @@ function useFetchCandidates() {
         education: "",
         field: "",
         position: "",
-      });
+    });
 
     useEffect(() => {
         const fetchAllCandidates = async () => {
             try {
                 setLoading(true);
 
-                const { data, error } = await supabase.from('Applicants')
+                let query = supabase.from('Applicants').select('*');
+
+                for (const key in filter) {
+                    if (filter[key]) {
+                        query = query.eq(key, filter[key]?.value);
+                    }
+                }
+
+
+                const { data, error } = await query
+
 
 
                 if (error) {
@@ -38,7 +48,7 @@ function useFetchCandidates() {
         };
 
         fetchAllCandidates();
-    }, []);
+    }, [filter]);
 
     return { candidates, loading, error, filter, setFilter };
 }
