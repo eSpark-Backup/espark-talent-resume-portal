@@ -414,7 +414,7 @@ export const inputsData = [
     {
         label: "Phone Number",
         type: "number",
-        name: "phone",
+        name: "phone_num",
         placeholder: "Enter Phone Number",
         maxLength:11
     },

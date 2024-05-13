@@ -40,23 +40,42 @@ const PostCV = () => {
 
     console.log(form, "form");
 
-    const formData = new FormData();
-    formData.append('file', form.cv);
+    if (form.cv instanceof File) {
+      const formData = new FormData();
+      formData.append('file', form.cv);
 
-    try {
-      
+
+
       const response = await fetch('/api', {
         method: 'POST',
         body: formData,
       });
 
       const { fileKey } = await response.json();
-      
 
-      const { value } = form.position
+      setForm(prev => (
+        {
+          ...prev,
+          cv: fileKey
+        }
+      ))
+    }
+
+    else {
+      setForm(prev => (
+        {
+          ...prev,
+          cv: form.cv
+        }
+      ))
+    }
+
+
+    try {
       const { data, error } = await supabase
         .from('Applicants')
         .insert({
+          ...form,
           availability: form.availability?.value,
           city: form.city?.value,
           cnic: form.cnic,
@@ -71,9 +90,8 @@ const PostCV = () => {
           prefrences: form.prefrences?.value,
           salary_expection: form.salary_expection,
           tags: form.tags,
-          subField: form.subField?.value,
-          cv: fileKey || null,
-          position: value
+          subField: form.position?.value ? form.subField?.value : null,
+          position: !form.position?.value ? form.subField?.value : form.position?.value,
         })
 
       if (error) {
@@ -148,12 +166,12 @@ const PostCV = () => {
       toast?.error("Invalid Contact Number");
       return;
     }
-    
-    if(form?.salary <= 0){
+
+    if (form?.salary <= 0) {
       toast?.error("Invalid Salary");
       return;
     }
-    
+
 
     console.log(form)
   }
