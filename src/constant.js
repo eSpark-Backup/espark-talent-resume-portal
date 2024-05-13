@@ -428,13 +428,13 @@ export const inputsData = [
     {
         label: "LinkedIn Profile Link",
         type: "url",
-        name: "linkedinLink",
+        name: "linkedin_profile",
         placeholder: "Enter LinkedIn Profile Link"
     },
     {
         label: "Salary Expectation",
         type: "number",
-        name: "salary",
+        name: "salary_expection",
         placeholder: "Enter Expected Salary"
     },
     {
@@ -542,7 +542,7 @@ export const inputsData = [
     {
         label: "Github Link",
         type: "url",
-        name: "githubLink",
+        name: "github_profile",
         placeholder: "Enter Github Link"
     },
     {

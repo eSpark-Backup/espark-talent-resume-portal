@@ -17,15 +17,15 @@ const PostCV = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    phone: "",
+    phone_num: "",
     cnic: "",
-    linkedinLink: "",
-    salary: "",
+    linkedin_profile: "",
+    salary_expection: "",
     experience: "",
     availability: "",
     prefrences: "",
     education: "",
-    githubLink: "",
+    github_profile: "",
     city: "",
     field: "",
     subField: "",
@@ -35,24 +35,43 @@ const PostCV = () => {
   });
 
   const handleSubmit = async (e) => {
+    console.log(form, "form");
     e.preventDefault();
+
+    console.log(form, "form");
 
     const formData = new FormData();
     formData.append('file', form.cv);
 
     try {
+      
       const response = await fetch('/api', {
         method: 'POST',
         body: formData,
       });
 
       const { fileKey } = await response.json();
+      
 
       const { value } = form.position
       const { data, error } = await supabase
         .from('Applicants')
         .insert({
-          ...form,
+          availability: form.availability?.value,
+          city: form.city?.value,
+          cnic: form.cnic,
+          education: form.education?.value,
+          email: form.email,
+          experience: form.experience?.value,
+          field: form.field?.value,
+          github_profile: form.github_profile,
+          linkedin_profile: form.linkedin_profile,
+          name: form.name,
+          phone_num: form.phone_num,
+          prefrences: form.prefrences?.value,
+          salary_expection: form.salary_expection,
+          tags: form.tags,
+          subField: form.subField?.value,
           cv: fileKey || null,
           position: value
         })
@@ -79,6 +98,9 @@ const PostCV = () => {
 
 
   };
+
+
+
 
   const handleChange = (name, value) => {
     switch (name) {
@@ -225,7 +247,7 @@ const PostCV = () => {
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Submit</button>
+            <button onClick={handleSubmit} type="submit" >Submit</button>
           </Box>
         </form>
       </div >

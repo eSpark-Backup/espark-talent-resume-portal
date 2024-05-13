@@ -406,7 +406,7 @@ input[type="checkbox"] {
 .card button{
   width: 97%;
   height: 45px;
-  background-color: lightblue;
+  background-color: rgb(97, 192, 224);
   color: white;
   margin: auto auto;
   border: none;
