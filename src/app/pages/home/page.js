@@ -25,7 +25,7 @@ import SearchInput from '@/common/SearchInput';
 const Home = () => {
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error, filter, setFilter } = useFetchCandidates()
+  const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
 
   const handleCheck = (obj) => {
     const temp = data.map(item => {
@@ -160,14 +160,16 @@ const Home = () => {
       </div>
     )
   }
+
+  
   return (
     <div className='home-main'>
       <div className="jobs-container">
         <div className='jobs-header'>
           <h1>Candidates List</h1>
-          <div style={{display:"flex", columnGap:"10px", alignItems:"center"}}>
-            <SearchInput />
-            <Link href={"/pages/post-cv"} style={{marginTop:"10px"}}>
+          <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
+            <SearchInput setSearch={setSearch} search={search} />
+            <Link href={"/pages/post-cv"} style={{ marginTop: "10px" }}>
               <button>Post CV</button>
             </Link>
           </div>
