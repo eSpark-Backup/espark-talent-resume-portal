@@ -1,5 +1,6 @@
 import supabase from "@/app/services/supabaseClient";
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 
 function useFetchCandidates() {
@@ -15,6 +16,8 @@ function useFetchCandidates() {
         field: "",
         position: "",
     });
+    const [search, setSearch] = useState("");
+    const [debouncedSearch] = useDebounce(search, 500);
 
     useEffect(() => {
         const fetchAllCandidates = async () => {
@@ -25,14 +28,15 @@ function useFetchCandidates() {
 
                 for (const key in filter) {
                     if (filter[key]) {
-                        query = query.eq(key, filter[key]?.value);
+                        query = query.eq(key, filter[key]?.value)
                     }
                 }
 
+                if (search) {
+                    query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone_num.ilike.%${search}%`)
+                }
 
                 const { data, error } = await query
-
-
 
                 if (error) {
                     setError('Error fetching applicants');
@@ -48,9 +52,9 @@ function useFetchCandidates() {
         };
 
         fetchAllCandidates();
-    }, [filter]);
+    }, [filter, debouncedSearch]);
 
-    return { candidates, loading, error, filter, setFilter };
+    return { candidates, loading, error, filter, setFilter, search, setSearch };
 }
 
 export default useFetchCandidates;
