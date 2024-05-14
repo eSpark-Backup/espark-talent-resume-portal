@@ -142,32 +142,21 @@ const Home = () => {
     }
   }, [filter]);
 
-  if (loading) {
-    return (
-      <div className='home-main'>
-        <div className='load-conatiner'>
-          <BallTriangle
-            height={100}
-            width={100}
-            radius={5}
-            color="#0f0f0f"
-            ariaLabel="ball-triangle-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        </div>
-      </div>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <div className='home-main'>
+
+  //     </div>
+  //   )
+  // }
   return (
     <div className='home-main'>
       <div className="jobs-container">
         <div className='jobs-header'>
           <h1>Candidates List</h1>
-          <div style={{display:"flex", columnGap:"10px", alignItems:"center"}}>
+          <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
             <SearchInput />
-            <Link href={"/pages/post-cv"} style={{marginTop:"10px"}}>
+            <Link href={"/pages/post-cv"} style={{ marginTop: "10px" }}>
               <button>Post CV</button>
             </Link>
           </div>
@@ -237,7 +226,18 @@ const Home = () => {
             />
           </div>
         </div>
-        <div className="table-parent">
+        {loading ? <div className='load-conatiner'>
+          <BallTriangle
+            height={100}
+            width={100}
+            radius={5}
+            color="#0f0f0f"
+            ariaLabel="ball-triangle-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div> : <div className="table-parent">
           {data && data.length > 0 ? <table>
             <thead>
               <tr>
@@ -301,7 +301,7 @@ const Home = () => {
             </tbody>
           </table> :
             <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
-        </div>
+        </div>}
       </div>
     </div>
   )
