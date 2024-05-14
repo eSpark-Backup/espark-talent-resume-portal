@@ -383,6 +383,8 @@ input[type="checkbox"] {
 .jobs-header{
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .jobs-header button{

@@ -20,12 +20,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
 import Link from 'next/link';
+import SearchInput from '@/common/SearchInput';
 
 const Home = () => {
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
   const { candidates, loading, error, filter, setFilter } = useFetchCandidates()
-  
+
   const handleCheck = (obj) => {
     const temp = data.map(item => {
       if (item.id === obj.id) {
@@ -164,9 +165,12 @@ const Home = () => {
       <div className="jobs-container">
         <div className='jobs-header'>
           <h1>Candidates List</h1>
-          <Link href={"/pages/post-cv"}>
-            <button>Post CV</button>
-          </Link>
+          <div style={{display:"flex", columnGap:"10px", alignItems:"center"}}>
+            <SearchInput />
+            <Link href={"/pages/post-cv"} style={{marginTop:"10px"}}>
+              <button>Post CV</button>
+            </Link>
+          </div>
         </div>
         <div className='dropdowns-parent'>
           <div className="filter-dropdowns">
