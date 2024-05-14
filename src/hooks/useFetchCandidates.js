@@ -15,7 +15,7 @@ function useFetchCandidates() {
         field: "",
         position: "",
     });
-    const [search, setSearch] = useState("Dieter Goodman");
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         const fetchAllCandidates = async () => {
