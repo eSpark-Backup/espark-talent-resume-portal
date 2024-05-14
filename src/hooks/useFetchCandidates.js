@@ -1,5 +1,6 @@
 import supabase from "@/app/services/supabaseClient";
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 
 function useFetchCandidates() {
@@ -16,6 +17,7 @@ function useFetchCandidates() {
         position: "",
     });
     const [search, setSearch] = useState("");
+    const [debouncedSearch] = useDebounce(search, 500);
 
     useEffect(() => {
         const fetchAllCandidates = async () => {
@@ -50,7 +52,7 @@ function useFetchCandidates() {
         };
 
         fetchAllCandidates();
-    }, [filter, search]);
+    }, [filter, debouncedSearch]);
 
     return { candidates, loading, error, filter, setFilter, search, setSearch };
 }
