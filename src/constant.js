@@ -588,11 +588,13 @@ export const inputsData = [
         tooltip: "Please select the city you are currently residing in.",
         options: citiesWithLabelValue
     },
+]
+
+export const inputsData2 = [
     {
         type: "select",
         name: "field",
-        label: "Field",
-        placeholder: "Select Field",
+        placeholder: "Select type",
         tooltip: "Please select the field you are interested in.",
         options: field
 
@@ -600,16 +602,14 @@ export const inputsData = [
     {
         type: "select",
         name: "subField",
-        label: "Sub-Field",
-        placeholder: "Select Sub Field",
+        placeholder: "Select type",
         tooltip: "Please select the sub-field you are interested in.",
         options: subField
     },
     {
         type: "select",
         name: "position",
-        label: "Position",
-        placeholder: "Select position",
+        placeholder: "Select type",
         tooltip: "Please select the position you are interested in.",
         options: positionBysubfields
     },
