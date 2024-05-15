@@ -209,6 +209,7 @@ const PostCV = () => {
                   border: "1px solid #ccc",
                   padding: "10px",
                   borderRadius: "5px",
+                  rowGap:"6px"
                 }}
               >
                 {inputsData?.map((item, index) => (
