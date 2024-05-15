@@ -6,9 +6,10 @@ import { inputsData } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
 import CustomInput from "@/common/CustomInput";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, Tooltip} from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { TagsInput } from "react-tag-input-component";
+
 
 const PostCV = () => {
   const theme = useTheme();
@@ -188,6 +189,7 @@ const PostCV = () => {
 
           }} >
             {inputsData?.map((item, index) => (
+            
               <Box
                 sx={{
                   [theme.breakpoints.up('xs')]: {
@@ -200,10 +202,10 @@ const PostCV = () => {
                 }}>
 
                 {item?.type !== "select" && item?.type !== "tags" ?
-                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={handleChange} maxLength={item?.maxLength && item?.maxLength} />
+                  <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} tooltip={item?.tooltip} onChange={handleChange} maxLength={item?.maxLength && item?.maxLength} />
                   :
                   item?.type !== "tags" ?
-                    <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={
+                    <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} tooltip={item?.tooltip} options={
                       item?.name === "subField" ? item?.options[form?.field?.value] :
                         item?.name === "position" ? item?.options[form?.subField?.value] : item?.options
                     }
@@ -216,7 +218,9 @@ const PostCV = () => {
                     />
                     :
                     <Box>
+                      <Tooltip placement="top-start" title={item?.tooltip}>
                       <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
+                      </Tooltip>
                       <TagsInput
                         value={form.tags}
                         onChange={(e) => handleChange("tags", e)}
@@ -233,6 +237,7 @@ const PostCV = () => {
                     </Box>
                 }
               </Box>
+           
             ))}
             <Box sx={{ width: "100%" }}>
               {prefrence === "" ?
