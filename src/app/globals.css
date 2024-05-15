@@ -177,7 +177,8 @@ button.btn:hover {
   /* column-gap: 25px; */
   flex-wrap: wrap;
   row-gap: 10px;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  gap: 25px;
 }
 
 .dropdown {

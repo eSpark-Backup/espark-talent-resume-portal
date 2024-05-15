@@ -27,6 +27,8 @@ const PostCV = () => {
     prefrences: "",
     education: "",
     github_profile: "",
+    job_type: "",
+    projects: "",
     city: "",
     field: "",
     subField: "",
@@ -72,6 +74,7 @@ const PostCV = () => {
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
+    console.log(form, "form");
     const newPhone_num = form.phone_num.replace(/\s|-/g, "");
 
     if (newPhone_num.length !== 13 || !newPhone_num.startsWith("+923")) {
@@ -148,6 +151,8 @@ const PostCV = () => {
           github_profile: form.github_profile,
           linkedin_profile: form.linkedin_profile,
           name: form.name,
+          job_type: form.job_type?.value,
+          projects: form.projects,
           phone_num: newPhone_num,
           prefrences: form.prefrences?.value,
           salary_expection: form.salary_expection,

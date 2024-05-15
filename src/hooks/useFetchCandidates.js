@@ -15,6 +15,7 @@ function useFetchCandidates() {
         education: "",
         field: "",
         position: "",
+        job_type: ""
     });
     const [search, setSearch] = useState("");
     const [debouncedSearch] = useDebounce(search, 500);

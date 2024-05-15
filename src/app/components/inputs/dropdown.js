@@ -13,6 +13,7 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
       backgroundColor: state.isSelected ? '#90d1f5' : 'white',
     }),
   };
+  
   return (
     <Stack className={className} gap={1}>
       <Tooltip placement="top-start" title={tooltip}>

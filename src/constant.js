@@ -56,6 +56,23 @@ export const educationOption = [
     },
 ]
 
+export const jobTypeOptions = [
+
+    {
+        label:"Full Time",
+        value:"full-time"
+    },
+    {
+        label:"Part Time",
+        value:"part-time"
+    },
+    {
+        label:"Contract",
+        value:"contract"
+    }
+]
+
+
 export const field = [
     { value: 'Software Engineering', label: 'Software Engineering' },
     { value: 'Hardware Design', label: 'Hardware Design' },
