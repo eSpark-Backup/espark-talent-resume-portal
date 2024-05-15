@@ -464,11 +464,10 @@ export const inputsData = [
     },
     {
         label: "Phone Number",
-        type: "number",
+        type: "tel",
         name: "phone_num",
         placeholder: "Enter Phone Number",
         tooltip: "Please enter your primary phone number. This will be used for all official communications eg: 03001234567",
-        maxLength: 11
     },
     {
         label: "CNIC",
@@ -535,6 +534,34 @@ export const inputsData = [
         name: "github_profile",
         tooltip: "Please enter the URL of your GitHub profile. This allows us to view your projects and contributions. eg: Github.com/username",
         placeholder: "Enter Github Link"
+    },
+    {
+        label: "Job Type",
+        type: "select",
+        name: "job_type",
+        placeholder: "Enter Job type",
+        tooltip: "Please select the type of job you are looking for eg: Full Time, Part Time, Contract",
+        options:[
+            {
+                label:"Full Time",
+                value:"full-time"
+            },
+            {
+                label:"Part Time",
+                value:"part-time"
+            },
+            {
+                label:"Contract",
+                value:"contract"
+            }
+        ]
+    },
+    {
+        label: "Projects",
+        type: "textarea",
+        name: "projects",
+        placeholder: "Tell us about your role in projects, technologies used and outcomes achieved.",
+        tooltip: "Please write about the projects you have worked on. Include the technologies you used, your role in the project, and the outcomes you achieved. This will help us understand your experience and skills better."
     },
     {
         type: "select",

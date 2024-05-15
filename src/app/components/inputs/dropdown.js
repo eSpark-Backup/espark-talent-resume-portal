@@ -1,4 +1,4 @@
-import { Tooltip } from "@mui/material";
+import { Stack, Typography, Tooltip} from "@mui/material";
 import React from "react";
 import Select from "react-select";
 
@@ -14,9 +14,9 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
     }),
   };
   return (
-    <div className={className}>
-       <Tooltip placement="top-start" title={tooltip}>
-      {label && <label style={{ color: "black" }}>{label}</label>}
+    <Stack className={className} gap={1}>
+      <Tooltip placement="top-start" title={tooltip}>
+      {label && <Typography style={{ color: "black" }}>{label}</Typography>}
       </Tooltip>
       <Select
         styles={customStyles}
@@ -32,7 +32,7 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
         }
         value={value}
       />
-    </div>
+    </Stack>
   );
 };
 

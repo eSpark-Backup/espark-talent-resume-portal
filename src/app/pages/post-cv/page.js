@@ -6,15 +6,15 @@ import { inputsData } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
 import CustomInput from "@/common/CustomInput";
-import { Box, Stack, Typography, Tooltip} from "@mui/material";
+import { Box, Stack, Typography, Tooltip } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { TagsInput } from "react-tag-input-component";
+import TextArea from "@/common/TextArea";
 
 
 const PostCV = () => {
   const theme = useTheme();
   const [loading] = useState(false);
-  const [prefrence, setPrefrence] = useState("")
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -72,24 +72,34 @@ const PostCV = () => {
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
+    const newPhone_num = form.phone_num.replace(/\s|-/g, "");
+
+    if (newPhone_num.length !== 13 || !newPhone_num.startsWith("+923")) {
+      toast.error("Invalid Phone Number");
+      return;
+    }
     if (form?.experience === "" || form?.availability === "" || form?.prefrences === "" || form?.tags.length <= 0 || form?.education === "" || form?.city === "" || form?.cv === "") {
       toast?.error("All Fields Are Required")
       return
     }
     if ((form?.cnic?.length || 0) !== 13) {
-      
+
       toast?.error("Invalid CNIC Number");
-      return;
-    }
-    if ((form?.phone_num?.length || 0) !== 11) {
-      console.log(form?.phone_num?.length)
-      toast?.error("Invalid Contact Number");
       return;
     }
 
     if (form?.salary_expection <= 0) {
       toast?.error("Invalid Salary");
       return;
+    }
+
+    if (!form?.linkedin_profile.includes("linkedin")) {
+      toast?.error("Invalid Linked Profile URL")
+      return
+    }
+    if (!form?.github_profile.includes("github")) {
+      toast?.error("Invalid Github Profile URL")
+      return
     }
 
     if (form.cv instanceof File) {
@@ -138,7 +148,7 @@ const PostCV = () => {
           github_profile: form.github_profile,
           linkedin_profile: form.linkedin_profile,
           name: form.name,
-          phone_num: form.phone_num,
+          phone_num: newPhone_num,
           prefrences: form.prefrences?.value,
           salary_expection: form.salary_expection,
           tags: form.tags,
@@ -167,6 +177,9 @@ const PostCV = () => {
     }
   }
 
+  const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+
+
 
 
   return (
@@ -189,7 +202,7 @@ const PostCV = () => {
 
           }} >
             {inputsData?.map((item, index) => (
-            
+
               <Box
                 sx={{
                   [theme.breakpoints.up('xs')]: {
@@ -197,14 +210,14 @@ const PostCV = () => {
                   },
 
                   [theme.breakpoints.up('md')]: {
-                    width: item?.name === "city" ? "100%" : "30%"
+                    width: item?.name === "city" || item?.name === "job_type" || item.name === "projects" ? "100%" : "30%"
                   }
                 }}>
 
-                {item?.type !== "select" && item?.type !== "tags" ?
+                {item?.type !== "select" && item?.type !== "tags" && item?.type !== "textarea" ?
                   <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} tooltip={item?.tooltip} onChange={handleChange} maxLength={item?.maxLength && item?.maxLength} />
                   :
-                  item?.type !== "tags" ?
+                  item?.type !== "tags" && item?.type !== "textarea" ?
                     <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} tooltip={item?.tooltip} options={
                       item?.name === "subField" ? item?.options[form?.field?.value] :
                         item?.name === "position" ? item?.options[form?.subField?.value] : item?.options
@@ -217,50 +230,46 @@ const PostCV = () => {
                       }
                     />
                     :
-                    <Box>
-                      <Tooltip placement="top-start" title={item?.tooltip}>
-                      <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
-                      </Tooltip>
-                      <TagsInput
-                        value={form.tags}
-                        onChange={(e) => handleChange("tags", e)}
-                        name="skills"
-                        placeHolder="Start with #"
-                        beforeAddValidate={(tag) => {
-                          if (tag.trim().startsWith("#")) {
-                            return true;
-                          } else {
-                            return false;
-                          }
-                        }}
-                      />
-                    </Box>
+                    item?.type === "textarea" ?
+                      <TextArea name={item?.name} placeholder={item?.placeholder} label={item?.label} title={item?.tooltip} onChange={handleChange} />
+                      :
+                      <Stack gap={1}>
+                        <Tooltip placement="top-start" title={item?.tooltip}>
+                          <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
+                        </Tooltip>
+                        <TagsInput
+                          value={form.tags}
+                          onChange={(e) => handleChange("tags", e)}
+                          name="skills"
+                          placeHolder="Start with #"
+                          beforeAddValidate={(tag) => {
+                            if (tag.trim().startsWith("#")) {
+                              return true;
+                            } else {
+                              return false;
+                            }
+                          }}
+                        />
+                      </Stack>
                 }
               </Box>
-           
+
             ))}
             <Box sx={{ width: "100%" }}>
-              {prefrence === "" ?
-                <Box>
-                  <Typography sx={{ color: "black" }}>Resume</Typography>
-                  <Stack direction={"row"} gap={1}>
-                    <Typography sx={{ color: "rgb(0, 69, 166)", cursor: "pointer" }} onClick={() => setPrefrence("file")}>Attach Resume</Typography>
-                    <Typography sx={{ color: "black" }}>or</Typography>
-                    <Typography sx={{ color: "rgb(0, 69, 166)", cursor: "pointer" }} onClick={() => setPrefrence("link")}>Paste Resume</Typography>
-                  </Stack>
-                </Box>
-                :
-                prefrence === "file"
-                  ?
-                  <CustomInput onChange={handleChange} type={"file"} placeholder={"Resume"} label={"Resume"} name={"cv"} />
-                  :
-                  <CustomInput onChange={handleChange} type={"url"} placeholder={"Resume Link"} label={"Resume"} name={"cv"} />
+              {<>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" gap="10px"><Typography mb={1} textAlign="left" sx={{ color: "black" }}>Resume</Typography>{form.cv !== "" && <img width={25} src={(typeof form.cv === "string" ? form.cv.match(new RegExp(expression)) : form.cv !== "") ? "/tick.png" : "/cross.png"} alt="icon" />}</Stack>
+                <Stack sx={{ border: "1px solid #ccc", padding: "10px", div: { width: "50%", div: { width: "100%" } } }} direction="row" justifyContent="space-between" alignItems="center" gap="10px">
+                  <CustomInput disabled={typeof form.cv === "string" && form.cv !== ""} onChange={handleChange} type={"file"} placeholder={"Resume"} name={"cv"} />
+                  <Typography mt={4} variant="subtitle2">OR</Typography>
+                  <CustomInput onChange={handleChange} type={"url"} placeholder={"Resume Link"} name={"cv"} />
+                </Stack>
+              </>
               }
             </Box>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Submit</button>
+            <button disabled={loading} type="submit">{loading ? "loading..." : "Submit"}</button>
           </Box>
         </form>
       </div >
