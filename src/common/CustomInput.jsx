@@ -1,8 +1,9 @@
 import React from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import { TextField, Typography, Stack, Tooltip } from '@mui/material';
+import { TextField, Typography, Stack, Tooltip, Box } from '@mui/material';
 import { NumericFormat } from 'react-number-format'; // Assuming NumericFormat is correctly imported
+import InfoIcon from '@mui/icons-material/Info';
 
 const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disabled, phone, tooltip }) => {
     const handlePhoneChange = (value, country, e, formattedValue) => {
@@ -16,9 +17,24 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
     return (
         type === "tel" ? (
             <Stack>
-                <Tooltip placement="top-start" title={tooltip}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                >
                     <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
-                </Tooltip>
+                    <Tooltip placement="top-start" title={tooltip}>
+                        <InfoIcon
+                            style={{
+                                marginLeft: "5px",
+                                color: "rgb(97, 192, 224)",
+                                fontSize: "13px",
+                                marginBottom: "12px",
+                            }}
+                        />
+                    </Tooltip>
+                </Box>
                 <PhoneInput
                     country={'pk'}
                     value={phone}
@@ -30,9 +46,27 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
             </Stack>
         ) : name === "salary_expection" ? (
             <Stack direction="column">
-                <Tooltip placement="top-start" title={tooltip}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                >
                     <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
-                </Tooltip>
+                    <Tooltip placement="top-start" title={tooltip}>
+                        <InfoIcon
+                            style={{
+                                marginLeft: "5px",
+                                color: "rgb(97, 192, 224)",
+                                fontSize: "13px",
+                                marginBottom: "12px",
+                            }}
+                        />
+                    </Tooltip>
+
+
+                </Box>
+
                 <NumericFormat
                     allowNegative={false}
                     min={10}
@@ -46,9 +80,31 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
             </Stack>
         ) : (
             <Stack direction="column">
-                <Tooltip placement="top-start" title={tooltip}>
-                    <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
-                </Tooltip>
+                {
+                    !(name === "cv") && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
+                            <Tooltip placement="top-start" title={tooltip}>
+                                <InfoIcon
+                                    style={{
+                                        marginLeft: "5px",
+                                        color: "rgb(97, 192, 224)",
+                                        fontSize: "13px",
+                                        marginBottom: "12px",
+                                    }}
+                                />
+                            </Tooltip>
+
+                        </Box>
+                    )
+                }
+
+
                 <TextField
                     disabled={disabled}
                     name={name}

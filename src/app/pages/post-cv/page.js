@@ -10,6 +10,7 @@ import { Box, Stack, Typography, Tooltip } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { TagsInput } from "react-tag-input-component";
 import TextArea from "@/common/TextArea";
+import InfoIcon from '@mui/icons-material/Info';
 
 const PostCV = () => {
   const theme = useTheme();
@@ -198,7 +199,9 @@ const PostCV = () => {
             }}
           >
             <Box sx={{ width: "100%" }}>
-              <Typography mb={1} textAlign="left" sx={{ color: "black" }}>
+              <Typography mb={1}
+                fontSize={25}
+                textAlign="left" sx={{ color: "black" }}>
                 Personal Info
               </Typography>
               <Box
@@ -209,7 +212,7 @@ const PostCV = () => {
                   border: "1px solid #ccc",
                   padding: "10px",
                   borderRadius: "5px",
-                  rowGap:"6px"
+                  rowGap: "6px"
                 }}
               >
                 {inputsData?.map((item, index) => (
@@ -243,6 +246,7 @@ const PostCV = () => {
                       />
                     ) : item?.type !== "tags" && item?.type !== "textarea" ? (
                       <Dropdown
+                        showTooltip={true}
                         name={item?.name}
                         label={item?.label}
                         placeholder={item?.placeholder}
@@ -278,11 +282,30 @@ const PostCV = () => {
                       />
                     ) : (
                       <Stack gap={1}>
-                        <Tooltip placement="top-start" title={item?.tooltip}>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+
                           <Typography sx={{ color: "black" }}>
                             Skills, Technologies and Expertise
                           </Typography>
-                        </Tooltip>
+
+                          <Tooltip placement="top-start" title={
+                            item?.tooltip
+                          } >
+                            <InfoIcon
+                              style={{
+                                marginLeft: "5px",
+                                color: "rgb(97, 192, 224)",
+                                fontSize: "13px",
+                                marginBottom: "12px",
+                              }}
+                            />
+                          </Tooltip>
+                        </Box>
                         <TagsInput
                           value={form.tags}
                           onChange={(e) => handleChange("tags", e)}
@@ -311,7 +334,9 @@ const PostCV = () => {
                     alignItems="center"
                     gap="10px"
                   >
-                    <Typography mb={1} textAlign="left" sx={{ color: "black" }}>
+                    <Typography
+                      fontSize={25}
+                      mb={1} textAlign="left" sx={{ color: "black" }}>
                       Resume
                     </Typography>
                     {form.cv !== "" && (
@@ -349,7 +374,9 @@ const PostCV = () => {
                       placeholder={"Resume"}
                       name={"cv"}
                     />
-                    <Typography mt={2} variant="subtitle2">
+                    <Typography
+                      style={{ color: "black" }}
+                      mt={2} variant="subtitle2">
                       OR
                     </Typography>
                     <CustomInput
@@ -363,7 +390,7 @@ const PostCV = () => {
               }
             </Box>
             <Box sx={{ width: "100%" }}>
-              <Typography mb={1} textAlign="left" sx={{ color: "black" }}>
+              <Typography fontSize={25} mb={1} textAlign="left" sx={{ color: "black" }}>
                 Apply For
               </Typography>
               <Box
