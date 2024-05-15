@@ -231,7 +231,7 @@ const PostCV = () => {
                     />
                     :
                     item?.type === "textarea" ?
-                      <TextArea name={item?.name} placeholder={item?.placeholder} label={item?.label} title={item?.tooltip} onChange={handleChange} />
+                      <TextArea name={item?.name} placeholder={item?.placeholder} label={item?.label} title={item?.tooltip} tooltip={item?.tooltip} onChange={handleChange} />
                       :
                       <Stack gap={1}>
                         <Tooltip placement="top-start" title={item?.tooltip}>
