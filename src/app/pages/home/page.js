@@ -22,6 +22,7 @@ import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
 import Link from 'next/link';
 import SearchInput from '@/common/SearchInput';
+import { Checkbox } from '@mui/material';
 
 const Home = () => {
   const [data, setData] = useState([])
@@ -270,7 +271,8 @@ const Home = () => {
                 <th>Position</th>
                 <th className='action-cell'>
                   <button onClick={xportAll}>Download Selected</button>
-                  <input checked={allCheck} onChange={handleAllCheck} type='checkbox' />
+                  {/* <input checked={allCheck} onChange={handleAllCheck} type='checkbox' /> */}
+                  <Checkbox onChange={handleAllCheck} />
                 </th>
               </tr>
             </thead>
@@ -307,7 +309,8 @@ const Home = () => {
                   <td>{item?.position}</td>
                   <td className='action-cell'>
                     <button onClick={() => xportSelected(item)}>Download</button>
-                    <input checked={item?.checked} onChange={() => handleCheck(item)} type='checkbox' />
+                    {/* <input style={{backgroundColor:"red !important"}} checked={item?.checked} onChange={() => handleCheck(item)} type='checkbox' /> */}
+                    <Checkbox checked={item?.checked} onChange={() => handleCheck(item)} />
                   </td>
                 </tr>
               ))}
