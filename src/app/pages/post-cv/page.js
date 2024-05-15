@@ -9,6 +9,7 @@ import CustomInput from "@/common/CustomInput";
 import { Box, Stack, Typography } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { TagsInput } from "react-tag-input-component";
+import TextArea from "@/common/TextArea";
 
 const PostCV = () => {
   const theme = useTheme();
@@ -70,24 +71,34 @@ const PostCV = () => {
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
+    const newPhone_num = form.phone_num.replace(/\s|-/g, "");
+
+    if (newPhone_num.length !== 13 || !newPhone_num.startsWith("+923")) {
+      toast.error("Invalid Phone Number");
+      return;
+    }
     if (form?.experience === "" || form?.availability === "" || form?.prefrences === "" || form?.tags.length <= 0 || form?.education === "" || form?.city === "" || form?.cv === "") {
       toast?.error("All Fields Are Required")
       return
     }
     if ((form?.cnic?.length || 0) !== 13) {
-      
+
       toast?.error("Invalid CNIC Number");
-      return;
-    }
-    if ((form?.phone_num?.length || 0) !== 11) {
-      console.log(form?.phone_num?.length)
-      toast?.error("Invalid Contact Number");
       return;
     }
 
     if (form?.salary_expection <= 0) {
       toast?.error("Invalid Salary");
       return;
+    }
+
+    if (!form?.linkedin_profile.includes("linkedin")) {
+      toast?.error("Invalid Linked Profile URL")
+      return
+    }
+    if (!form?.github_profile.includes("github")) {
+      toast?.error("Invalid Github Profile URL")
+      return
     }
 
     if (form.cv instanceof File) {
@@ -136,7 +147,7 @@ const PostCV = () => {
           github_profile: form.github_profile,
           linkedin_profile: form.linkedin_profile,
           name: form.name,
-          phone_num: form.phone_num,
+          phone_num: newPhone_num,
           prefrences: form.prefrences?.value,
           salary_expection: form.salary_expection,
           tags: form.tags,
@@ -167,6 +178,9 @@ const PostCV = () => {
 
   const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
 
+
+
+
   return (
     <>
       <div className="container">
@@ -194,14 +208,14 @@ const PostCV = () => {
                   },
 
                   [theme.breakpoints.up('md')]: {
-                    width: item?.name === "city" ? "100%" : "30%"
+                    width: item?.name === "city" || item?.name === "job_type" || item.name === "projects" ? "100%" : "30%"
                   }
                 }}>
 
-                {item?.type !== "select" && item?.type !== "tags" ?
+                {item?.type !== "select" && item?.type !== "tags" && item?.type !== "textarea" ?
                   <CustomInput label={item?.label} type={item?.type} name={item?.name} placeholder={item?.placeholder} onChange={handleChange} maxLength={item?.maxLength && item?.maxLength} />
                   :
-                  item?.type !== "tags" ?
+                  item?.type !== "tags" && item?.type !== "textarea" ?
                     <Dropdown name={item?.name} label={item?.label} placeholder={item?.placeholder} options={
                       item?.name === "subField" ? item?.options[form?.field?.value] :
                         item?.name === "position" ? item?.options[form?.subField?.value] : item?.options
@@ -214,22 +228,25 @@ const PostCV = () => {
                       }
                     />
                     :
-                    <Box>
-                      <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
-                      <TagsInput
-                        value={form.tags}
-                        onChange={(e) => handleChange("tags", e)}
-                        name="skills"
-                        placeHolder="Start with #"
-                        beforeAddValidate={(tag) => {
-                          if (tag.trim().startsWith("#")) {
-                            return true;
-                          } else {
-                            return false;
-                          }
-                        }}
-                      />
-                    </Box>
+                    item?.type === "textarea" ?
+                      <TextArea name={item?.name} placeholder={item?.placeholder} label={item?.label} onChange={handleChange} />
+                      :
+                      <Stack gap={1}>
+                        <Typography sx={{ color: "black" }}>Skills, Technologies and Expertise</Typography>
+                        <TagsInput
+                          value={form.tags}
+                          onChange={(e) => handleChange("tags", e)}
+                          name="skills"
+                          placeHolder="Start with #"
+                          beforeAddValidate={(tag) => {
+                            if (tag.trim().startsWith("#")) {
+                              return true;
+                            } else {
+                              return false;
+                            }
+                          }}
+                        />
+                      </Stack>
                 }
               </Box>
             ))}

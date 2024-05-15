@@ -462,10 +462,9 @@ export const inputsData = [
     },
     {
         label: "Phone Number",
-        type: "number",
+        type: "tel",
         name: "phone_num",
         placeholder: "Enter Phone Number",
-        maxLength:11
     },
     {
         label: "CNIC",
@@ -523,6 +522,32 @@ export const inputsData = [
         type: "url",
         name: "github_profile",
         placeholder: "Enter Github Link"
+    },
+    {
+        label: "Job Type",
+        type: "select",
+        name: "job_type",
+        placeholder: "Enter Job type",
+        options:[
+            {
+                label:"Full Time",
+                value:"full-time"
+            },
+            {
+                label:"Part Time",
+                value:"part-time"
+            },
+            {
+                label:"Contract",
+                value:"contract"
+            }
+        ]
+    },
+    {
+        label: "Projects",
+        type: "textarea",
+        name: "projects",
+        placeholder: "Tell us about your role in projects, technologies used and outcomes achieved."
     },
     {
         type: "select",
