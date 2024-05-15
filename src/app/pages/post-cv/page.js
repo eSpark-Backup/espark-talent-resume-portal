@@ -13,7 +13,6 @@ import { TagsInput } from "react-tag-input-component";
 const PostCV = () => {
   const theme = useTheme();
   const [loading] = useState(false);
-  const [prefrence, setPrefrence] = useState("")
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -166,7 +165,7 @@ const PostCV = () => {
     }
   }
 
-
+  const expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
 
   return (
     <>
@@ -235,27 +234,20 @@ const PostCV = () => {
               </Box>
             ))}
             <Box sx={{ width: "100%" }}>
-              {prefrence === "" ?
-                <Box>
-                  <Typography sx={{ color: "black" }}>Resume</Typography>
-                  <Stack direction={"row"} gap={1}>
-                    <Typography sx={{ color: "rgb(0, 69, 166)", cursor: "pointer" }} onClick={() => setPrefrence("file")}>Attach Resume</Typography>
-                    <Typography sx={{ color: "black" }}>or</Typography>
-                    <Typography sx={{ color: "rgb(0, 69, 166)", cursor: "pointer" }} onClick={() => setPrefrence("link")}>Paste Resume</Typography>
-                  </Stack>
-                </Box>
-                :
-                prefrence === "file"
-                  ?
-                  <CustomInput onChange={handleChange} type={"file"} placeholder={"Resume"} label={"Resume"} name={"cv"} />
-                  :
-                  <CustomInput onChange={handleChange} type={"url"} placeholder={"Resume Link"} label={"Resume"} name={"cv"} />
+              {<>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" gap="10px"><Typography mb={1} textAlign="left" sx={{ color: "black" }}>Resume</Typography>{form.cv !== "" && <img width={25} src={(typeof form.cv === "string" ? form.cv.match(new RegExp(expression)) : form.cv !== "") ? "/tick.png" : "/cross.png"} alt="icon"/>}</Stack>
+                <Stack sx={{ border: "1px solid #ccc", padding: "10px", div:{width: "50%", div: {width: "100%"}}}} direction="row" justifyContent="space-between" alignItems="center" gap="10px">
+                  <CustomInput disabled={typeof form.cv === "string" && form.cv !== ""} onChange={handleChange} type={"file"} placeholder={"Resume"} name={"cv"} />
+                  <Typography mt={4} variant="subtitle2">OR</Typography>
+                  <CustomInput onChange={handleChange} type={"url"} placeholder={"Resume Link"} name={"cv"} />
+                </Stack>
+              </>
               }
             </Box>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Submit</button>
+            <button disabled={loading} type="submit">{loading ? "loading..." : "Submit"}</button>
           </Box>
         </form>
       </div >
