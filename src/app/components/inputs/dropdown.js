@@ -1,3 +1,4 @@
+import { Stack, Typography } from "@mui/material";
 import React from "react";
 import Select from "react-select";
 
@@ -13,8 +14,8 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
     }),
   };
   return (
-    <div className={className}>
-      {label && <label style={{ color: "black" }}>{label}</label>}
+    <Stack className={className} gap={1}>
+      {label && <Typography style={{ color: "black" }}>{label}</Typography>}
       <Select
         styles={customStyles}
         placeholder={placeholder}
@@ -29,7 +30,7 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
         }
         value={value}
       />
-    </div>
+    </Stack>
   );
 };
 
