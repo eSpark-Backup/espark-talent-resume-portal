@@ -13,7 +13,7 @@
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.2",
+    "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.2",
     "@supabase/supabase-js": "^1.35.6",
     "dotenv": "^16.4.5",
@@ -25,6 +25,7 @@
     "react-select": "^5.8.0",
     "react-tag-input-component": "^2.0.2",
     "react-toastify": "^10.0.5",
+    "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
     "xlsx": "^0.18.5"
   }

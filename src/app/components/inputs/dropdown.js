@@ -20,6 +20,7 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
         placeholder={placeholder}
         options={options}
         isSearchable={true}
+        isClearable={true}
         onChange={(e) => onChange(name, e)}
         defaultValue={
           name === "subField" || name === "position"

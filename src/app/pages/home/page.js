@@ -1,18 +1,32 @@
 "use client"
 import { Dropdown } from '@/app/components'
 import { utils, writeFileXLSX } from "xlsx";
-import { expOptions, stackOptions, tableData, techOptions } from '@/constant'
+import {
+  availibilityOptions,
+  citiesWithLabelValue,
+  educationOption,
+  expOptions,
+  field,
+  positionBysubfields,
+  prefOptions,
+  stackOptions,
+  subField,
+  tableData,
+  techOptions,
+} from '@/constant'
 import useFetchCandidates from '@/hooks/useFetchCandidates'
 import { DateMonthYear } from '@/utility/DataConverter'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
 import Link from 'next/link';
+import SearchInput from '@/common/SearchInput';
 
 const Home = () => {
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error } = useFetchCandidates()
+  const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
+
   const handleCheck = (obj) => {
     const temp = data.map(item => {
       if (item.id === obj.id) {
@@ -108,10 +122,111 @@ const Home = () => {
     writeFileXLSX(wb, `${obj?.full_name}.xlsx`);
   });
 
-  if (loading) {
-    return (
-      <div className='home-main'>
-        <div className='load-conatiner'>
+  const handleFilter = (name, value) => {
+    setFilter((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const [positionOptions, setPositionOptions] = useState(null);
+  useEffect(() => {
+    if (filter.field?.value === "Software Engineering") {
+      const subFieldsArr = subField[filter.field?.value];
+      const positionArr = subFieldsArr.map(({ value }) => {
+        return positionBysubfields[value]
+      });
+      setPositionOptions(Object.values(positionArr).flat());
+    } else {
+      setPositionOptions(subField[filter.field?.value]);
+    }
+  }, [filter]);
+
+  // if (loading) {
+  //   return (
+  //     <div className='home-main'>
+
+  //     </div>
+  //   )
+  // }
+  return (
+    <div className='home-main'>
+      <div className="jobs-container">
+        <div className='jobs-header'>
+          <h1>Candidates List</h1>
+          <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
+            <SearchInput setSearch={setSearch} search={search} />
+            <Link href={"/pages/post-cv"} style={{ marginTop: "10px" }}>
+              <button>Post CV</button>
+            </Link>
+          </div>
+        </div>
+        <div className='dropdowns-parent'>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Location"}
+              options={citiesWithLabelValue}
+              value={filter.city}
+              name={"city"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Experience"}
+              options={expOptions}
+              value={filter.experience}
+              name={"experience"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Availability"}
+              options={availibilityOptions}
+              value={filter.availability}
+              name={"availability"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Preference"}
+              options={prefOptions}
+              value={filter.prefrences}
+              name={"prefrences"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Education"}
+              options={educationOption}
+              value={filter.education}
+              name={"education"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"Field"}
+              options={field}
+              value={filter.field}
+              name={"field"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              label={"position"}
+              options={positionOptions}
+              value={filter.position}
+              name={"position"}
+              onChange={handleFilter}
+            />
+          </div>
+        </div>
+        {loading ? <div className='load-conatiner'>
           <BallTriangle
             height={100}
             width={100}
@@ -122,32 +237,25 @@ const Home = () => {
             wrapperClass=""
             visible={true}
           />
-        </div>
-      </div>
-    )
-  }
-  return (
-    <div className='home-main'>
-      <div className="jobs-container">
-        <div className='jobs-header'>
-          <h1>Candidates List</h1>
-          <Link href={"/pages/post-cv"}>
-            <button>Post CV</button>
-          </Link>
-        </div>
-        <div className='dropdowns-parent'>
-          <Dropdown label={"Stack"} options={stackOptions} name={"stack"} onChange={(name, value) => { console.log(name, value) }} />
-          <Dropdown label={"Experience"} options={expOptions} name={"experience"} onChange={(name, value) => { console.log(name, value) }} />
-          <Dropdown label={"Technologies"} options={techOptions} name={"technologies"} onChange={(name, value) => { console.log(name, value) }} />
-        </div>
-        <div className="table-parent">
+        </div> : <div className="table-parent">
           {data && data.length > 0 ? <table>
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Date</th>
-                <th>Desination</th>
-                <th>Status</th>
+                <th>Email</th>
+                <th>Phone No</th>
+                <th>Cnic</th>
+                <th>Location</th>
+                <th>Education</th>
+                <th>Github</th>
+                <th>Linked In</th>
+                <th>Availability</th>
+                <th>Experience</th>
+                <th>Prefrence</th>
+                <th>Exp Sallary</th>
+                <th>Field</th>
+                <th>Position</th>
                 <th className='action-cell'>
                   <button onClick={xportAll}>Download Selected</button>
                   <input checked={allCheck} onChange={handleAllCheck} type='checkbox' />
@@ -157,12 +265,32 @@ const Home = () => {
             <tbody>
               {data?.map((item, index) => (
                 <tr key={index}>
-                  <td>{item?.full_name}</td>
+                  <td>{item?.name}</td>
                   <td>{DateMonthYear(item?.created_at)}</td>
-                  <td>{item?.designation}</td>
+                  <td>{item?.email}</td>
+                  <td>{item?.phone_num}</td>
+                  <td>{item?.cnic}</td>
+                  <td>{item?.city}</td>
+                  <td>{item?.education}</td>
                   <td>
-                    <p className={`pending`}>pending</p>
+                    <a href={item?.github_profile} target="_blank">
+                      {item?.github_profile}
+                    </a>
                   </td>
+                  <td>
+                    <a href={item?.linkedin_profile} target="_blank">
+                      {item?.linkedin_profile}
+                    </a>
+                  </td>
+                  <td>{item?.availability}</td>
+                  <td>{item?.experience}</td>
+                  <td>{item?.prefrences}</td>
+                  <td>{item?.salary_expection}</td>
+                  <td>
+                    {item?.field}
+                    {item?.subField && `/ ${item?.subField}`}
+                  </td>
+                  <td>{item?.position}</td>
                   <td className='action-cell'>
                     <button onClick={() => xportSelected(item)}>Download</button>
                     <input checked={item?.checked} onChange={() => handleCheck(item)} type='checkbox' />
@@ -173,7 +301,7 @@ const Home = () => {
             </tbody>
           </table> :
             <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
-        </div>
+        </div>}
       </div>
     </div>
   )
