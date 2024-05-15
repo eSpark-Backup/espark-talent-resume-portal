@@ -56,6 +56,23 @@ export const educationOption = [
     },
 ]
 
+export const jobTypeOptions = [
+
+    {
+        label:"Full Time",
+        value:"full-time"
+    },
+    {
+        label:"Part Time",
+        value:"part-time"
+    },
+    {
+        label:"Contract",
+        value:"contract"
+    }
+]
+
+
 export const field = [
     { value: 'Software Engineering', label: 'Software Engineering' },
     { value: 'Hardware Design', label: 'Hardware Design' },
@@ -452,44 +469,51 @@ export const inputsData = [
         label: "Name",
         type: "text",
         name: "name",
-        placeholder: "Enter Name"
+        placeholder: "Enter Name",
+        tooltip: "Please enter your full legal name, including first, middle (if applicable), and last name, as it appears on your official documents. eg: Mark Zuckerberg"
     },
     {
         label: "Email",
         type: "email",
         name: "email",
-        placeholder: "Enter Email"
+        placeholder: "Enter Email",
+        tooltip: "Please enter your primary email address. This will be used for all official communications eg: mark@gmail.com"
     },
     {
         label: "Phone Number",
         type: "tel",
         name: "phone_num",
         placeholder: "Enter Phone Number",
+        tooltip: "Please enter your primary phone number. This will be used for all official communications eg: 03001234567",
     },
     {
         label: "CNIC",
         type: "number",
         name: "cnic",
         placeholder: "Enter CNIC Number",
-        maxLength:13
+        tooltip: "Please enter your CNIC number as it appears on your identity card, including all dashes. eg: 42201-1234567-8",
+        maxLength: 13
     },
     {
         label: "LinkedIn Profile Link",
         type: "url",
         name: "linkedin_profile",
-        placeholder: "Enter LinkedIn Profile Link"
+        placeholder: "Enter LinkedIn Profile Link",
+        tooltip: "Please enter the URL of your LinkedIn profile. This allows us to view your professional background and connect with you on LinkedIn. eg: https://www.linkedin.com/in/markzuckerberg"
     },
     {
         label: "Salary Expectation",
         type: "number",
         name: "salary_expection",
-        placeholder: "Enter Expected Salary"
+        placeholder: "Enter Expected Salary",
+        tooltip: "Please enter your expected salary in PKR. This will help us understand your salary expectations and make you an offer accordingly. eg: 100000"
     },
     {
         type: "select",
         name: "experience",
         label: "Experience",
         placeholder: "Experience",
+        tooltip: "Please enter the total number of years and months you have worked in your field.",
         options: expOptions
 
     },
@@ -498,6 +522,7 @@ export const inputsData = [
         name: "availability",
         label: "Availability",
         placeholder: "Availability",
+        tooltip: "Please select the earliest you can start working with us.",
         options: availibilityOptions
     },
     {
@@ -505,22 +530,26 @@ export const inputsData = [
         name: "prefrences",
         label: "Prefrences",
         placeholder: "Prefrences",
+        tooltip: "Please select your work preferences. This will help us understand your work preferences and make you an offer accordingly.",
         options: prefOptions
     },
     {
-        type: "tags"
+        type: "tags",
+        tooltip: "Please write the technologies you are proficient in. Also Please type # before the technology name. eg: #ReactJS, #NodeJS, #VueJS",
     },
     {
         type: "select",
         name: "education",
         label: "Education",
         placeholder: "Education",
+        tooltip: "Please select your highest level of education.",
         options: educationOption
     },
     {
         label: "Github Link",
         type: "url",
         name: "github_profile",
+        tooltip: "Please enter the URL of your GitHub profile. This allows us to view your projects and contributions. eg: Github.com/username",
         placeholder: "Enter Github Link"
     },
     {
@@ -528,6 +557,7 @@ export const inputsData = [
         type: "select",
         name: "job_type",
         placeholder: "Enter Job type",
+        tooltip: "Please select the type of job you are looking for eg: Full Time, Part Time, Contract",
         options:[
             {
                 label:"Full Time",
@@ -547,70 +577,43 @@ export const inputsData = [
         label: "Projects",
         type: "textarea",
         name: "projects",
-        placeholder: "Tell us about your role in projects, technologies used and outcomes achieved."
+        placeholder: "Tell us about your role in projects, technologies used and outcomes achieved.",
+        tooltip: "Please write about the projects you have worked on. Include the technologies you used, your role in the project, and the outcomes you achieved. This will help us understand your experience and skills better."
     },
     {
         type: "select",
         name: "city",
         label: "City",
         placeholder: "City",
+        tooltip: "Please select the city you are currently residing in.",
         options: citiesWithLabelValue
     },
+]
+
+export const inputsData2 = [
     {
         type: "select",
         name: "field",
-        label: "Field",
-        placeholder: "Select Field",
+        placeholder: "Select type",
+        tooltip: "Please select the field you are interested in.",
         options: field
 
     },
     {
         type: "select",
         name: "subField",
-        label: "Sub-Field",
-        placeholder: "Select Sub Field",
+        placeholder: "Select type",
+        tooltip: "Please select the sub-field you are interested in.",
         options: subField
     },
     {
         type: "select",
         name: "position",
-        label: "Position",
-        placeholder: "Select position",
+        placeholder: "Select type",
+        tooltip: "Please select the position you are interested in.",
         options: positionBysubfields
     },
 ]
-
-
-
-
-
-
-
-const Fields = {
-    software: [
-        { value: 'nyc', label: 'New York City' },
-        { value: 'la', label: 'Los Angeles' },
-    ],
-    engineer: [
-        { value: 'toronto', label: 'Toronto' },
-        { value: 'vancouver', label: 'Vancouver' },
-    ],
-};
-
-const subFields = {
-    nyc: [
-        { value: 'ny', label: 'New York' },
-    ],
-    la: [
-        { value: 'ca', label: 'California' },
-    ],
-    toronto: [
-        { value: 'on', label: 'Ontario' },
-    ],
-    vancouver: [
-        { value: 'bc', label: 'British Columbia' },
-    ],
-};
 
 
 
