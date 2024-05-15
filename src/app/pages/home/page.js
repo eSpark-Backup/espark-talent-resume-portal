@@ -5,6 +5,7 @@ import {
   availibilityOptions,
   citiesWithLabelValue,
   educationOption,
+  jobTypeOptions,
   expOptions,
   field,
   positionBysubfields,
@@ -209,6 +210,15 @@ const Home = () => {
           </div>
           <div className="filter-dropdowns">
             <Dropdown
+              label={"Job Type"}
+              options={jobTypeOptions}
+              value={filter.job_type}
+              name={"job_type"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
               label={"Field"}
               options={field}
               value={filter.field}
@@ -218,7 +228,7 @@ const Home = () => {
           </div>
           <div className="filter-dropdowns">
             <Dropdown
-              label={"position"}
+              label={"Position"}
               options={positionOptions}
               value={filter.position}
               name={"position"}
@@ -254,6 +264,8 @@ const Home = () => {
                 <th>Experience</th>
                 <th>Prefrence</th>
                 <th>Exp Sallary</th>
+                <th>Job type</th>
+                <th>Description</th>
                 <th>Field</th>
                 <th>Position</th>
                 <th className='action-cell'>
@@ -286,6 +298,8 @@ const Home = () => {
                   <td>{item?.experience}</td>
                   <td>{item?.prefrences}</td>
                   <td>{item?.salary_expection}</td>
+                  <td>{item?.job_type}</td>
+                  <td>{item?.projects}</td>
                   <td>
                     {item?.field}
                     {item?.subField && `/ ${item?.subField}`}

@@ -26,6 +26,8 @@ const PostCV = () => {
     prefrences: "",
     education: "",
     github_profile: "",
+    job_type: "",
+    projects: "",
     city: "",
     field: "",
     subField: "",
@@ -68,6 +70,7 @@ const PostCV = () => {
 
   const HandleSubmit = async (e) => {
     e.preventDefault();
+    console.log(form, "form");
     const newPhone_num = form.phone_num.replace(/\s|-/g, "");
 
     if (newPhone_num.length !== 13 || !newPhone_num.startsWith("+923")) {
@@ -148,6 +151,8 @@ const PostCV = () => {
         position: !form.position?.value
           ? form.subField?.value
           : form.position?.value,
+        job_type: form.job_type?.value,
+        projects: form.projects,
       });
 
       if (error) {
@@ -216,16 +221,16 @@ const PostCV = () => {
                       [theme.breakpoints.up("md")]: {
                         width:
                           item?.name === "city" ||
-                          item?.name === "job_type" ||
-                          item.name === "projects"
+                            item?.name === "job_type" ||
+                            item.name === "projects"
                             ? "100%"
                             : "30%",
                       },
                     }}
                   >
                     {item?.type !== "select" &&
-                    item?.type !== "tags" &&
-                    item?.type !== "textarea" ? (
+                      item?.type !== "tags" &&
+                      item?.type !== "textarea" ? (
                       <CustomInput
                         label={item?.label}
                         type={item?.type}
@@ -245,20 +250,20 @@ const PostCV = () => {
                           item?.name === "subField"
                             ? item?.options[form?.field?.value]
                             : item?.name === "position"
-                            ? item?.options[form?.subField?.value]
-                            : item?.options
+                              ? item?.options[form?.subField?.value]
+                              : item?.options
                         }
                         onChange={handleChange}
                         className={
                           item?.name === "subField" && !form.field
                             ? "hide"
                             : item?.name === "position" && !form.subField
-                            ? "hide"
-                            : item?.name === "position" &&
-                              form.subField &&
-                              form?.field?.value !== "Software Engineering"
-                            ? "hide"
-                            : ""
+                              ? "hide"
+                              : item?.name === "position" &&
+                                form.subField &&
+                                form?.field?.value !== "Software Engineering"
+                                ? "hide"
+                                : ""
                         }
                       />
                     ) : item?.type === "textarea" ? (
@@ -380,8 +385,8 @@ const PostCV = () => {
                       [theme.breakpoints.up("md")]: {
                         width:
                           item?.name === "city" ||
-                          item?.name === "job_type" ||
-                          item.name === "projects"
+                            item?.name === "job_type" ||
+                            item.name === "projects"
                             ? "100%"
                             : "30%",
                       },
@@ -396,20 +401,20 @@ const PostCV = () => {
                         item?.name === "subField"
                           ? item?.options[form?.field?.value]
                           : item?.name === "position"
-                          ? item?.options[form?.subField?.value]
-                          : item?.options
+                            ? item?.options[form?.subField?.value]
+                            : item?.options
                       }
                       onChange={handleChange}
                       className={
                         item?.name === "subField" && !form.field
                           ? "hide"
                           : item?.name === "position" && !form.subField
-                          ? "hide"
-                          : item?.name === "position" &&
-                            form.subField &&
-                            form?.field?.value !== "Software Engineering"
-                          ? "hide"
-                          : ""
+                            ? "hide"
+                            : item?.name === "position" &&
+                              form.subField &&
+                              form?.field?.value !== "Software Engineering"
+                              ? "hide"
+                              : ""
                       }
                     />
                   </Box>
