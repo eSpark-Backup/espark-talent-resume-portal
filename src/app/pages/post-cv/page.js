@@ -42,16 +42,17 @@ const PostCV = () => {
       case "field":
         setForm((prev) => ({
           ...prev,
-          [name]: value,
           subField: "",
           position: "",
+          [name]: value,
+          
         }));
         break;
       case "subField":
         setForm((prev) => ({
           ...prev,
-          [name]: value,
           position: "",
+          [name]: value,
         }));
         break;
       case "position":
@@ -434,6 +435,7 @@ const PostCV = () => {
                     <Dropdown
                       name={item?.name}
                       label={item?.label}
+                      value={form[item?.name]}
                       placeholder={item?.placeholder}
                       tooltip={item?.tooltip}
                       options={
