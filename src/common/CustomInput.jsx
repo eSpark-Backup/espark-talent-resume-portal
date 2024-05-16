@@ -37,11 +37,12 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
                 </Box>
                 <PhoneInput
                     country={'pk'}
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    inputStyle={{ color: "black" }}
-                    onlyCountries={['pk']}
                     disableDropdown={true}
+                    inputStyle={{ color: "black" }}
+                    countryCodeEditable={false}
+                    onChange={handlePhoneChange}
+                    value={phone}
+                    onlyCountries={['pk']}
                 />
             </Stack>
         ) : name === "salary_expection" ? (
@@ -113,6 +114,7 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
                     placeholder={placeholder}
                     required
                     {...(maxLength && { onInput: (e) => e.target.value = e.target.value.slice(0, maxLength) })}
+                    
                 />
             </Stack>
         )

@@ -334,11 +334,23 @@ const PostCV = () => {
                     alignItems="center"
                     gap="10px"
                   >
-                    <Typography
-                      fontSize={25}
-                      mb={1} textAlign="left" sx={{ color: "black" }}>
-                      Resume
-                    </Typography>
+                    <Stack direction={"row"}>
+                      <Typography
+                        fontSize={25}
+                        mb={1} textAlign="left" sx={{ color: "black" }}>
+                        Resume
+                      </Typography>
+                      <Tooltip placement="top-start" title={"Please choose a file to upload your resume, or you can share a link to your resume with us. Accepted formats are PDF, DOC, and DOCX."}>
+                        <InfoIcon
+                          style={{
+                            marginLeft: "5px",
+                            color: "rgb(97, 192, 224)",
+                            fontSize: "13px",
+                            marginBottom: "12px",
+                          }}
+                        />
+                      </Tooltip>
+                    </Stack>
                     {form.cv !== "" && (
                       <img
                         width={25}
