@@ -67,10 +67,16 @@ const Home = () => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
-      newRow.resume = {
-        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.resume}`}", "Download")`,
+      if(newRow.subField){
+        newRow.field =  `${newRow.field} / ${newRow.subField}`
+        delete newRow.subField
+      } else {
+        delete newRow.subField
+      }
+      newRow.cv = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.cv}`}", "Download")`,
         t: 'n',
-        v: `http://localhost:3000/api?resume=${newRow?.resume}`
+        v: `http://localhost:3000/api?resume=${newRow?.cv}`
       }
       return newRow;
     });
@@ -79,9 +85,22 @@ const Home = () => {
       "Date",
       "Name",
       "Email",
-      "Phone No",
-      "Designation",
+      "CNIC",
+      "LinkedIn URL",
+      "Exp Sallary",
+      "Experience",
+      "Availability",
+      "Preference",
+      "Education",
+      "Github URL",
+      "City",
+      "Department",
+      "Position",
       "Resume",
+      "Phone No",
+      "Tags",
+      "Job Type",
+      "Projects",
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -99,10 +118,16 @@ const Home = () => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
-      newRow.resume = {
-        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.resume}`}", "Download")`,
+      if(newRow.subField){
+        newRow.field =  `${newRow.field} / ${newRow.subField}`
+        delete newRow.subField
+      } else {
+        delete newRow.subField
+      }
+      newRow.cv = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.cv}`}", "Download")`,
         t: 'n',
-        v: `http://localhost:3000/api?resume=${newRow?.resume}`
+        v: `http://localhost:3000/api?resume=${newRow?.cv}`
       }
       return newRow;
     });
@@ -111,17 +136,29 @@ const Home = () => {
       "Date",
       "Name",
       "Email",
-      "Phone No",
-      "Designation",
+      "CNIC",
+      "LinkedIn URL",
+      "Exp Sallary",
+      "Experience",
+      "Availability",
+      "Preference",
+      "Education",
+      "Github URL",
+      "City",
+      "Department",
+      "Position",
       "Resume",
-
+      "Phone No",
+      "Tags",
+      "Job Type",
+      "Projects",
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
     });
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, "Data");
-    writeFileXLSX(wb, `${obj?.full_name}.xlsx`);
+    writeFileXLSX(wb, `${obj?.name}.xlsx`);
   });
 
   const handleFilter = (name, value) => {
