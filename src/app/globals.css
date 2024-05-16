@@ -118,9 +118,41 @@ form.form {
   width: 100%;
 }
 
-.input-parent>div,
-.input-parent>input {
-  margin-top: 5px;
+.hidden-input {
+  display: none;
+}
+
+.image-selector {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 10px;
+  gap: 10px;
+  cursor: pointer;
+}
+
+p.upload-btn {
+  background: rgb(97, 192, 224);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+p.filename {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.disabled {
+  cursor: no-drop;
+}
+
+.disabled .upload-btn {
+   background: #ccc;
 }
 
 input {

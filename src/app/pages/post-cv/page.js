@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dropdown } from "../../components";
+import { Dropdown, ImgUploader } from "../../components";
 import { inputsData, inputsData2 } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
@@ -379,12 +379,11 @@ const PostCV = () => {
                     alignItems="center"
                     gap="10px"
                   >
-                    <CustomInput
+                    <ImgUploader
                       disabled={typeof form.cv === "string" && form.cv !== ""}
                       onChange={handleChange}
-                      type={"file"}
-                      placeholder={"Resume"}
                       name={"cv"}
+                      filename={form.cv?.name}
                     />
                     <Typography
                       style={{ color: "black" }}
