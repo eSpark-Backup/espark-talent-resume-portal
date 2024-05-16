@@ -236,6 +236,7 @@ const PostCV = () => {
                       item?.type !== "tags" &&
                       item?.type !== "textarea" ? (
                       <CustomInput
+                        required
                         label={item?.label}
                         type={item?.type}
                         name={item?.name}
