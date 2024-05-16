@@ -5,7 +5,7 @@ import { TextField, Typography, Stack, Tooltip, Box } from '@mui/material';
 import { NumericFormat } from 'react-number-format'; // Assuming NumericFormat is correctly imported
 import InfoIcon from '@mui/icons-material/Info';
 
-const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disabled, phone, tooltip }) => {
+const CustomInput = ({ required, label, type, name, onChange, placeholder, maxLength, disabled, phone, tooltip }) => {
     const handlePhoneChange = (value, country, e, formattedValue) => {
         onChange(name, formattedValue); // Assuming you want to pass the formatted phone number
     };
@@ -37,11 +37,12 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
                 </Box>
                 <PhoneInput
                     country={'pk'}
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    inputStyle={{ color: "black" }}
-                    onlyCountries={['pk']}
                     disableDropdown={true}
+                    inputStyle={{ color: "black" }}
+                    countryCodeEditable={false}
+                    onChange={handlePhoneChange}
+                    value={phone}
+                    onlyCountries={['pk']}
                 />
             </Stack>
         ) : name === "salary_expection" ? (
@@ -111,8 +112,9 @@ const CustomInput = ({ label, type, name, onChange, placeholder, maxLength, disa
                     onChange={(e) => onChange(name, type === "file" ? e.target.files[0] : e.target.value)}
                     type={type ? type : "text"}
                     placeholder={placeholder}
-                    required
+                    required={required}
                     {...(maxLength && { onInput: (e) => e.target.value = e.target.value.slice(0, maxLength) })}
+                    
                 />
             </Stack>
         )

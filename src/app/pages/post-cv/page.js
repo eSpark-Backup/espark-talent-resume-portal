@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Dropdown } from "../../components";
+import { Dropdown, ImgUploader } from "../../components";
 import { inputsData, inputsData2 } from "@/constant";
 import supabase from "@/app/services/supabaseClient";
 import { toast } from "react-toastify";
@@ -42,16 +42,17 @@ const PostCV = () => {
       case "field":
         setForm((prev) => ({
           ...prev,
-          [name]: value,
           subField: "",
           position: "",
+          [name]: value,
+          
         }));
         break;
       case "subField":
         setForm((prev) => ({
           ...prev,
-          [name]: value,
           position: "",
+          [name]: value,
         }));
         break;
       case "position":
@@ -236,6 +237,7 @@ const PostCV = () => {
                       item?.type !== "tags" &&
                       item?.type !== "textarea" ? (
                       <CustomInput
+                        required
                         label={item?.label}
                         type={item?.type}
                         name={item?.name}
@@ -334,11 +336,23 @@ const PostCV = () => {
                     alignItems="center"
                     gap="10px"
                   >
-                    <Typography
-                      fontSize={25}
-                      mb={1} textAlign="left" sx={{ color: "black" }}>
-                      Resume
-                    </Typography>
+                    <Stack direction={"row"}>
+                      <Typography
+                        fontSize={25}
+                        mb={1} textAlign="left" sx={{ color: "black" }}>
+                        Resume
+                      </Typography>
+                      <Tooltip placement="top-start" title={"Please choose a file to upload your resume, or you can share a link to your resume with us. Accepted formats are PDF, DOC, and DOCX."}>
+                        <InfoIcon
+                          style={{
+                            marginLeft: "5px",
+                            color: "rgb(97, 192, 224)",
+                            fontSize: "13px",
+                            marginBottom: "12px",
+                          }}
+                        />
+                      </Tooltip>
+                    </Stack>
                     {form.cv !== "" && (
                       <img
                         width={25}
@@ -367,12 +381,11 @@ const PostCV = () => {
                     alignItems="center"
                     gap="10px"
                   >
-                    <CustomInput
+                    <ImgUploader
                       disabled={typeof form.cv === "string" && form.cv !== ""}
                       onChange={handleChange}
-                      type={"file"}
-                      placeholder={"Resume"}
                       name={"cv"}
+                      filename={form.cv?.name}
                     />
                     <Typography
                       style={{ color: "black" }}
@@ -423,6 +436,7 @@ const PostCV = () => {
                     <Dropdown
                       name={item?.name}
                       label={item?.label}
+                      value={form[item?.name]}
                       placeholder={item?.placeholder}
                       tooltip={item?.tooltip}
                       options={
