@@ -1,5 +1,5 @@
 "use client"
-import { Dropdown, ImgUploader } from '@/app/components'
+import { ConfirmationModal, Dropdown, ImgUploader, LoginModal } from '@/app/components'
 import { utils, writeFileXLSX } from "xlsx";
 import {
   availibilityOptions,
@@ -26,6 +26,8 @@ import { Checkbox } from '@mui/material';
 import CustomModal from '@/common/Modal';
 
 const Home = () => {
+  const [authed, setAuthed] = useState(false);
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
   const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
@@ -188,7 +190,32 @@ const Home = () => {
     console.log(name, value)
   }
 
+  const checkAuth = () => {
+    const auth = localStorage.getItem("auth");
+    if(auth) {
+      setAuthed(true);
+    } else {
+      setAuthed(false);
+    }
+  }
 
+  const logout = () => {
+    localStorage.removeItem("auth")
+    checkAuth();
+    setOpen(false);
+  }
+
+  useEffect(() => {
+    checkAuth()
+  }, [])
+
+  if (!authed) {
+    return (
+      <div className='login'>
+         <LoginModal open={true} setAuthed={setAuthed} />
+      </div>
+    )
+  }
   return (
     <div className='home-main'>
       <div className="jobs-container">
@@ -199,6 +226,7 @@ const Home = () => {
             <Link href={"/pages/post-cv"} style={{ marginTop: "10px" }}>
               <button>Post CV</button>
             </Link>
+            <button style={{ marginTop: "10px" }} onClick={() => setOpen(true)}>Logout</button>
           </div>
         </div>
         <div className='dropdowns-parent'>
@@ -373,6 +401,16 @@ const Home = () => {
         </div>}
       </div>
       <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} description={"Are you sure you want to update the resume?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
+      <ConfirmationModal
+        open={open}
+        handleClose={() => setOpen(false)}
+        title="Log Out"
+        description="Are you sure you want to logout?"
+        confirmText="Confirm"
+        canceltext="Cancel"
+        confirmAction={logout}
+        cancelAction={() => setOpen(false)}
+      />
     </div>
   )
 }

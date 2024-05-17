@@ -90,10 +90,10 @@ a {
   border-radius: 10px;
   width: 70%;
   min-height: 60vh;
-  /* display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; */
+  align-items: center;
 }
 
 .container {
@@ -457,8 +457,17 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
+button.disabled {
+  background-color: #ccc !important;
+  cursor: no-drop !important;
+}
+
+.css-a1p05m-MuiModal-root {
+  background-color: transparent !important;
+}
+
 .card button{
-  width: 97%;
+  width: 100%;
   height: 45px;
   background-color: rgb(97, 192, 224);
   color: white;
