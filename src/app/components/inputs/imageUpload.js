@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 
-const ImgUploader = ({ label, name, onChange, disabled, filename }) => {
+const ImgUploader = ({ label, name, onChange, disabled, filename, form, table }) => {
   const handleFileChange = (e, name) => {
     if (e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -24,9 +24,9 @@ const ImgUploader = ({ label, name, onChange, disabled, filename }) => {
           className="hidden-input"
           name={name}
         />
-        <div className={`image-selector ${disabled ? "disabled" : ""}`}>
-          <p className="upload-btn">Upload</p>
-          <p className="filename">{filename || "Choose Your File"}</p>
+        <div className={form ? `image-selector ${disabled ? 'disabled' : ''}` : ''}>
+          <p className={form || table ? "upload-btn" : "upload-btn2"}>Upload</p>
+          {form && <p className="filename">{filename ? filename : "Choose Your File"}</p>}
         </div>
       </label>
     </div>

@@ -386,6 +386,7 @@ const PostCV = () => {
                       onChange={handleChange}
                       name={"cv"}
                       filename={form.cv?.name}
+                      form={true}
                     />
                     <Typography
                       style={{ color: "black" }}
