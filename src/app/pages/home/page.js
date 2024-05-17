@@ -24,6 +24,7 @@ import Link from 'next/link';
 import SearchInput from '@/common/SearchInput';
 import { Checkbox } from '@mui/material';
 import CustomModal from '@/common/Modal';
+import supabase from '@/app/services/supabaseClient';
 
 const Home = () => {
   const [data, setData] = useState([])
@@ -31,6 +32,7 @@ const Home = () => {
   const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
+  const [row, setRow] = useState(null)
 
   const handleCheck = (obj) => {
     const temp = data.map(item => {
@@ -81,6 +83,11 @@ const Home = () => {
         t: 'n',
         v: `http://localhost:3000/api?resume=${newRow?.cv}`
       }
+      newRow.revamp_cv = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.revamp_cv}`}", "Download")`,
+        t: 'n',
+        v: `http://localhost:3000/api?resume=${newRow?.revamp_cv}`
+      }
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -104,6 +111,7 @@ const Home = () => {
       "Tags",
       "Job Type",
       "Projects",
+      "Rewamp Resume"
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -132,6 +140,11 @@ const Home = () => {
         t: 'n',
         v: `http://localhost:3000/api?resume=${newRow?.cv}`
       }
+      newRow.revamp_cv = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.revamp_cv}`}", "Download")`,
+        t: 'n',
+        v: `http://localhost:3000/api?resume=${newRow?.revamp_cv}`
+      }
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -155,6 +168,7 @@ const Home = () => {
       "Tags",
       "Job Type",
       "Projects",
+      "Revamp Resume"
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -184,8 +198,48 @@ const Home = () => {
     }
   }, [filter]);
 
-  const handleChange = (name, value) => {
-    console.log(name, value)
+  useEffect(() => {
+    console.log(row, "row");
+  }, [row])
+
+  const handleChange = async (name, value) => {
+    const formData = new FormData();
+    formData.append("file", value);
+
+    const response = await fetch("/api", {
+      method: "POST",
+      body: formData,
+    });
+
+    const { fileKey } = await response.json();
+
+    // update Supabase with the new file key
+    const { data, error } = await supabase
+      .from("Applicants")
+      .update({
+        revamp_cv: fileKey,
+      })
+      .match({ id });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    // update the UI
+    const updatedData = data[0];
+    setData((prev) =>
+      prev.map((item) => {
+        if (item.id === updatedData.id) {
+          return updatedData;
+        }
+        return item;
+      })
+    );
+
+    toast.success("File uploaded successfully");
+    setShowModal(false);
+
   }
 
 
@@ -346,8 +400,8 @@ const Home = () => {
                     {item?.subField && `/ ${item?.subField}`}
                   </td>
                   <td>{item?.position}</td>
-                  <td>{
-                    item?.revamp_Resume
+                  <td onClick={() => setRow(item)}>{
+                    item?.revamp_cv
                       ?
                       <button onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
                       :
