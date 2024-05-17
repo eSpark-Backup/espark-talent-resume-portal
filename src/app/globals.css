@@ -139,6 +139,16 @@ p.upload-btn {
   color: #fff;
   padding: 8px 12px;
   border-radius: 5px;
+  cursor: pointer;
+}
+p.upload-btn2 {
+  background: rgb(97, 192, 224);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 30%;
+  height: 40px;
 }
 
 p.filename {

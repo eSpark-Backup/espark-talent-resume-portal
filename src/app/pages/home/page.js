@@ -1,5 +1,5 @@
 "use client"
-import { Dropdown } from '@/app/components'
+import { Dropdown, ImgUploader } from '@/app/components'
 import { utils, writeFileXLSX } from "xlsx";
 import {
   availibilityOptions,
@@ -23,11 +23,14 @@ import { toast } from "react-toastify";
 import Link from 'next/link';
 import SearchInput from '@/common/SearchInput';
 import { Checkbox } from '@mui/material';
+import CustomModal from '@/common/Modal';
 
 const Home = () => {
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
   const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
+  const [revampResume, setRevampResume] = useState("")
+  const [showModal, setShowModal] = useState(false)
 
   const handleCheck = (obj) => {
     const temp = data.map(item => {
@@ -67,8 +70,8 @@ const Home = () => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
-      if(newRow.subField){
-        newRow.field =  `${newRow.field} / ${newRow.subField}`
+      if (newRow.subField) {
+        newRow.field = `${newRow.field} / ${newRow.subField}`
         delete newRow.subField
       } else {
         delete newRow.subField
@@ -118,8 +121,8 @@ const Home = () => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
-      if(newRow.subField){
-        newRow.field =  `${newRow.field} / ${newRow.subField}`
+      if (newRow.subField) {
+        newRow.field = `${newRow.field} / ${newRow.subField}`
         delete newRow.subField
       } else {
         delete newRow.subField
@@ -181,13 +184,11 @@ const Home = () => {
     }
   }, [filter]);
 
-  // if (loading) {
-  //   return (
-  //     <div className='home-main'>
+  const handleChange = (name, value) => {
+    console.log(name, value)
+  }
 
-  //     </div>
-  //   )
-  // }
+
   return (
     <div className='home-main'>
       <div className="jobs-container">
@@ -306,6 +307,7 @@ const Home = () => {
                 <th>Description</th>
                 <th>Field</th>
                 <th>Position</th>
+                <th>Revamp Resume</th>
                 <th className='action-cell'>
                   <button onClick={xportAll}>Download Selected</button>
                   {/* <input checked={allCheck} onChange={handleAllCheck} type='checkbox' /> */}
@@ -344,6 +346,19 @@ const Home = () => {
                     {item?.subField && `/ ${item?.subField}`}
                   </td>
                   <td>{item?.position}</td>
+                  <td>{
+                    item?.revamp_Resume
+                      ?
+                      <button onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
+                      :
+                      <ImgUploader
+                        onChange={handleChange}
+                        name={"revamp_resume"}
+                        filename={revampResume}
+                        table={true}
+                      />
+                  }
+                  </td>
                   <td className='action-cell'>
                     <button onClick={() => xportSelected(item)}>Download</button>
                     {/* <input style={{backgroundColor:"red !important"}} checked={item?.checked} onChange={() => handleCheck(item)} type='checkbox' /> */}
@@ -357,6 +372,7 @@ const Home = () => {
             <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
         </div>}
       </div>
+      <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} description={"Are you sure you want to update the resume?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   )
 }
