@@ -1,5 +1,5 @@
 "use client"
-import { ConfirmationModal, Dropdown, ImgUploader, LoginModal } from '@/app/components'
+import { ConfirmationModal, Dropdown, ImgUploader, Loader, LoginModal } from '@/app/components'
 import { utils, writeFileXLSX } from "xlsx";
 import {
   availibilityOptions,
@@ -364,16 +364,7 @@ const Home = () => {
           </div>
         </div>
         {loading ? <div className='load-conatiner'>
-          <BallTriangle
-            height={100}
-            width={100}
-            radius={5}
-            color="#0f0f0f"
-            ariaLabel="ball-triangle-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
+          <Loader/>
         </div> : <div className="table-parent">
           {data && data.length > 0 ? <table>
             <thead>
