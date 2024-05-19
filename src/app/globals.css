@@ -114,9 +114,6 @@ form.form {
   gap: 10px;
 }
 
-.input-parent {
-  width: 100%;
-}
 
 .hidden-input {
   display: none;
@@ -147,7 +144,6 @@ p.upload-btn2 {
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  width: 30%;
   height: 40px;
 }
 

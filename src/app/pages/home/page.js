@@ -1,5 +1,5 @@
 "use client"
-import { ConfirmationModal, Dropdown, ImgUploader, LoginModal } from '@/app/components'
+import { ConfirmationModal, Dropdown, ImgUploader, Loader, LoginModal } from '@/app/components'
 import { utils, writeFileXLSX } from "xlsx";
 import {
   availibilityOptions,
@@ -24,6 +24,7 @@ import Link from 'next/link';
 import SearchInput from '@/common/SearchInput';
 import { Checkbox } from '@mui/material';
 import CustomModal from '@/common/Modal';
+import supabase from '@/app/services/supabaseClient';
 
 const Home = () => {
   const [authed, setAuthed] = useState(false);
@@ -33,6 +34,8 @@ const Home = () => {
   const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
+  const [row, setRow] = useState(null)
+  const [modalLoader, setModalLoader] = useState(false)
 
   const handleCheck = (obj) => {
     const temp = data.map(item => {
@@ -83,6 +86,11 @@ const Home = () => {
         t: 'n',
         v: `http://localhost:3000/api?resume=${newRow?.cv}`
       }
+      newRow.revamp_cv = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.revamp_cv}`}", "Download")`,
+        t: 'n',
+        v: `http://localhost:3000/api?resume=${newRow?.revamp_cv}`
+      }
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -106,6 +114,7 @@ const Home = () => {
       "Tags",
       "Job Type",
       "Projects",
+      "Rewamp Resume"
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -134,6 +143,11 @@ const Home = () => {
         t: 'n',
         v: `http://localhost:3000/api?resume=${newRow?.cv}`
       }
+      newRow.revamp_cv = {
+        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.revamp_cv}`}", "Download")`,
+        t: 'n',
+        v: `http://localhost:3000/api?resume=${newRow?.revamp_cv}`
+      }
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -157,6 +171,7 @@ const Home = () => {
       "Tags",
       "Job Type",
       "Projects",
+      "Revamp Resume"
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -186,8 +201,53 @@ const Home = () => {
     }
   }, [filter]);
 
-  const handleChange = (name, value) => {
-    console.log(name, value)
+  useEffect(() => {
+    console.log(row, "row");
+  }, [row])
+
+  const handleChange = async (name, value) => {
+    setModalLoader(true)
+    const formData = new FormData();
+    formData.append("file", value);
+
+    const response = await fetch("/api", {
+      method: "POST",
+      body: formData,
+    });
+
+    const { fileKey } = await response.json();
+    const id = row?.id
+
+    // update Supabase with the new file key
+    const { data, error } = await supabase
+      .from("Applicants")
+      .update({
+        revamp_cv: fileKey,
+      })
+      .match({ id });
+
+    if (error) {
+      console.error(error);
+      setShowModal(false);
+      setModalLoader(false)
+      return;
+    }
+
+    // update the UI
+    const updatedData = data[0];
+    setData((prev) =>
+      prev.map((item) => {
+        if (item.id === updatedData?.id) {
+          return updatedData;
+        }
+        return item;
+      })
+    );
+
+    toast.success("File uploaded successfully");
+    setShowModal(false);
+    setModalLoader(false)
+
   }
 
   const checkAuth = () => {
@@ -304,16 +364,7 @@ const Home = () => {
           </div>
         </div>
         {loading ? <div className='load-conatiner'>
-          <BallTriangle
-            height={100}
-            width={100}
-            radius={5}
-            color="#0f0f0f"
-            ariaLabel="ball-triangle-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
+          <Loader/>
         </div> : <div className="table-parent">
           {data && data.length > 0 ? <table>
             <thead>
@@ -374,17 +425,18 @@ const Home = () => {
                     {item?.subField && `/ ${item?.subField}`}
                   </td>
                   <td>{item?.position}</td>
-                  <td>{
-                    item?.revamp_Resume
+                  <td onClick={() => setRow(item)}>{
+                    item?.revamp_cv
                       ?
                       <button onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
                       :
-                      <ImgUploader
-                        onChange={handleChange}
-                        name={"revamp_resume"}
-                        filename={revampResume}
-                        table={true}
-                      />
+                      // <ImgUploader
+                      //   onChange={handleChange}
+                      //   name={"revamp_resume"}
+                      //   filename={revampResume}
+                      //   table={true}
+                      // />
+                      <button onClick={() => setShowModal(true)}>Upload</button>
                   }
                   </td>
                   <td className='action-cell'>
@@ -400,7 +452,7 @@ const Home = () => {
             <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
         </div>}
       </div>
-      <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} description={"Are you sure you want to update the resume?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
+      <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} modalLoader={modalLoader} description={"Are you sure you want to proceed?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
       <ConfirmationModal
         open={open}
         handleClose={() => setOpen(false)}
