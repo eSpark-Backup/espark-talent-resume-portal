@@ -471,9 +471,11 @@ const PostCV = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              padding: "0px 30px",
+              width: "100%"
             }}
           >
-            <button disabled={loading} type="submit">
+            <button className={loading ? "disabled" : ""} disabled={loading} type="submit">
               {loading ? "loading..." : "Submit"}
             </button>
           </Box>
