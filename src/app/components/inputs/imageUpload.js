@@ -14,6 +14,7 @@ const ImgUploader = ({ label, name, onChange, disabled, filename, form, table}) 
           {label}
         </Typography>
       )}
+      <div>
       <label htmlFor="imageInput">
         <input
           disabled={disabled}
@@ -29,6 +30,7 @@ const ImgUploader = ({ label, name, onChange, disabled, filename, form, table}) 
           {form && <p className="filename">{filename ? filename : "Choose Your File"}</p>}
         </div>
       </label>
+        </div>
     </div>
   );
 };

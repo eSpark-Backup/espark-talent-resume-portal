@@ -33,6 +33,7 @@ const Home = () => {
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [row, setRow] = useState(null)
+  const [modalLoader, setModalLoader] = useState(false)
 
   const handleCheck = (obj) => {
     const temp = data.map(item => {
@@ -203,6 +204,7 @@ const Home = () => {
   }, [row])
 
   const handleChange = async (name, value) => {
+    setModalLoader(true)
     const formData = new FormData();
     formData.append("file", value);
 
@@ -212,6 +214,7 @@ const Home = () => {
     });
 
     const { fileKey } = await response.json();
+    const id = row?.id
 
     // update Supabase with the new file key
     const { data, error } = await supabase
@@ -223,6 +226,8 @@ const Home = () => {
 
     if (error) {
       console.error(error);
+      setShowModal(false);
+      setModalLoader(false)
       return;
     }
 
@@ -230,7 +235,7 @@ const Home = () => {
     const updatedData = data[0];
     setData((prev) =>
       prev.map((item) => {
-        if (item.id === updatedData.id) {
+        if (item.id === updatedData?.id) {
           return updatedData;
         }
         return item;
@@ -239,6 +244,7 @@ const Home = () => {
 
     toast.success("File uploaded successfully");
     setShowModal(false);
+    setModalLoader(false)
 
   }
 
@@ -405,12 +411,13 @@ const Home = () => {
                       ?
                       <button onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
                       :
-                      <ImgUploader
-                        onChange={handleChange}
-                        name={"revamp_resume"}
-                        filename={revampResume}
-                        table={true}
-                      />
+                      // <ImgUploader
+                      //   onChange={handleChange}
+                      //   name={"revamp_resume"}
+                      //   filename={revampResume}
+                      //   table={true}
+                      // />
+                      <button onClick={() => setShowModal(true)}>Upload</button>
                   }
                   </td>
                   <td className='action-cell'>
@@ -426,7 +433,7 @@ const Home = () => {
             <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
         </div>}
       </div>
-      <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} description={"Are you sure you want to update the resume?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
+      <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} modalLoader={modalLoader} description={"Are you sure you want to proceed?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   )
 }

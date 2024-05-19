@@ -1,7 +1,7 @@
 import React from 'react'
 import Modal from '@mui/material/Modal';
 import { Box, Stack, Typography } from '@mui/material';
-import { ImgUploader } from '@/app/components';
+import { ImgUploader, Loader } from '@/app/components';
 
 const style = {
     position: 'absolute',
@@ -15,7 +15,7 @@ const style = {
     p: 4,
 };
 
-const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename }) => {
+const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename, modalLoader }) => {
     return (
         <Modal
             open={modalOpen}
@@ -24,13 +24,33 @@ const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2" color={"black"} sx={{textAlign:"center"}}>
-                    {description}
-                </Typography>
-                <Box sx={{ display: "flex", marginTop: "15px", columnGap:"10px" }}>
-                    <button onClick={onClose} style={{ width: "30%", height: "40px", backgroundColor: "white", borderRadius: "6px", border: "1px solid black", color: "black", cursor: "pointer" }}>Close</button>
-                    <ImgUploader onChange={onChange} name={name} filename={filename} />
-                </Box>
+                {!modalLoader ?
+                    (
+                        <Box>
+                            <Typography id="modal-modal-title" variant="h6" component="h2" color={"black"} sx={{ textAlign: "center" }}>
+                                {description}
+                            </Typography>
+                            <Box sx={{ display: "flex", marginTop: "15px", columnGap: "10px", justifyContent: "center" }}>
+                                <button onClick={onClose} style={{ height: "40px", backgroundColor: "white", borderRadius: "6px", border: "1px solid black", color: "black", cursor: "pointer", padding: "0px 20px" }}>Close</button>
+                                <ImgUploader onChange={onChange} name={name} filename={filename} />
+                            </Box>
+                        </Box>
+                    )
+                    : (
+                        <Box sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            marginBottom: "10px"
+                        }}>
+                            <Loader />
+                        </Box>
+                    )
+
+                }
+
+
             </Box>
         </Modal>
     )
