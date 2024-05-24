@@ -1,5 +1,5 @@
 "use client"
-import { ConfirmationModal, Dropdown, ImgUploader, Loader, LoginModal } from '@/app/components'
+import { ConfirmationModal, Dropdown, Loader, LoginModal } from '@/app/components'
 import { utils, writeFileXLSX } from "xlsx";
 import {
   availibilityOptions,
@@ -10,15 +10,11 @@ import {
   field,
   positionBysubfields,
   prefOptions,
-  stackOptions,
   subField,
-  tableData,
-  techOptions,
 } from '@/constant'
 import useFetchCandidates from '@/hooks/useFetchCandidates'
 import { DateMonthYear } from '@/utility/DataConverter'
 import React, { useCallback, useEffect, useState } from 'react'
-import { BallTriangle } from 'react-loader-spinner'
 import { toast } from "react-toastify";
 import Link from 'next/link';
 import SearchInput from '@/common/SearchInput';
@@ -201,9 +197,6 @@ const Home = () => {
     }
   }, [filter]);
 
-  useEffect(() => {
-    console.log(row, "row");
-  }, [row])
 
   const handleChange = async (name, value) => {
     setModalLoader(true)
@@ -283,9 +276,6 @@ const Home = () => {
           <h1>Candidates List</h1>
           <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
             <SearchInput setSearch={setSearch} search={search} />
-            <Link href={"/pages/post-cv"} style={{ marginTop: "10px" }}>
-              <button>Post CV</button>
-            </Link>
             <button style={{ marginTop: "10px" }} onClick={() => setOpen(true)}>Logout</button>
           </div>
         </div>
@@ -373,7 +363,7 @@ const Home = () => {
                 <th>Date</th>
                 <th>Email</th>
                 <th>Phone No</th>
-                <th>Cnic</th>
+                <th>CNIC</th>
                 <th>Location</th>
                 <th>Education</th>
                 <th>Github</th>
@@ -430,18 +420,11 @@ const Home = () => {
                       ?
                       <button onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
                       :
-                      // <ImgUploader
-                      //   onChange={handleChange}
-                      //   name={"revamp_resume"}
-                      //   filename={revampResume}
-                      //   table={true}
-                      // />
                       <button onClick={() => setShowModal(true)}>Upload</button>
                   }
                   </td>
                   <td className='action-cell'>
                     <button onClick={() => xportSelected(item)}>Download</button>
-                    {/* <input style={{backgroundColor:"red !important"}} checked={item?.checked} onChange={() => handleCheck(item)} type='checkbox' /> */}
                     <Checkbox checked={item?.checked} onChange={() => handleCheck(item)} />
                   </td>
                 </tr>

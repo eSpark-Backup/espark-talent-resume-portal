@@ -10,9 +10,9 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    borderRadius: '10px',
     boxShadow: 24,
-    p: 4,
+    p: 3,
 };
 
 const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename, modalLoader }) => {
@@ -24,33 +24,17 @@ const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                {!modalLoader ?
                     (
                         <Box>
                             <Typography id="modal-modal-title" variant="h6" component="h2" color={"black"} sx={{ textAlign: "center" }}>
                                 {description}
                             </Typography>
                             <Box sx={{ display: "flex", marginTop: "15px", columnGap: "10px", justifyContent: "center" }}>
-                                <button onClick={onClose} style={{ height: "40px", backgroundColor: "white", borderRadius: "6px", border: "1px solid black", color: "black", cursor: "pointer", padding: "0px 20px" }}>Close</button>
-                                <ImgUploader onChange={onChange} name={name} filename={filename} />
+                                <button onClick={onClose} style={{ height: "40px", width:"80px", backgroundColor: "white", borderRadius: "6px", border: "1px solid black", color: "black", cursor: "pointer", padding: "3px 15px", fontSize:"16px" }}>Close</button>
+                                <ImgUploader onChange={onChange} name={name} filename={filename} modalLoader={modalLoader}  />
                             </Box>
                         </Box>
                     )
-                    : (
-                        <Box sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                            marginBottom: "10px"
-                        }}>
-                            <Loader />
-                        </Box>
-                    )
-
-                }
-
-
             </Box>
         </Modal>
     )

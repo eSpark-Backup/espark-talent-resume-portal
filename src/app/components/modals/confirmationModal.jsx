@@ -48,7 +48,7 @@ const ConfirmationModal = ({
           <button className="btn btn-cancel" onClick={cancelAction}>{canceltext}</button>
           <button
             onClick={confirmAction}
-            className={`btn btn-confirm${loading ? "disabled" : ""}`}
+            className={`btn btn-confirm ${loading ? "disabled" : ""}`}
             disabled={loading}
           >
             {loading ? "loading..." : confirmText}
