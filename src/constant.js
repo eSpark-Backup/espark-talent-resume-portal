@@ -41,8 +41,8 @@ export const prefOptions = [
 
 export const availibilityOptions = [
     {
-        label: "Less then 1 month",
-        value: "Less then 1 month"
+        label: "Less than 1 month",
+        value: "Less than 1 month"
     },
     {
         label: "1 Month",
