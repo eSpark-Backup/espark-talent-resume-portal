@@ -53,8 +53,8 @@ export const availibilityOptions = [
         value: "2 Months"
     },
     {
-        label: "More then 2 Months",
-        value: "More then 2 Months"
+        label: "More than 2 Months",
+        value: "More than 2 Months"
     },
 ]
 
