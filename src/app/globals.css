@@ -257,9 +257,18 @@ td {
   min-width: 200px;
   border: 1px solid rgb(241, 241, 241);
   text-align: center;
-  height: 50px;
-
+  padding: 0px 15px;
 }
+
+td {
+  height: 50px;
+  font-size: 14px;
+}
+
+th {
+  height: 70px;
+}
+
 
 th button,
 td button {
@@ -398,7 +407,11 @@ tr td:first-child {
 }
 
 .action-cell button{
-  width: 180px;
+  width: 160px;
+}
+
+.td-button {
+  width: 160px;
 }
 
 .action-cell input {

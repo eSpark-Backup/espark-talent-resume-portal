@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { config } from 'dotenv';
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import path from 'path';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 config();
 
@@ -57,27 +58,49 @@ export const GET = async (req) => {
      const searchParams =  new URLSearchParams(url.searchParams)
      const resume = searchParams.get("resume")
 
+     if (!resume) {
+        return new Response('Missing resume parameter', { status: 400 });
+      }
 
-    const data = await s3Client.send(
-        new GetObjectCommand({
-            Bucket: process.env.BUCKET_NAME,
-            Key: resume,
-        })
-    );
+      const command = new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: resume,
+      });
 
-    const file = data?.Body
-    const fileName = resume;
 
-    return new Response(
-        file,
-        {
-            status: 200,
-            headers: new Headers({
-                // this optional header triggers a download in the browser
-                "content-disposition": `attachment; filename=${fileName}`,
-                "content-type": "application/zip",
-            })
-        })
+      try {
+        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 600 });
+    
+        return new Response(JSON.stringify({ url: signedUrl }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } catch (error) {
+        console.error('Error generating signed URL:', error);
+        return new Response('Internal Server Error', { status: 500 });
+      }
+
+
+    // const data = await s3Client.send(
+    //     new GetObjectCommand({
+    //         Bucket: process.env.BUCKET_NAME,
+    //         Key: resume,
+    //     })
+    // );
+
+    // const file = data?.Body
+    // const fileName = resume;
+
+    // return new Response(
+    //     file,
+    //     {
+    //         status: 200,
+    //         headers: new Headers({
+    //             // this optional header triggers a download in the browser
+    //             "content-disposition": `attachment; filename=${fileName}`,
+    //             "content-type": "application/zip",
+    //         })
+    //     })
 }
 
 

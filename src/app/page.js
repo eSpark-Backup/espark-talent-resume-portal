@@ -20,6 +20,7 @@ import SearchInput from '@/common/SearchInput';
 import { Checkbox } from '@mui/material';
 import CustomModal from '@/common/Modal';
 import supabase from '@/app/services/supabaseClient';
+import { isValidURL } from '@/utility/URLValidator';
 
 const Home = () => {
   const [authed, setAuthed] = useState(false);
@@ -197,6 +198,25 @@ const Home = () => {
   }, [filter]);
 
 
+  const handleGenerateResumeLink = async (resumeKey) => {
+    try {
+      const data = await fetch(`http://localhost:3000/api?resume=${resumeKey}`);
+      const { url } = await data.json();
+
+      if (!url) {
+        toast.error("Error generating resume link");
+      }
+
+      window.open(url, "_blank");
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Error generating resume link");
+    }
+  }
+
+
+
   const handleChange = async (name, value) => {
     setModalLoader(true)
     const formData = new FormData();
@@ -244,7 +264,7 @@ const Home = () => {
 
   const checkAuth = () => {
     const auth = localStorage.getItem("auth");
-    if(auth) {
+    if (auth) {
       setAuthed(true);
     } else {
       setAuthed(false);
@@ -264,7 +284,7 @@ const Home = () => {
   if (!authed) {
     return (
       <div className='login'>
-         <LoginModal open={true} setAuthed={setAuthed} />
+        <LoginModal open={true} setAuthed={setAuthed} />
       </div>
     )
   }
@@ -353,7 +373,7 @@ const Home = () => {
           </div>
         </div>
         {loading ? <div className='load-conatiner'>
-          <Loader/>
+          <Loader />
         </div> : <div className="table-parent">
           {data && data.length > 0 ? <table>
             <thead>
@@ -375,7 +395,11 @@ const Home = () => {
                 <th>Description</th>
                 <th>Field</th>
                 <th>Position</th>
-                <th>Revamp Resume</th>
+                <th>Upload Rewamp Resume</th>
+                <th>Download Resume</th>
+                <th>Download Rewamp Resume</th>
+                {/* <th>Download Re-Resume</th> */}
+
                 <th className='action-cell'>
                   <button onClick={xportAll}>Download Selected</button>
                   {/* <input checked={allCheck} onChange={handleAllCheck} type='checkbox' /> */}
@@ -417,9 +441,24 @@ const Home = () => {
                   <td onClick={() => setRow(item)}>{
                     item?.revamp_cv
                       ?
-                      <button onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
+                      <button className='td-button' onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
                       :
-                      <button onClick={() => setShowModal(true)}>Upload</button>
+                      <button className='td-button' onClick={() => setShowModal(true)}>Upload</button>
+                  }
+                  </td>
+                  <td >{
+                    !isValidURL(item?.cv) ?
+                      <button className='td-button' onClick={() => handleGenerateResumeLink(item?.cv)}>Download</button>
+                      : <a href={item?.cv} target="_blank">
+                        <button className='td-button'>Download</button>
+                      </a>
+                    // item?.cv
+                  }
+                  </td>
+                  <td >{
+                    (!isValidURL(item?.revamp_cv) && !(item?.revamp_cv === null)) ?
+                      <button className='td-button' onClick={() => handleGenerateResumeLink(item?.revamp_cv)}>Download</button>
+                      : <span>No Resume Uploaded</span>
                   }
                   </td>
                   <td className='action-cell'>
