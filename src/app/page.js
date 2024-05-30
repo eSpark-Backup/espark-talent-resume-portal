@@ -65,7 +65,7 @@ const Home = () => {
     const selectedData = data.filter(item => item.checked)
     const finalArr = selectedData.map(item => {
       const { checked, ...rest } = item;
-      return rest;
+      return {...rest, resume: process.env.PORTAL_LIVE_URL};
     });
     const formattedData = finalArr.map((row) => {
       const newRow = { ...row };
@@ -77,15 +77,12 @@ const Home = () => {
       } else {
         delete newRow.subField
       }
-      newRow.cv = {
-        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.cv}`}", "Download")`,
+      delete newRow.cv
+      delete newRow.revamp_cv
+      newRow.resume = {
+        f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
-        v: `http://localhost:3000/api?resume=${newRow?.cv}`
-      }
-      newRow.revamp_cv = {
-        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.revamp_cv}`}", "Download")`,
-        t: 'n',
-        v: `http://localhost:3000/api?resume=${newRow?.revamp_cv}`
+        v: newRow?.resume
       }
       return newRow;
     });
@@ -105,12 +102,11 @@ const Home = () => {
       "City",
       "Department",
       "Position",
-      "Resume",
       "Phone No",
       "Tags",
       "Job Type",
       "Projects",
-      "Rewamp Resume"
+      "Resume"
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -120,7 +116,11 @@ const Home = () => {
     writeFileXLSX(wb, "data.xlsx");
   });
 
-  const xportSelected = useCallback(async (obj) => {
+  const xportSelected = useCallback(async (object) => {
+    const obj = {
+      ...object,
+      resume: process.env.PORTAL_LIVE_URL
+    }
     delete obj.checked;
     const arr = [obj]
     const columnIndexToRemove = 0;
@@ -134,15 +134,12 @@ const Home = () => {
       } else {
         delete newRow.subField
       }
-      newRow.cv = {
-        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.cv}`}", "Download")`,
+      delete newRow.cv
+      delete newRow.revamp_cv
+      newRow.resume = {
+        f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
-        v: `http://localhost:3000/api?resume=${newRow?.cv}`
-      }
-      newRow.revamp_cv = {
-        f: `HYPERLINK("${`http://localhost:3000/api?resume=${newRow?.revamp_cv}`}", "Download")`,
-        t: 'n',
-        v: `http://localhost:3000/api?resume=${newRow?.revamp_cv}`
+        v: newRow?.resume
       }
       return newRow;
     });
@@ -162,12 +159,11 @@ const Home = () => {
       "City",
       "Department",
       "Position",
-      "Resume",
       "Phone No",
       "Tags",
       "Job Type",
       "Projects",
-      "Revamp Resume"
+      "Resume"
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
