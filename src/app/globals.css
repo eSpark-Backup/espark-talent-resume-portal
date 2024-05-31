@@ -131,17 +131,20 @@ form.form {
   cursor: pointer;
 }
 
-
+p.upload-btn {
+  background: rgb(97, 192, 224);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
 p.upload-btn2 {
-  background: #029894;
+  background: rgb(97, 192, 224);
   color: #fff;
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
   height: 40px;
-  width: 80px;
-  display: flex;
-  justify-content: center;
 }
 
 p.filename {
@@ -172,14 +175,14 @@ button.btn {
   border: 1px solid transparent;
   border-radius: 5px;
   color: #fff;
-  background: #9cf35a;
+  background: #5a5af3;
   cursor: pointer;
 }
 
 button.btn:hover {
   background: #fff;
-  color: #0d827f;
-  border: 1px solid #0d827f
+  color: #5a5af3;
+  border: 1px solid #5a5af3;
 }
 
 /* Home Page starts */
@@ -257,18 +260,17 @@ td {
   min-width: 200px;
   border: 1px solid rgb(241, 241, 241);
   text-align: center;
-  padding: 0px 15px;
-}
-
-td {
   height: 50px;
-  font-size: 14px;
+
 }
 
-th {
-  height: 70px;
-}
 
+th:first-child, td:first-child{
+  position: sticky;
+  left: 0;
+  z-index: 100;
+  background-color: white;
+}
 
 th button,
 td button {
@@ -407,11 +409,7 @@ tr td:first-child {
 }
 
 .action-cell button{
-  width: 160px;
-}
-
-.td-button {
-  width: 160px;
+  width: 180px;
 }
 
 .action-cell input {
@@ -475,7 +473,7 @@ button.disabled {
 .card button{
   width: 100%;
   height: 45px;
-  background-color: #029894;
+  background-color: rgb(97, 192, 224);
   color: white;
   margin: auto auto;
   border: none;
