@@ -391,10 +391,9 @@ const Home = () => {
                 <th>Description</th>
                 <th>Field</th>
                 <th>Position</th>
-                <th>Upload Rewamp Resume</th>
                 <th>Download Resume</th>
+                <th>Upload Rewamp Resume</th>
                 <th>Download Rewamp Resume</th>
-                {/* <th>Download Re-Resume</th> */}
 
                 <th className='action-cell'>
                   <button onClick={xportAll}>Download Selected</button>
@@ -434,14 +433,6 @@ const Home = () => {
                     {item?.subField && `/ ${item?.subField}`}
                   </td>
                   <td>{item?.position}</td>
-                  <td onClick={() => setRow(item)}>{
-                    item?.revamp_cv
-                      ?
-                      <button className='td-button' onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
-                      :
-                      <button className='td-button' onClick={() => setShowModal(true)}>Upload</button>
-                  }
-                  </td>
                   <td >{
                     !isValidURL(item?.cv) ?
                       <button className='td-button' onClick={() => handleGenerateResumeLink(item?.cv)}>Download</button>
@@ -449,6 +440,14 @@ const Home = () => {
                         <button className='td-button'>Download</button>
                       </a>
                     // item?.cv
+                  }
+                  </td>
+                  <td onClick={() => setRow(item)}>{
+                    item?.revamp_cv
+                      ?
+                      <button className='td-button' onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
+                      :
+                      <button className='td-button' onClick={() => setShowModal(true)}>Upload</button>
                   }
                   </td>
                   <td >{

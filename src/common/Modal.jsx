@@ -24,7 +24,6 @@ const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                    (
                         <Box>
                             <Typography id="modal-modal-title" variant="h6" component="h2" color={"black"} sx={{ textAlign: "center" }}>
                                 {description}
@@ -34,7 +33,6 @@ const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename
                                 <ImgUploader onChange={onChange} name={name} filename={filename} modalLoader={modalLoader}  />
                             </Box>
                         </Box>
-                    )
             </Box>
         </Modal>
     )
