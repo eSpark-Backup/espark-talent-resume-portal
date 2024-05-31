@@ -64,8 +64,8 @@ const Home = () => {
     const columnIndexToRemove = 0;
     const selectedData = data.filter(item => item.checked)
     const finalArr = selectedData.map(item => {
-      const { checked, ...rest } = item;
-      return {...rest, resume: process.env.PORTAL_LIVE_URL};
+      const { checked, id, name, ...rest } = item;
+      return { id, name, ...rest, resume: process.env.PORTAL_LIVE_URL};
     });
     const formattedData = finalArr.map((row) => {
       const newRow = { ...row };
@@ -88,8 +88,8 @@ const Home = () => {
     });
     const ws = utils.json_to_sheet(formattedData);
     const headers = [
-      "Date",
       "Name",
+      "Date",
       "Email",
       "CNIC",
       "LinkedIn URL",
@@ -118,6 +118,8 @@ const Home = () => {
 
   const xportSelected = useCallback(async (object) => {
     const obj = {
+      id: object.id,
+      name: object.name,
       ...object,
       resume: process.env.PORTAL_LIVE_URL
     }
@@ -145,8 +147,8 @@ const Home = () => {
     });
     const ws = utils.json_to_sheet(formattedData);
     const headers = [
-      "Date",
       "Name",
+      "Date",
       "Email",
       "CNIC",
       "LinkedIn URL",
