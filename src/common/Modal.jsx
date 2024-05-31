@@ -23,9 +23,9 @@ const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style} width={!modalLoader ? "auto" : 400} p={!modalLoader ? 1 : 3}>
+            <Box sx={style} width={modalLoader ? "auto" : 400} p={modalLoader ? 1 : 3}>
                 <Box>
-                    {!modalLoader ? <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    {modalLoader ? <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                         <Oval
                             visible={true}
                             height="70"
