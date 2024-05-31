@@ -2,7 +2,7 @@ import React from 'react'
 import Modal from '@mui/material/Modal';
 import { Box, Stack, Typography } from '@mui/material';
 import { ImgUploader, Loader } from '@/app/components';
-import { ColorRing } from 'react-loader-spinner';
+import { Oval } from 'react-loader-spinner';
 
 const style = {
     position: 'absolute',
@@ -23,17 +23,18 @@ const CustomModal = ({ modalOpen, onClose, description, onChange, name, filename
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style} width={modalLoader?"auto":400} p={modalLoader?0:3}>
+            <Box sx={style} width={!modalLoader ? "auto" : 400} p={!modalLoader ? 1 : 3}>
                 <Box>
-                    {modalLoader ? <Box sx={{width:"100%", height:"100%", display:"flex", justifyContent:"center", alignItems:"center"}}>
-                        <ColorRing
+                    {!modalLoader ? <Box sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <Oval
                             visible={true}
-                            height="80"
-                            width="80"
-                            ariaLabel="color-ring-loading"
+                            height="70"
+                            width="70"
+                            color="#000000"
+                            ariaLabel="oval-loading"
                             wrapperStyle={{}}
-                            wrapperClass="color-ring-wrapper"
-                            colors={['#7f8280']}
+                            wrapperClass=""
+                            secondaryColor="#fff"
                         />
                     </Box> : <>
                         <Typography id="modal-modal-title" variant="h6" component="h2" color={"black"} sx={{ textAlign: "center" }}>
