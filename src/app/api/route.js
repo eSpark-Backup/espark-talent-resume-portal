@@ -69,7 +69,7 @@ export const GET = async (req) => {
 
 
       try {
-        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 600 });
+        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 5 });
     
         return new Response(JSON.stringify({ url: signedUrl }), {
           status: 200,
