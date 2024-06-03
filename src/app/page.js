@@ -18,7 +18,7 @@ import { DateMonthYear } from '@/utility/DataConverter'
 import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from "react-toastify";
 import SearchInput from '@/common/SearchInput';
-import { Checkbox } from '@mui/material';
+import { Checkbox, Typography } from '@mui/material';
 import CustomModal from '@/common/Modal';
 import supabase from '@/app/services/supabaseClient';
 import { isValidURL } from '@/utility/URLValidator';
@@ -36,7 +36,12 @@ const Home = () => {
   const [frozenColumn, setFrozenColumn] = useState(null);
 
   const freezeColumn = (index) => {
-    setFrozenColumn(index);
+    if (frozenColumn === index) {
+      setFrozenColumn(null);
+    }
+    else {
+      setFrozenColumn(index);
+    }
   };
 
   const getColumnClass = (index) => (frozenColumn === index ? 'fixed-column' : '');
@@ -307,8 +312,13 @@ const Home = () => {
     <div className='home-main'>
       <div className="jobs-container">
         <div className='jobs-header'>
-          <h1
-           >Candidates List</h1>
+          <Typography 
+          sx={{
+            fontSize: "32px",
+            fontWeight: 600,
+            mb: {md:"0px", sm:"20px", xs:"20px"}
+          }}
+          >Candidates List</Typography>
           <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
             <SearchInput placeholder="search by name, email, phone" setSearch={setSearch} search={search} />
             <button style={{ marginTop: "10px" }} onClick={() => setOpen(true)}>Logout</button>
@@ -416,6 +426,7 @@ const Home = () => {
                   : header}
                   <ArrowRightIcon sx={{
                     transform: `${frozenColumn === index ? 'rotate(90deg)' : 'rotate(0deg)'}`, 
+                    visibility: {md: 'visible', sm: 'hidden', xs: 'visible'},
                     fontSize: '17px',
                     color: '#000'
                   }} />

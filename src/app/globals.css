@@ -532,7 +532,7 @@ button.disabled {
 }
 
 
-@media screen and (min-width:1024px){
+@media screen and (min-width:900px){
   .fixed-column{
   position: sticky;
   left: 0;
