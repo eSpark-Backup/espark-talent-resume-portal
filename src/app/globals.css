@@ -411,10 +411,8 @@ tr td:first-child {
 
 .action-cell {
   display: flex;
-  width: 120%;
   justify-content: center;
   align-items: center;
-  column-gap: 20px;
 }
 
 .action-cell button{

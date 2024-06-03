@@ -90,7 +90,7 @@ const CustomInput = ({ required, label, type, name, onChange, placeholder, maxLe
                             }}
                         >
                             <Typography mb={1} textAlign="left" sx={{ color: "black" }}>{label}</Typography>
-                            <Tooltip placement="top-start" title={tooltip}>
+                            {tooltip && <Tooltip placement="top-start" title={tooltip}>
                                 <InfoIcon
                                     style={{
                                         marginLeft: "5px",
@@ -99,7 +99,7 @@ const CustomInput = ({ required, label, type, name, onChange, placeholder, maxLe
                                         marginBottom: "12px",
                                     }}
                                 />
-                            </Tooltip>
+                            </Tooltip>}
 
                         </Box>
                     )

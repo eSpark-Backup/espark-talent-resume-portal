@@ -47,15 +47,13 @@ function useFetchCandidates() {
                 }
             } catch (error) {
                 setError('Error fetching applicants');
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchAllCandidates();
     }, [filter, debouncedSearch]);
 
-    return { candidates, loading, error, filter, setFilter, search, setSearch };
+    return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading };
 }
 
 export default useFetchCandidates;

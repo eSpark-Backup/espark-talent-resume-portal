@@ -28,7 +28,7 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error, filter, setFilter, search, setSearch } = useFetchCandidates()
+  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading } = useFetchCandidates()
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [row, setRow] = useState(null)
@@ -72,7 +72,9 @@ const Home = () => {
     if (error) {
       toast.error(error)
     }
+    setLoading(true)
     setData(candidates.map(item => ({ ...item, checked: false })))
+    setLoading(false)
   }, [error, candidates])
 
   const xportAll = useCallback(async () => {
@@ -308,7 +310,7 @@ const Home = () => {
           <h1
            >Candidates List</h1>
           <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
-            <SearchInput setSearch={setSearch} search={search} />
+            <SearchInput placeholder="search by name, email, phone" setSearch={setSearch} search={search} />
             <button style={{ marginTop: "10px" }} onClick={() => setOpen(true)}>Logout</button>
           </div>
         </div>
@@ -383,7 +385,7 @@ const Home = () => {
               onChange={handleFilter}
             />
           </div>
-          <div className="filter-dropdowns">
+          {filter.field && filter.field !== "" && <div className="filter-dropdowns">
             <Dropdown
               placeholder={"Select Position"}
               label={"Position"}
@@ -392,7 +394,7 @@ const Home = () => {
               name={"position"}
               onChange={handleFilter}
             />
-          </div>
+          </div>}
         </div>
         {loading ? <div className='load-conatiner'>
           <Loader />
@@ -406,7 +408,12 @@ const Home = () => {
                   className={`cursor-pointer ${frozenColumn === index ? 'fixed-column' : ''}`}
                 >
                   <div className='table-headings-box'>
-                  {header}
+                  {header === "Actions" ?
+                    <div className='action-cell'>
+                      <button onClick={xportAll}>Download Selected</button>
+                      <Checkbox checked={allCheck} onChange={handleAllCheck} />
+                    </div>
+                  : header}
                   <ArrowRightIcon sx={{
                     transform: `${frozenColumn === index ? 'rotate(90deg)' : 'rotate(0deg)'}`, 
                     fontSize: '17px',
