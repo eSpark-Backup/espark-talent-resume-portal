@@ -34,6 +34,7 @@ const Home = () => {
   const [row, setRow] = useState(null)
   const [modalLoader, setModalLoader] = useState(false)
   const [frozenColumn, setFrozenColumn] = useState(null);
+  const [isAnyChecked, setIsAnyChecked] = useState(false)
 
   const freezeColumn = (index) => {
     if (frozenColumn === index) {
@@ -85,6 +86,11 @@ const Home = () => {
   const xportAll = useCallback(async () => {
     const columnIndexToRemove = 0;
     const selectedData = data.filter(item => item.checked)
+    if (selectedData.length <= 0) {
+      setIsAnyChecked(false)
+      return
+    }
+    setIsAnyChecked(true)
     const finalArr = selectedData.map(item => {
       const { checked, id, name, ...rest } = item;
       return { id, name, ...rest, resume: process.env.PORTAL_LIVE_URL };
@@ -301,6 +307,17 @@ const Home = () => {
     checkAuth()
   }, [])
 
+  useEffect(() => {
+    const anyChecked = data?.filter((item) => item?.checked)
+    if (anyChecked.length <= 0) {
+      setIsAnyChecked(false)
+    }
+    else {
+      setIsAnyChecked(true)
+    }
+    console.log(anyChecked)
+  }, [data])
+
   if (!authed) {
     return (
       <div className='login'>
@@ -418,18 +435,18 @@ const Home = () => {
                   className={`cursor-pointer ${frozenColumn === index ? 'fixed-column' : ''}`}
                 >
                   <div className='table-headings-box'>
-                  {header === "Actions" ?
-                    <div className='action-cell'>
-                      <button onClick={xportAll}>Download Selected</button>
-                      <Checkbox checked={allCheck} onChange={handleAllCheck} />
-                    </div>
-                  : header}
-                  <ArrowRightIcon sx={{
-                    transform: `${frozenColumn === index ? 'rotate(90deg)' : 'rotate(0deg)'}`, 
-                    visibility: {md: 'visible', sm: 'hidden', xs: 'visible'},
-                    fontSize: '17px',
-                    color: '#000'
-                  }} />
+                    {header === "Actions" ?
+                      <div className='action-cell' style={{marginLeft:"7px"}}>
+                        <button onClick={xportAll} style={isAnyChecked?{cursor:"pointer"}:{cursor:"not-allowed"}}>Download Selected</button>
+                        <Checkbox checked={allCheck} onChange={handleAllCheck} />
+                      </div>
+                      : header}
+                    <ArrowRightIcon sx={{
+                      transform: `${frozenColumn === index ? 'rotate(90deg)' : 'rotate(0deg)'}`,
+                      visibility: { md: 'visible', sm: 'hidden', xs: 'visible' },
+                      fontSize: '17px',
+                      color: '#000'
+                    }} />
                   </div>
                 </th>
               ))}
