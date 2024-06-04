@@ -2,7 +2,6 @@ import { Stack, Typography, Tooltip, Box } from "@mui/material";
 import React from "react";
 import Select from "react-select";
 import InfoIcon from '@mui/icons-material/Info';
-import zIndex from "@mui/material/styles/zIndex";
 
 const Dropdown = ({ name, label, placeholder, options, onChange, value, className, tooltip, showTooltip }) => {
   const customStyles = {

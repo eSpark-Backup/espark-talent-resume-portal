@@ -107,6 +107,7 @@ const Home = () => {
       }
       delete newRow.cv
       delete newRow.revamp_cv
+      delete newRow.tags 
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
@@ -115,6 +116,7 @@ const Home = () => {
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
+    console.log(formattedData, "formattedData");
     const headers = [
       "Name",
       "Date",
@@ -131,7 +133,6 @@ const Home = () => {
       "Department",
       "Position",
       "Phone No",
-      "Tags",
       "Job Type",
       "Projects",
       "Resume"
@@ -166,6 +167,7 @@ const Home = () => {
       }
       delete newRow.cv
       delete newRow.revamp_cv
+      delete newRow.tags
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
@@ -190,7 +192,6 @@ const Home = () => {
       "Department",
       "Position",
       "Phone No",
-      "Tags",
       "Job Type",
       "Projects",
       "Resume"
@@ -300,6 +301,16 @@ const Home = () => {
   const logout = () => {
     localStorage.removeItem("auth")
     checkAuth();
+    setFilter({
+      city: "",
+      experience: "",
+      availability: "",
+      prefrences: "",
+      education: "",
+      field: "",
+      position: "",
+      job_type: ""
+    })
     setOpen(false);
   }
 
