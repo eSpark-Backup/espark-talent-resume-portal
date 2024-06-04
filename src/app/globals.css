@@ -521,7 +521,7 @@ button.disabled {
     /* min-height: 90%; */
   }
   .card button{
-    width: 90%;
+    width: 100%;
 
   }
 }
