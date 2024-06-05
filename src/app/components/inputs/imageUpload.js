@@ -27,15 +27,17 @@ const ImgUploader = ({ label, name, onChange, disabled, filename, form, modalLoa
           />
           <div className={form ? `image-selector ${modalLoader ? 'disabled' : ''}` : ''}>
             <p className={"upload-btn2"}>
-              {
-                !modalLoader ? "Upload" :
+              {/* {
+                !modalLoader ? 
+                "Upload" :
                   <img src="/w-loader.svg" alt="upload"
                     style={{
                       width: "25px",
                       height: "25px",
                     }}
                   />
-              }
+              } */}
+              Upload
 
 
 

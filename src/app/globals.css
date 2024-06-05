@@ -96,6 +96,10 @@ a {
   align-items: center;
 }
 
+.modal.card {
+  min-height: auto !important;
+}
+
 .container {
   width: 100%;
   min-height: 100vh;
@@ -177,8 +181,8 @@ button.btn {
 }
 
 button.btn:hover {
-  background: #fff;
-  color: #0d827f;
+  background-color: #02827e;
+  color: white;
   border: 1px solid #0d827f
 }
 
@@ -257,7 +261,7 @@ td {
   min-width: 200px;
   border: 1px solid rgb(241, 241, 241);
   text-align: center;
-  padding: 0px 15px;
+  height: 50px;
 }
 
 td {
@@ -268,6 +272,13 @@ td {
 th {
   height: 70px;
 }
+
+.table-headings-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 
 th button,
@@ -400,10 +411,8 @@ tr td:first-child {
 
 .action-cell {
   display: flex;
-  width: 120%;
   justify-content: center;
   align-items: center;
-  column-gap: 20px;
 }
 
 .action-cell button{
@@ -413,6 +422,7 @@ tr td:first-child {
 .td-button {
   width: 160px;
 }
+
 
 .action-cell input {
   width: 30px;
@@ -459,7 +469,7 @@ input[type="checkbox"] {
 }
 
 .css-b62m3t-container > div {
-  height: 56px !important;
+  /* height: 56px !important; */
   cursor: pointer;
 }
 
@@ -483,6 +493,12 @@ button.disabled {
   cursor: pointer;
   margin-bottom: 10px;
   border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.card button:hover{
+  background-color: #02827e;
+  color: white;
 }
 
 .react-tel-input .form-control{
@@ -505,7 +521,7 @@ button.disabled {
     /* min-height: 90%; */
   }
   .card button{
-    width: 90%;
+    width: 100%;
 
   }
 }
@@ -514,6 +530,19 @@ button.disabled {
     width: 90%;
   }
 }
+
+
+@media screen and (min-width:900px){
+  .fixed-column{
+  position: sticky;
+  left: 0;
+  z-index: 100;
+  background-color: white;
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  }
 
 .hide {
   display: none;

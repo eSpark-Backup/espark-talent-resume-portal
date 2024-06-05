@@ -2,7 +2,7 @@ import { FormControl, Input, InputAdornment, InputLabel } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import React from 'react'
 
-const SearchInput = ({setSearch, search}) => {
+const SearchInput = ({setSearch, search, placeholder}) => {
     return (
         <FormControl fullWidth sx={{ m: 1 }} variant="standard">
             <InputLabel 
@@ -17,6 +17,7 @@ const SearchInput = ({setSearch, search}) => {
                 Search Candidate
             </InputLabel>
             <Input
+                placeholder={placeholder}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 sx={{
@@ -24,6 +25,11 @@ const SearchInput = ({setSearch, search}) => {
                     border: '1px solid #ccc',
                     borderRadius: '4px',
                     boxShadow: 'none',
+                    input: {
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                    },
                     '&:before, &:after': {
                         display: 'none',
                     },

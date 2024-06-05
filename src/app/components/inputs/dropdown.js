@@ -12,6 +12,15 @@ const Dropdown = ({ name, label, placeholder, options, onChange, value, classNam
         backgroundColor: '#e6e9eb',
       },
       backgroundColor: state.isSelected ? '#90d1f5' : 'white',
+      boxShadow: 'none',
+    }),
+    control: (provided) => ({ 
+      ...provided, 
+      height: '56px',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      border: "1px solid transparent",
     }),
   };
 

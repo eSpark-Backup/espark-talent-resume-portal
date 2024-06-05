@@ -21,7 +21,7 @@ const ConfirmationModal = ({
       aria-describedby="modal-modal-description"
     >
       <Box
-        className="card"
+        className="modal card"
         sx={{
           background: "#fff",
           maxWidth: "500px",
@@ -38,10 +38,10 @@ const ConfirmationModal = ({
           transform: "translate(-50%, -50%)",
         }}
       >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography id="modal-modal-title" variant="h6" component="h2" color={"black"}>
           {title}
         </Typography>
-        <Typography id="modal-modal-description">
+        <Typography id="modal-modal-description" color={"black"}>
           {description}
         </Typography>
         <Stack width="100%" direction="row" justifyContent="space-between" alignItems="center" gap="10px">
