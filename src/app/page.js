@@ -227,7 +227,7 @@ const Home = () => {
 
   const handleGenerateResumeLink = async (resumeKey) => {
     try {
-      const data = await fetch(`${process.env.BASE_URL}/api?resume=${resumeKey}`);
+      const data = await fetch(`/api?resume=${resumeKey}`);
       const { url } = await data.json();
 
       if (!url) {
