@@ -229,9 +229,15 @@ const Home = () => {
     try {
       const data = await fetch(`/api?resume=${resumeKey}`);
       const { url } = await data.json();
+      const res = await fetch(url)
+      if (!res?.ok && res?.status === 403) {
+        toast.error("We're sorry, your requested resource could not be processed at this time");
+        return;
+      }
 
       if (!url) {
         toast.error("Error generating resume link");
+        return;
       }
 
       window.open(url, "_blank");
