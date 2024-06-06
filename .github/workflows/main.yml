@@ -16,6 +16,13 @@ jobs:
       matrix:
         node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    env:
+      B2_APPLICATION_KEY: ${{secrets.B2_APPLICATION_KEY}}
+      B2_APPLICATION_KEY_ID: ${{ secrets.B2_APPLICATION_KEY_ID }}
+      BASE_URL: ${{ secrets.BASE_URL }}
+      BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+      END_POINT: ${{ secrets.END_POINT }}
+      REGION: ${{ secrets.REGION }}
 
     steps:
     - uses: actions/checkout@v4
@@ -36,5 +43,5 @@ jobs:
           ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
     - run: |
         npm ci
-        npm run build --if-present
-        npm start
+        npm run build
+        pm2 restart talent-portal

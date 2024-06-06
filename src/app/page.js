@@ -435,7 +435,7 @@ const Home = () => {
           </div>}
         </div>
         {loading ? <div className='load-conatiner'>
-          <Loader />
+          <span class="loader"></span>
         </div> : <div className="table-parent">
           {data && data.length > 0 ? <table>
             <thead>
