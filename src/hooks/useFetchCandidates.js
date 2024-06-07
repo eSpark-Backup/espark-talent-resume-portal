@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 
-function useFetchCandidates() {
+function useFetchCandidates(authed) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [candidates, setCandidates] = useState([])
@@ -50,8 +50,10 @@ function useFetchCandidates() {
             }
         };
 
-        fetchAllCandidates();
-    }, [filter, debouncedSearch]);
+        if(authed) {
+            fetchAllCandidates();
+        }
+    }, [filter, debouncedSearch, authed]);
 
     return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading };
 }

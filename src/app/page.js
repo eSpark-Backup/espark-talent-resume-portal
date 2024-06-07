@@ -28,7 +28,7 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading } = useFetchCandidates()
+  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading } = useFetchCandidates(authed)
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [row, setRow] = useState(null)
