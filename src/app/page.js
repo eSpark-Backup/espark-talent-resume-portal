@@ -355,7 +355,7 @@ const Home = () => {
           >Candidates List</Typography>
           <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
             <SearchInput placeholder="search by name, email, phone" setSearch={setSearch} search={search} />
-            <button style={{ marginTop: "10px" }} onClick={() => setOpen(true)}>Logout</button>
+            <button style={{ marginTop: "16px" }} onClick={() => setOpen(true)}>Logout</button>
           </div>
         </div>
         <div className='dropdowns-parent'>

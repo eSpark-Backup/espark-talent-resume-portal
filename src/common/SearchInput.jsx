@@ -4,7 +4,7 @@ import React from 'react'
 
 const SearchInput = ({setSearch, search, placeholder}) => {
     return (
-        <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+        <FormControl fullWidth  variant="standard">
             <InputLabel 
                 htmlFor="search"
                 sx={{
