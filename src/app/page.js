@@ -48,7 +48,7 @@ const Home = () => {
   const getColumnClass = (index) => (frozenColumn === index ? 'fixed-column' : '');
 
   const headers = [
-    'Name', 'Date', 'Email', 'Phone Number', 'CNIC', 'City', 'Education',
+    'Name', 'Date', 'Email', 'Phone Number', 'CNIC', 'Country', 'City', 'Education',
     'Github Profile', 'LinkedIn Profile', 'Availability', 'Experience',
     'Preferences', 'Salary Expectation', 'Job Type', 'Projects',
     'Field', 'Position', 'CV', 'Revamp CV', 'Download Revamp CV', 'Actions'
@@ -107,7 +107,7 @@ const Home = () => {
       }
       delete newRow.cv
       delete newRow.revamp_cv
-      delete newRow.tags 
+      delete newRow.tags
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
@@ -332,7 +332,7 @@ const Home = () => {
     else {
       setIsAnyChecked(true)
     }
-    console.log(anyChecked)
+    console.log(data)
   }, [data])
 
   if (!authed) {
@@ -346,12 +346,12 @@ const Home = () => {
     <div className='home-main'>
       <div className="jobs-container">
         <div className='jobs-header'>
-          <Typography 
-          sx={{
-            fontSize: "32px",
-            fontWeight: 600,
-            mb: {md:"0px", sm:"20px", xs:"20px"}
-          }}
+          <Typography
+            sx={{
+              fontSize: "32px",
+              fontWeight: 600,
+              mb: { md: "0px", sm: "20px", xs: "20px" }
+            }}
           >Candidates List</Typography>
           <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
             <SearchInput placeholder="search by name, email, phone" setSearch={setSearch} search={search} />
@@ -410,7 +410,7 @@ const Home = () => {
             />
           </div>
           <div className="filter-dropdowns">
-            <Dropdown 
+            <Dropdown
               placeholder={"Select Job Type"}
               label={"Job Type"}
               options={jobTypeOptions}
@@ -453,8 +453,8 @@ const Home = () => {
                 >
                   <div className='table-headings-box'>
                     {header === "Actions" ?
-                      <div className='action-cell' style={{marginLeft:"7px"}}>
-                        <button onClick={xportAll} style={isAnyChecked?{cursor:"pointer"}:{cursor:"not-allowed"}}>Download Selected</button>
+                      <div className='action-cell' style={{ marginLeft: "7px" }}>
+                        <button onClick={xportAll} style={isAnyChecked ? { cursor: "pointer" } : { cursor: "not-allowed" }}>Download Selected</button>
                         <Checkbox checked={allCheck} onChange={handleAllCheck} />
                       </div>
                       : header}
@@ -476,30 +476,31 @@ const Home = () => {
                   <td className={getColumnClass(2)}>{item?.email}</td>
                   <td className={getColumnClass(3)}>{item?.phone_num}</td>
                   <td className={getColumnClass(4)}>{item?.cnic}</td>
-                  <td className={getColumnClass(5)}>{item?.city}</td>
-                  <td className={getColumnClass(6)}>{item?.education}</td>
-                  <td className={getColumnClass(7)}>
+                  <td className={getColumnClass(5)}>{item?.country}</td>
+                  <td className={getColumnClass(6)}>{item?.city === null ? "-" : item?.city}</td>
+                  <td className={getColumnClass(7)}>{item?.education}</td>
+                  <td className={getColumnClass(8)}>
                     <a href={item?.github_profile} target="_blank">
                       {item?.github_profile}
                     </a>
                   </td>
-                  <td className={getColumnClass(8)}>
+                  <td className={getColumnClass(9)}>
                     <a href={item?.linkedin_profile} target="_blank">
                       {item?.linkedin_profile}
                     </a>
                   </td>
-                  <td className={getColumnClass(9)}>{item?.availability}</td>
-                  <td className={getColumnClass(10)}>{item?.experience}</td>
-                  <td className={getColumnClass(11)}>{item?.prefrences}</td>
-                  <td className={getColumnClass(12)}>{item?.salary_expection}</td>
-                  <td className={getColumnClass(13)}>{item?.job_type}</td>
-                  <td className={getColumnClass(14)}>{item?.projects}</td>
-                  <td className={getColumnClass(15)}>
+                  <td className={getColumnClass(10)}>{item?.availability}</td>
+                  <td className={getColumnClass(11)}>{item?.experience}</td>
+                  <td className={getColumnClass(12)}>{item?.prefrences}</td>
+                  <td className={getColumnClass(13)}>{item?.salary_expection}</td>
+                  <td className={getColumnClass(14)}>{item?.job_type}</td>
+                  <td className={getColumnClass(15)}>{item?.projects}</td>
+                  <td className={getColumnClass(16)}>
                     {item?.field}
                     {item?.subField && `/ ${item?.subField}`}
                   </td>
-                  <td className={getColumnClass(16)}>{item?.position}</td>
-                  <td className={getColumnClass(17)}>{
+                  <td className={getColumnClass(17)}>{item?.position}</td>
+                  <td className={getColumnClass(18)}>{
                     !isValidURL(item?.cv) ?
                       <button className='td-button' onClick={() => handleGenerateResumeLink(item?.cv)}>Download</button>
                       : <a href={item?.cv} target="_blank">
@@ -508,7 +509,7 @@ const Home = () => {
                     // item?.cv
                   }
                   </td>
-                  <td className={getColumnClass(18)} onClick={() => setRow(item)}>{
+                  <td className={getColumnClass(19)} onClick={() => setRow(item)}>{
                     item?.revamp_cv
                       ?
                       <button className='td-button' onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
@@ -516,13 +517,13 @@ const Home = () => {
                       <button className='td-button' onClick={() => setShowModal(true)}>Upload</button>
                   }
                   </td>
-                  <td className={getColumnClass(19)}>{
+                  <td className={getColumnClass(20)}>{
                     (!isValidURL(item?.revamp_cv) && !(item?.revamp_cv === null)) ?
                       <button className='td-button' onClick={() => handleGenerateResumeLink(item?.revamp_cv)}>Download</button>
                       : <span>No Resume Uploaded</span>
                   }
                   </td>
-                  <td className={`action-cell ${getColumnClass(20)}`}>
+                  <td className={`action-cell ${getColumnClass(21)}`}>
                     <button onClick={() => xportSelected(item)}>Download</button>
                     <Checkbox checked={item?.checked} onChange={() => handleCheck(item)} />
                   </td>
