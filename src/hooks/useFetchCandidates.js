@@ -26,7 +26,7 @@ function useFetchCandidates(authed) {
             try {
                 setLoading(true);
 
-                let query = supabase.from('Applicants').select('*');
+                let query = supabase.from('Applicants').select('*').order("created_at", {ascending:false});
 
                 for (const key in filter) {
                     if (filter[key]) {

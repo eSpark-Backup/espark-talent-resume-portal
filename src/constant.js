@@ -22,7 +22,6 @@ const COUNTRIES = [
     'Afghanistan',
     'Albania',
     'Algeria',
-    'American Samoa',
     'Andorra',
     'Angola',
     'Antigua and Barbuda',
