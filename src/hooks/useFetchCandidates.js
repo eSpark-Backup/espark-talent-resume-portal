@@ -15,7 +15,8 @@ function useFetchCandidates(authed) {
         education: "",
         field: "",
         position: "",
-        job_type: ""
+        job_type: "",
+        country:""
     });
     const [search, setSearch] = useState("");
     const [debouncedSearch] = useDebounce(search, 500);

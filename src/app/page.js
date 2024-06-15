@@ -12,6 +12,7 @@ import {
   positionBysubfields,
   prefOptions,
   subField,
+  COUNTRIES_OPTIONS,
 } from '@/constant'
 import useFetchCandidates from '@/hooks/useFetchCandidates'
 import { DateMonthYear } from '@/utility/DataConverter'
@@ -342,6 +343,14 @@ const Home = () => {
       </div>
     )
   }
+
+  const capitalizeWords = (str) => {
+    if (!str) return '';
+    return str
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
   return (
     <div className='home-main'>
       <div className="jobs-container">
@@ -361,8 +370,18 @@ const Home = () => {
         <div className='dropdowns-parent'>
           <div className="filter-dropdowns">
             <Dropdown
-              placeholder={"Select Location"}
-              label={"Location"}
+              placeholder={"Select Country"}
+              label={"Country"}
+              options={COUNTRIES_OPTIONS}
+              value={filter.country}
+              name={"country"}
+              onChange={handleFilter}
+            />
+          </div>
+          <div className="filter-dropdowns">
+            <Dropdown
+              placeholder={"Select City"}
+              label={"City"}
               options={citiesWithLabelValue}
               value={filter.city}
               name={"city"}
@@ -469,6 +488,7 @@ const Home = () => {
               ))}
             </thead>
             <tbody>
+              
               {data?.map((item, index) => (
                 <tr key={index}>
                   <td className={getColumnClass(0)}>{item?.name}</td>
@@ -476,8 +496,8 @@ const Home = () => {
                   <td className={getColumnClass(2)}>{item?.email}</td>
                   <td className={getColumnClass(3)}>{item?.phone_num}</td>
                   <td className={getColumnClass(4)}>{item?.cnic}</td>
-                  <td className={getColumnClass(5)}>{item?.country}</td>
-                  <td className={getColumnClass(6)}>{item?.city === null ? "-" : item?.city}</td>
+                  <td className={getColumnClass(5)}>{capitalizeWords(item?.country)}</td>
+                  <td className={getColumnClass(6)}>{item?.city === null ? "-" : capitalizeWords(item?.city)}</td>
                   <td className={getColumnClass(7)}>{item?.education}</td>
                   <td className={getColumnClass(8)}>
                     <a href={item?.github_profile} target="_blank">
@@ -503,8 +523,8 @@ const Home = () => {
                   <td className={getColumnClass(18)}>{
                     !isValidURL(item?.cv) ?
                       <button className='td-button' onClick={() => handleGenerateResumeLink(item?.cv)}>Download</button>
-                      : <a href={item?.cv} target="_blank">
-                        <button className='td-button'>Download</button>
+                      : <a href={item?.cv} target="_blank" style={{backgroundColor:"white"}}>
+                        <button className='td-button'>Link</button>
                       </a>
                     // item?.cv
                   }
