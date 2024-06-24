@@ -55,6 +55,10 @@ jobs:
     needs: build
     runs-on: portal-prod
     steps:
+
+    - name: Login Docker on server
+      run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
     - name: Pull Image from Docker Hub
       run: docker pull faizi968/esparktalent-resumeportal:latest
 
