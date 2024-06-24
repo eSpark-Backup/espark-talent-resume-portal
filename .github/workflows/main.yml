@@ -28,14 +28,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Create .env File
-      run: echo "B2_APPLICATION_KEY=${{secrets.B2_APPLICATION_KEY}}" >> .env &&
-           echo "B2_APPLICATION_KEY_ID=${{secrets.B2_APPLICATION_KEY_ID}}" >> .env &&
-           echo "BASE_URL=${{secrets.BASE_URL}}" >> .env &&
-           echo "BUCKET_NAME=${{secrets.BUCKET_NAME}}" >> .env &&
-           echo "END_POINT=${{secrets.END_POINT}}" >> .env &&
-           echo "REGION=${{secrets.REGION}}" >> .env &&
-           echo "NEXT_PUBLIC_SUPABASE_URL=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" >> .env &&
-           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" >> .env 
+      run: echo "B2_APPLICATION_KEY=${{secrets.B2_APPLICATION_KEY}}" > .env &&
+           echo "B2_APPLICATION_KEY_ID=${{secrets.B2_APPLICATION_KEY_ID}}" > .env &&
+           echo "BASE_URL=${{secrets.BASE_URL}}" > .env &&
+           echo "BUCKET_NAME=${{secrets.BUCKET_NAME}}" > .env &&
+           echo "END_POINT=${{secrets.END_POINT}}" > .env &&
+           echo "REGION=${{secrets.REGION}}" > .env &&
+           echo "NEXT_PUBLIC_SUPABASE_URL=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" > .env &&
+           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" > .env 
     
     - name: Build Docker Image
       run: docker compose build
