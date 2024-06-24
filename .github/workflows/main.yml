@@ -38,7 +38,7 @@ jobs:
            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" >> .env 
     
     - name: Build Docker Image
-      run: docker build -t faizi968/esparktalent-resumeportal .
+      run: docker build --update -t faizi968/esparktalent-resumeportal .
 
     - name: Login to Docker Hub
       run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
