@@ -66,7 +66,7 @@ jobs:
       run: docker rm -f esparktalent-resumeportal-container
 
     - name: Run Docker Container
-      run: docker compose up -d --name esparktalent-resumeportal-container
+      run: docker compose up -d
 
     # - name: Use Node.js ${{ matrix.node-version }}
     #  uses: actions/setup-node@v3

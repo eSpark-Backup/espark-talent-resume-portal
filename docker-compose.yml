@@ -3,6 +3,7 @@ version: '3.4'
 services:
   esparktalent-resumeportal:
     image: esparktalent-resumeportal
+    container_name: talent-resumeportal
     build:
       context: .
       dockerfile: ./Dockerfile
