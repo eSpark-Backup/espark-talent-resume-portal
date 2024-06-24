@@ -43,24 +43,24 @@ jobs:
         cat .env
     
     - name: Build Docker Image
-      run: docker build -t faizi968/esparktalent-resumeportal .
+      run: docker compose build
 
     - name: Login to Docker Hub
       run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
     - name: Push Image to Docker Hub
-      run: docker compose push faizi968/esparktalent-resumeportal:latest
+      run: docker compose push
 
   deploy:
     needs: build
     runs-on: portal-prod
     steps:
 
-    - name: Login Docker on server
-      run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+    # - name: Login Docker on server
+    #   run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
     - name: Pull Image from Docker Hub
-      run: docker compose pull faizi968/esparktalent-resumeportal:latest
+      run: docker compose pull
 
     - name: Delete old container
       run: docker rm -f esparktalent-resumeportal-container
