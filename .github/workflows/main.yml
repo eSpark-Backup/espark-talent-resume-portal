@@ -45,7 +45,7 @@ jobs:
       run: docker compose pull
 
     - name: Delete old container
-      run: docker rm
+      run: docker compose rm
 
     - name: Run Docker Container
       run: docker compose up -d
