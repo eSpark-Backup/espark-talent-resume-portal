@@ -58,7 +58,9 @@ jobs:
 
     # - name: Login Docker on server
     #   run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-
+    - name: Troubleshoot
+      run: ls -a -l
+      
     - name: Pull Image from Docker Hub
       run: docker compose pull
 
