@@ -36,6 +36,7 @@ jobs:
            echo "REGION=${{secrets.REGION}}" > .env &&
            echo "NEXT_PUBLIC_SUPABASE_URL=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" > .env &&
            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" > .env 
+           cat .env
     
     - name: Build Docker Image
       run: docker compose build
