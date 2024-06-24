@@ -9,39 +9,69 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
 
-    runs-on: portal-prod
-
-    strategy:
-      matrix:
-        node-version: [18.x]
+    # strategy:
+      # matrix:
+        # node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    env:
-      B2_APPLICATION_KEY: ${{secrets.B2_APPLICATION_KEY}}
-      B2_APPLICATION_KEY_ID: ${{ secrets.B2_APPLICATION_KEY_ID }}
-      BASE_URL: ${{ secrets.BASE_URL }}
-      BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-      END_POINT: ${{ secrets.END_POINT }}
-      REGION: ${{ secrets.REGION }}
+    # env:
+    #  B2_APPLICATION_KEY: ${{secrets.B2_APPLICATION_KEY}}
+    #  B2_APPLICATION_KEY_ID: ${{ secrets.B2_APPLICATION_KEY_ID }}
+    #  BASE_URL: ${{ secrets.BASE_URL }}
+    #  BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+    #  END_POINT: ${{ secrets.END_POINT }}
+    #  REGION: ${{ secrets.REGION }}
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - uses: actions/cache@v4
-      with:
-        path: |
-          ~/.npm
-          ${{ github.workspace }}/.next/cache
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Create .env File
+      run: echo "B2_APPLICATION_KEY=${{secrets.B2_APPLICATION_KEY}}" >> .env &&
+           echo "B2_APPLICATION_KEY_ID=${{secrets.B2_APPLICATION_KEY_ID}}" >> .env &&
+           echo "BASE_URL=${{secrets.BASE_URL}}" >> .env &&
+           echo "BUCKET_NAME=${{secrets.BUCKET_NAME}}" >> .env &&
+           echo "END_POINT=${{secrets.END_POINT}}" >> .env &&
+           echo "REGION=${{secrets.REGION}}" >> .env
+    
+    - name: Build Docker Image
+      run: docker build -t faizi968/esparktalent-resumeportal .
+
+    - name: Login to Docker Hub
+      run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+    - name: Push Image to Docker Hub
+      run: docker push faizi968/esparktalent-resumeportal:latest
+
+  deploy:
+    needs: build
+    runs-on: portal-prod
+    steps:
+    - name: Pull Image from Docker Hub
+      run: docker pull faizi968/esparktalent-resumeportal:latest
+
+    - name: Delete old container
+      run: docker rm -f esparktalent-resumeportal-container
+
+    - name: Run Docker Container
+      run: docker compose up -d --name esparktalent-resumeportal-container
+    # - name: Use Node.js ${{ matrix.node-version }}
+    #  uses: actions/setup-node@v3
+    #  with:
+    #    node-version: ${{ matrix.node-version }}
+    #    cache: 'npm'
+    #- uses: actions/cache@v4
+    #  with:
+    #    path: |
+    #      ~/.npm
+    #      ${{ github.workspace }}/.next/cache
       # Generate a new cache whenever packages or source files change.
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+    #    key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
       # If source files changed but packages didn't, rebuild from a prior cache.
-        restore-keys: |
-          ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
-    - run: |
-        npm ci
-        npm run build
-        pm2 restart talent-portal
+    #    restore-keys: |
+    #      ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+    # - run: |
+    #    npm ci
+    #    npm run build
+    #    pm2 restart talent-portal
