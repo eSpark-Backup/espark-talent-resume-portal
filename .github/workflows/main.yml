@@ -34,8 +34,8 @@ jobs:
            echo "BUCKET_NAME=${{secrets.BUCKET_NAME}}" >> .env &&
            echo "END_POINT=${{secrets.END_POINT}}" >> .env &&
            echo "REGION=${{secrets.REGION}}" >> .env &&
-           echo "NEXT_PUBLIC_SUPABASE_URL=${{secrets.SUPABASE_URL}}" >> .env &&
-           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.SUPABASE_ANON_KEY}}" >> .env 
+           echo "NEXT_PUBLIC_SUPABASE_URL=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" >> .env &&
+           echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" >> .env 
     
     - name: Build Docker Image
       run: docker build -t faizi968/esparktalent-resumeportal .
