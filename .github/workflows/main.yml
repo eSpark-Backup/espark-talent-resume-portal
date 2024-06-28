@@ -39,7 +39,6 @@ on:
         type: string
       aws_account_id:
         description: AWS Account ID
-        default: ${{ secrets.AWS_ACCOUNT_ID }}
         type: string
       aws_region:
         description: Target AWS Region
