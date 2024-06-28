@@ -4,8 +4,6 @@
 name: eSpark Talent Resume Portal Main CI
 
 on:
-  push:
-    branches: [ "main" ]
 
   workflow_dispatch:
     inputs:
