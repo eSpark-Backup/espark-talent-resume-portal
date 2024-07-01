@@ -182,7 +182,4 @@ jobs:
         docker rm talent-resumeportal || true
 
     - name: Run Docker Container
-      run: docker run -d 
-           --name talent-resumeportal 
-           -p ${{ secrets.DOCKER_EXPOSED_PORT }}:${{ secrets.DOCKER_APPLICATION_PORT }} 
-           "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      run: docker run -d --name talent-resumeportal -p ${{ secrets.DOCKER_EXPOSED_PORT }}:${{ secrets.DOCKER_APPLICATION_PORT }} "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
