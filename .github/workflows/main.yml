@@ -9,23 +9,22 @@ on:
 
 concurrency: ci-${{ github.repository }}-docker-pipeline
 
+env:
+  path_to_dockerfile: "Dockerfile"
+  docker_build_dir: "."
+  image_tag: "latest"
+  lifecycle_policy_file: "policy.json"
+  backend_s3_bucket: "talent-terraform-bucket"
+  backend_iam_role: "terraform-role"
+  github_iam_role: "cicd"
+  aws_account_id: "${{ secrets.AWS_ACCOUNT_ID }}"
+  aws_region: "${{ secrets.AWS_REGION }}"
+  backend_dynamodb_table: "talent-terraform-dynamodb"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env:
-      path_to_dockerfile: "Dockerfile"
-      docker_build_dir: "."
-      image_tag: "latest"
-      lifecycle_policy_file: "policy.json"
-      backend_s3_bucket: "talent-terraform-bucket"
-      backend_iam_role: "terraform-role"
-      github_iam_role: "cicd"
-      aws_account_id: "${{ secrets.AWS_ACCOUNT_ID }}"
-      aws_region: "${{ secrets.AWS_REGION }}"
-      backend_dynamodb_table: "talent-terraform-dynamodb"
-      
+     
     permissions:
       id-token: write
       contents: read
@@ -129,7 +128,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-      
+
     steps:
 
     - name: Configure AWS credentials
