@@ -4,48 +4,53 @@
 name: eSpark Talent Resume Portal Main CI
 
 on:
+  push:
+    branches: [ "main" ]
 
-  workflow_dispatch:
-    inputs:
-      path_to_dockerfile:
-        description: Path to the dockerfile (default = 'Dockerfile')
-        default: "Dockerfile"
-        type: string
-      docker_build_dir:
-        description: Docker build directory (default = '.')
-        default: "."
-        type: string
-      image_tag:
-        description: Tag to apply to images.
-        type: string
-        default: latest
-      lifecycle_policy_file:
-        description: Path to the lifecycle policy JSON file (default = 'policy.json')
-        default: "policy.json"
-        type: string
-      backend_s3_bucket:
-        description: Name of the S3bucket for Terraform backend
-        default: "talent-terraform-bucket"
-        type: string
-      backend_iam_role:
-        description: Name of the Terraform backend assumable IAM Role
-        default: "terraform-role"
-        type: string
-      github_iam_role:
-        description: Name of the IAM Role for adding access to ECR repo
-        default: "cicd"
-        type: string
-      aws_account_id:
-        description: AWS Account ID
-        type: string
-      aws_region:
-        description: Target AWS Region
-        default: "us-east-1"
-        type: string
-      backend_dynamodb_table:
-        description: DynamoDB table for State lock
-        default: "talent-terraform-dynamodb"
-        type: string
+
+
+
+  # workflow_dispatch:
+  #   inputs:
+  #     path_to_dockerfile:
+  #       description: Path to the dockerfile (default = 'Dockerfile')
+  #       default: "Dockerfile"
+  #       type: string
+  #     docker_build_dir:
+  #       description: Docker build directory (default = '.')
+  #       default: "."
+  #       type: string
+  #     image_tag:
+  #       description: Tag to apply to images.
+  #       type: string
+  #       default: latest
+  #     lifecycle_policy_file:
+  #       description: Path to the lifecycle policy JSON file (default = 'policy.json')
+  #       default: "policy.json"
+  #       type: string
+  #     backend_s3_bucket:
+  #       description: Name of the S3bucket for Terraform backend
+  #       default: "talent-terraform-bucket"
+  #       type: string
+  #     backend_iam_role:
+  #       description: Name of the Terraform backend assumable IAM Role
+  #       default: "terraform-role"
+  #       type: string
+  #     github_iam_role:
+  #       description: Name of the IAM Role for adding access to ECR repo
+  #       default: "cicd"
+  #       type: string
+  #     aws_account_id:
+  #       description: AWS Account ID
+  #       type: string
+  #     aws_region:
+  #       description: Target AWS Region
+  #       default: "us-east-1"
+  #       type: string
+  #     backend_dynamodb_table:
+  #       description: DynamoDB table for State lock
+  #       default: "talent-terraform-dynamodb"
+  #       type: string
 
 # concurrency required to avoid terraform lock contention during ECR provisioning
 concurrency: ci-${{ github.repository }}-docker-pipeline
@@ -54,7 +59,19 @@ concurrency: ci-${{ github.repository }}-docker-pipeline
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
+    env:
+      path_to_dockerfile: "Dockerfile"
+      docker_build_dir: "."
+      image_tag: "latest"
+      lifecycle_policy_file: "policy.json"
+      backend_s3_bucket: "talent-terraform-bucket"
+      backend_iam_role: "terraform-role"
+      github_iam_role: "cicd"
+      aws_account_id: "${{ secrets.AWS_ACCOUNT_ID }}"
+      aws_region: "${{ secrets.AWS_REGION }}"
+      backend_dynamodb_table: "talent-terraform-dynamodb"
+      
     permissions:
       id-token: write
       contents: read
@@ -70,8 +87,8 @@ jobs:
     - name: configure aws credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::${{ inputs.aws_account_id }}:role/cicd
-        aws-region: ${{ inputs.aws_region }}
+        role-to-assume: arn:aws:iam::${{ env.aws_account_id }}:role/cicd
+        aws-region: ${{ env.aws_region }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -97,11 +114,11 @@ jobs:
           -backend-config='skip_metadata_api_check=true' \
           -backend-config='skip_region_validation=true' \
           -backend-config='skip_credentials_validation=true' \
-          -backend-config='region=${{ inputs.aws_region }}' \
-          -backend-config='bucket=${{ inputs.backend_s3_bucket }}' \
+          -backend-config='region=${{ env.aws_region }}' \
+          -backend-config='bucket=${{ env.backend_s3_bucket }}' \
           -backend-config='key=docker-ecr/terraform-${{ env.ECR_REPO_NAME }}.tfstate' \
-          -backend-config='dynamodb_table=${{ inputs.backend_dynamodb_table }}' \
-          -backend-config='role_arn=arn:aws:iam::${{ inputs.aws_account_id }}:role/${{ inputs.backend_iam_role }}'
+          -backend-config='dynamodb_table=${{ env.backend_dynamodb_table }}' \
+          -backend-config='role_arn=arn:aws:iam::${{ env.aws_account_id }}:role/${{ env.backend_iam_role }}'
       working-directory: ${{ github.action_path }}
         
     - name: Create .env File
@@ -122,9 +139,9 @@ jobs:
         set -eux
         terraform apply \
           -var 'repository_name=${{ env.ECR_REPO_NAME }}' \
-          -var 'lifecycle_policy=${{ inputs.lifecycle_policy_file }}' \
-          -var 'iam_role=arn:aws:iam::${{ inputs.aws_account_id }}:role/${{ inputs.github_iam_role }}' \
-          -var 'aws_account_id=${{ inputs.aws_account_id }}' \
+          -var 'lifecycle_policy=${{ env.lifecycle_policy_file }}' \
+          -var 'iam_role=arn:aws:iam::${{ env.aws_account_id }}:role/${{ env.github_iam_role }}' \
+          -var 'aws_account_id=${{ env.aws_account_id }}' \
           -auto-approve
       working-directory: ${{ github.action_path }}
 
@@ -132,7 +149,7 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
       with:
-        registries: ${{ inputs.aws_account_id }}
+        registries: ${{ env.aws_account_id }}
         mask-password: "true" # see: https://github.com/aws-actions/amazon-ecr-login#docker-credentials
 
     - name: Build, tag, and push image to Amazon ECR
@@ -141,9 +158,9 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
-        IMAGE_TAG: ${{ inputs.image_tag }}
+        IMAGE_TAG: ${{ env.image_tag }}
       run: |
-        docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        docker build "${{ env.docker_build_dir }}" -f "${{ env.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
         echo "image_tag=$IMAGE_TAG" 
