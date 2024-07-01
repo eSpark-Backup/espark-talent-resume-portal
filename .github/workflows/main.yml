@@ -135,8 +135,14 @@ jobs:
     runs-on: portal-prod
     steps:
 
+
     - name: Pull Image from Amazon ECR to EC2
-      run: docker pull \"${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO_NAME }}:${{ env.image_tag }}\"
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
+        IMAGE_TAG: ${{ env.image_tag }}
+
+      run: docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Delete old container
       run: |
