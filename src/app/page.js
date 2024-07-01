@@ -19,7 +19,7 @@ import { DateMonthYear } from '@/utility/DataConverter'
 import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from "react-toastify";
 import SearchInput from '@/common/SearchInput';
-import { Checkbox, Typography } from '@mui/material';
+import { Checkbox, Tooltip, Typography } from '@mui/material';
 import CustomModal from '@/common/Modal';
 import supabase from '@/app/services/supabaseClient';
 import { isValidURL } from '@/utility/URLValidator';
@@ -514,7 +514,16 @@ const Home = () => {
                   <td className={getColumnClass(12)}>{item?.prefrences}</td>
                   <td className={getColumnClass(13)}>{item?.salary_expection}</td>
                   <td className={getColumnClass(14)}>{item?.job_type}</td>
-                  <td className={getColumnClass(15)}>{item?.projects}</td>
+                  <td className={getColumnClass(15)}>
+                    {
+                      item?.projects?.length > 50 ?
+                      <Tooltip placement="top-start" title={item?.projects}> 
+                        {item?.projects.slice(0,50)}...
+                      </Tooltip>
+                      :
+                      item?.projects
+                    }
+                  </td>
                   <td className={getColumnClass(16)}>
                     {item?.field}
                     {item?.subField && `/ ${item?.subField}`}
