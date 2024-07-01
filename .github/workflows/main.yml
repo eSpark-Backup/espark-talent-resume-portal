@@ -183,5 +183,5 @@ jobs:
 
     - name: Run Docker Container
       run: docker run -d \
-          --name bb_internal_api \
-          -p ${{ secrets.DOCKER_EXPOSED_PORT }}:${{ secrets.DOCKER_APPLICATION_PORT }} "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          --name talent-resumeportal \
+          -p 3001:3000 "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
