@@ -8,8 +8,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 config();
 
 const s3Client = new S3Client({
-    endpoint: process.env.END_POINT,
-    region: process.env.REGION,
+    endpoint: process.env.B2_END_POINT,
+    region: process.env.B2_REGION,
     credentials: {
         accessKeyId: process.env.B2_APPLICATION_KEY_ID,
         secretAccessKey: process.env.B2_APPLICATION_KEY,
@@ -38,7 +38,7 @@ export async function POST(req) {
 
         await s3Client.send(
             new PutObjectCommand({
-                Bucket: process.env.BUCKET_NAME,
+                Bucket: process.env.B2_BUCKET_NAME,
                 Key: key,
                 Body: buffer,
             })
@@ -63,7 +63,7 @@ export const GET = async (req) => {
       }
 
       const command = new GetObjectCommand({
-        Bucket: process.env.BUCKET_NAME,
+        Bucket: process.env.B2_BUCKET_NAME,
         Key: resume,
       });
 

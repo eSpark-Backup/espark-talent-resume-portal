@@ -127,9 +127,9 @@ jobs:
         echo "B2_APPLICATION_KEY=${{secrets.B2_APPLICATION_KEY}}" >> .env
         echo "B2_APPLICATION_KEY_ID=${{secrets.B2_APPLICATION_KEY_ID}}" >> .env
         echo "BASE_URL=${{secrets.BASE_URL}}" >> .env
-        echo "BUCKET_NAME=${{secrets.BUCKET_NAME}}" >> .env
-        echo "END_POINT=${{secrets.END_POINT}}" >> .env
-        echo "REGION=${{secrets.REGION}}" >> .env
+        echo "B2_BUCKET_NAME=${{secrets.B2_BUCKET_NAME}}" >> .env
+        echo "B2_END_POINT=${{secrets.B2_END_POINT}}" >> .env
+        echo "B2_REGION=${{secrets.B2_REGION}}" >> .env
         echo "NEXT_PUBLIC_SUPABASE_URL=${{secrets.NEXT_PUBLIC_SUPABASE_URL}}" >> .env
         echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY}}" >> .env
 
