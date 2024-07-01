@@ -168,20 +168,16 @@ jobs:
         # replace / with _
         echo "ECR_REPO_NAME=${repo//\//_}" >> $GITHUB_ENV
 
+    - name: Pull Image from Amazon ECR and Deploy as Docker Container to EC2
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ env.image_tag }}
-        
-    - name: Pull Image from Amazon ECR to EC2
-      run: docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
-    - name: Delete old container
       run: |
+        docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         docker stop talent-resumeportal || true
         docker rm talent-resumeportal || true
-
-    - name: Run Docker Container
-      run: docker run -d \
+        docker run -d \
           --name talent-resumeportal \
           -p 3001:3000 "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
