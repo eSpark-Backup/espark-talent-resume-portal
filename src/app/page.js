@@ -1,7 +1,12 @@
-"use client"
-import { ConfirmationModal, Dropdown, Loader, LoginModal } from '@/app/components'
+"use client";
+import {
+  ConfirmationModal,
+  Dropdown,
+  Loader,
+  LoginModal,
+} from "@/app/components";
 import { utils, writeFileXLSX } from "xlsx";
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import {
   availibilityOptions,
   citiesWithLabelValue,
@@ -13,86 +18,181 @@ import {
   prefOptions,
   subField,
   COUNTRIES_OPTIONS,
-} from '@/constant'
-import useFetchCandidates from '@/hooks/useFetchCandidates'
-import { DateMonthYear } from '@/utility/DataConverter'
-import React, { useCallback, useEffect, useState } from 'react'
+  ADMIN_EMAIL,
+} from "@/constant";
+import useFetchCandidates from "@/hooks/useFetchCandidates";
+import { DateMonthYear } from "@/utility/DataConverter";
+import React, { use, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import SearchInput from '@/common/SearchInput';
-import { Checkbox, Tooltip, Typography } from '@mui/material';
-import CustomModal from '@/common/Modal';
-import supabase from '@/app/services/supabaseClient';
-import { isValidURL } from '@/utility/URLValidator';
+import SearchInput from "@/common/SearchInput";
+import { Checkbox, Tooltip, Typography } from "@mui/material";
+import CustomModal from "@/common/Modal";
+import supabase from "@/app/services/supabaseClient";
+import { isValidURL } from "@/utility/URLValidator";
 
 const Home = () => {
   const [authed, setAuthed] = useState(false);
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([])
-  const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading } = useFetchCandidates(authed)
-  const [revampResume, setRevampResume] = useState("")
-  const [showModal, setShowModal] = useState(false)
-  const [row, setRow] = useState(null)
-  const [modalLoader, setModalLoader] = useState(false)
+  const [DeleteModal, setDeleteModal] = useState(false);
+  const [data, setData] = useState([]);
+  const [allCheck, setAllCheck] = useState(false);
+  const {
+    candidates,
+    loading,
+    error,
+    filter,
+    setFilter,
+    search,
+    setSearch,
+    setLoading,
+  } = useFetchCandidates(authed);
+  const [revampResume, setRevampResume] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [row, setRow] = useState(null);
+  const [modalLoader, setModalLoader] = useState(false);
   const [frozenColumn, setFrozenColumn] = useState(null);
-  const [isAnyChecked, setIsAnyChecked] = useState(false)
+  const [isAnyChecked, setIsAnyChecked] = useState(false);
+  const AuthInfo = JSON.parse(localStorage.getItem("supabase.auth.token"));
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteLoader, setDeleteLoader] = useState(false);
+
+  const handleDelete = async (id) => {
+    setDeleteModal(true);
+    setDeleteId(id)
+  };
+
+  const handleSupabaseDelete = async () => {
+    if (deleteId) {
+      setDeleteLoader(true);
+      const { data, error } = await supabase
+        .from("Applicants")
+        .delete()
+        .eq("id", deleteId);
+      if (error) {
+        console.error(error);
+        setDeleteLoader(false);
+        toast.error("Error while deleting candidate");
+        return;
+      }
+      const updatedData = data[0];
+      setData((prev) => prev.filter((item) => item.id !== updatedData?.id));
+      toast.success("Candidate Deleted Successfully");
+      setDeleteModal(false);
+      setDeleteLoader(false);
+    }
+    else {
+      setDeleteLoader(true);
+
+      const selectedData = data.filter(item => item.checked)
+      const ids = selectedData.map(item => item.id)
+      const { _, error } = await supabase
+        .from('Applicants')
+        .delete()
+        .in('id', ids)
+      if (error) {
+        console.error(error)
+        toast.error("Error while deleting candidates");
+        setDeleteLoader(false)
+        return
+      }
+      setData((prev) =>
+        prev.filter((item) => !ids.includes(item.id))
+      )
+      setDeleteModal(false)
+      toast.success("Candidates Deleted Successfully")
+      setDeleteLoader(false)
+      
+
+    }
+  };
+
+  useEffect(() => {
+    if (AuthInfo?.currentSession?.user?.email === ADMIN_EMAIL) {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [AuthInfo]);
 
   const freezeColumn = (index) => {
     if (frozenColumn === index) {
       setFrozenColumn(null);
-    }
-    else {
+    } else {
       setFrozenColumn(index);
     }
   };
 
-  const getColumnClass = (index) => (frozenColumn === index ? 'fixed-column' : '');
+  const getColumnClass = (index) =>
+    frozenColumn === index ? "fixed-column" : "";
 
   const headers = [
-    'Name', 'Date', 'Email', 'Phone Number', 'CNIC', 'Country', 'City', 'Education',
-    'Github Profile', 'LinkedIn Profile', 'Availability', 'Experience',
-    'Preferences', 'Salary Expectation', 'Job Type', 'Projects',
-    'Field', 'Position', 'CV', 'Revamp CV', 'Download Revamp CV', 'Actions'
+    "Name",
+    "Date",
+    "Email",
+    "Phone Number",
+    "CNIC",
+    "Country",
+    "City",
+    "Education",
+    "Github Profile",
+    "LinkedIn Profile",
+    "Availability",
+    "Experience",
+    "Preferences",
+    "Salary Expectation",
+    "Job Type",
+    "Projects",
+    "Field",
+    "Position",
+    "CV",
+    "Revamp CV",
+    "Download Revamp CV",
+    "Download Selected",
   ];
 
-  const handleCheck = (obj) => {
-    const temp = data.map(item => {
-      if (item.id === obj.id) {
-        return { ...item, checked: !item.checked }
-      }
-      return { ...item }
-    })
-    setData(temp)
+  if (isAdmin) {
+    headers.push("Actions");
   }
+
+  const handleCheck = (obj) => {
+    const temp = data.map((item) => {
+      if (item.id === obj.id) {
+        return { ...item, checked: !item.checked };
+      }
+      return { ...item };
+    });
+    setData(temp);
+  };
 
   const handleAllCheck = () => {
     if (allCheck) {
-      setAllCheck(false)
-      setData(candidates.map(item => ({ ...item, checked: false })))
+      setAllCheck(false);
+      setData(candidates.map((item) => ({ ...item, checked: false })));
     } else {
-      setAllCheck(true)
-      setData(candidates.map(item => ({ ...item, checked: true })))
+      setAllCheck(true);
+      setData(candidates.map((item) => ({ ...item, checked: true })));
     }
-  }
+  };
 
   useEffect(() => {
     if (error) {
-      toast.error(error)
+      toast.error(error);
     }
-    setLoading(true)
-    setData(candidates.map(item => ({ ...item, checked: false })))
-    setLoading(false)
-  }, [error, candidates])
+    setLoading(true);
+    setData(candidates.map((item) => ({ ...item, checked: false })));
+    setLoading(false);
+  }, [error, candidates]);
 
   const xportAll = useCallback(async () => {
     const columnIndexToRemove = 0;
-    const selectedData = data.filter(item => item.checked)
+    const selectedData = data.filter((item) => item.checked);
     if (selectedData.length <= 0) {
-      setIsAnyChecked(false)
-      return
+      setIsAnyChecked(false);
+      return;
     }
-    setIsAnyChecked(true)
-    const finalArr = selectedData.map(item => {
+    setIsAnyChecked(true);
+    const finalArr = selectedData.map((item) => {
       const { checked, id, name, ...rest } = item;
       return { id, name, ...rest, resume: process.env.PORTAL_LIVE_URL };
     });
@@ -101,23 +201,22 @@ const Home = () => {
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
       if (newRow.subField) {
-        newRow.field = `${newRow.field} / ${newRow.subField}`
-        delete newRow.subField
+        newRow.field = `${newRow.field} / ${newRow.subField}`;
+        delete newRow.subField;
       } else {
-        delete newRow.subField
+        delete newRow.subField;
       }
-      delete newRow.cv
-      delete newRow.revamp_cv
-      delete newRow.tags
+      delete newRow.cv;
+      delete newRow.revamp_cv;
+      delete newRow.tags;
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
-        t: 'n',
-        v: newRow?.resume
-      }
+        t: "n",
+        v: newRow?.resume,
+      };
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
-    console.log(formattedData, "formattedData");
     const headers = [
       "Name",
       "Date",
@@ -136,7 +235,7 @@ const Home = () => {
       "Phone No",
       "Job Type",
       "Projects",
-      "Resume"
+      "Resume",
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -151,29 +250,29 @@ const Home = () => {
       id: object.id,
       name: object.name,
       ...object,
-      resume: process.env.PORTAL_LIVE_URL
-    }
+      resume: process.env.PORTAL_LIVE_URL,
+    };
     delete obj.checked;
-    const arr = [obj]
+    const arr = [obj];
     const columnIndexToRemove = 0;
     const formattedData = arr.map((row) => {
       const newRow = { ...row };
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
       newRow.created_at = DateMonthYear(newRow?.created_at);
       if (newRow.subField) {
-        newRow.field = `${newRow.field} / ${newRow.subField}`
-        delete newRow.subField
+        newRow.field = `${newRow.field} / ${newRow.subField}`;
+        delete newRow.subField;
       } else {
-        delete newRow.subField
+        delete newRow.subField;
       }
-      delete newRow.cv
-      delete newRow.revamp_cv
-      delete newRow.tags
+      delete newRow.cv;
+      delete newRow.revamp_cv;
+      delete newRow.tags;
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
-        t: 'n',
-        v: newRow?.resume
-      }
+        t: "n",
+        v: newRow?.resume,
+      };
       return newRow;
     });
     const ws = utils.json_to_sheet(formattedData);
@@ -195,7 +294,7 @@ const Home = () => {
       "Phone No",
       "Job Type",
       "Projects",
-      "Resume"
+      "Resume",
     ];
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: "s" };
@@ -217,7 +316,7 @@ const Home = () => {
     if (filter.field?.value === "Software Engineering") {
       const subFieldsArr = subField[filter.field?.value];
       const positionArr = subFieldsArr.map(({ value }) => {
-        return positionBysubfields[value]
+        return positionBysubfields[value];
       });
       setPositionOptions(Object.values(positionArr).flat());
     } else {
@@ -225,14 +324,15 @@ const Home = () => {
     }
   }, [filter]);
 
-
   const handleGenerateResumeLink = async (resumeKey) => {
     try {
       const data = await fetch(`/api?resume=${resumeKey}`);
       const { url } = await data.json();
-      const res = await fetch(url)
+      const res = await fetch(url);
       if (!res?.ok && res?.status === 403) {
-        toast.error("We're sorry, your requested resource could not be processed at this time");
+        toast.error(
+          "We're sorry, your requested resource could not be processed at this time"
+        );
         return;
       }
 
@@ -242,17 +342,14 @@ const Home = () => {
       }
 
       window.open(url, "_blank");
-
     } catch (error) {
       console.error(error);
       toast.error("Error generating resume link");
     }
-  }
-
-
+  };
 
   const handleChange = async (name, value) => {
-    setModalLoader(true)
+    setModalLoader(true);
     const formData = new FormData();
     formData.append("file", value);
 
@@ -262,7 +359,7 @@ const Home = () => {
     });
 
     const { fileKey } = await response.json();
-    const id = row?.id
+    const id = row?.id;
 
     // update Supabase with the new file key
     const { data, error } = await supabase
@@ -275,7 +372,7 @@ const Home = () => {
     if (error) {
       console.error(error);
       setShowModal(false);
-      setModalLoader(false)
+      setModalLoader(false);
       return;
     }
 
@@ -292,9 +389,8 @@ const Home = () => {
 
     toast.success("File uploaded successfully");
     setShowModal(false);
-    setModalLoader(false)
-
-  }
+    setModalLoader(false);
+  };
 
   const checkAuth = () => {
     const auth = localStorage.getItem("auth");
@@ -303,10 +399,10 @@ const Home = () => {
     } else {
       setAuthed(false);
     }
-  }
+  };
 
   const logout = () => {
-    localStorage.removeItem("auth")
+    localStorage.removeItem("auth");
     checkAuth();
     setFilter({
       city: "",
@@ -316,58 +412,66 @@ const Home = () => {
       education: "",
       field: "",
       position: "",
-      job_type: ""
-    })
+      job_type: "",
+    });
     setOpen(false);
-  }
+  };
 
   useEffect(() => {
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   useEffect(() => {
-    const anyChecked = data?.filter((item) => item?.checked)
+    const anyChecked = data?.filter((item) => item?.checked);
     if (anyChecked.length <= 0) {
-      setIsAnyChecked(false)
+      setIsAnyChecked(false);
+    } else {
+      setIsAnyChecked(true);
     }
-    else {
-      setIsAnyChecked(true)
-    }
-    console.log(data)
-  }, [data])
+  }, [data]);
 
   if (!authed) {
     return (
-      <div className='login'>
+      <div className="login">
         <LoginModal open={true} setAuthed={setAuthed} />
       </div>
-    )
+    );
   }
 
   const capitalizeWords = (str) => {
-    if (!str) return '';
+    if (!str) return "";
     return str
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
   return (
-    <div className='home-main'>
+    <div className="home-main">
       <div className="jobs-container">
-        <div className='jobs-header'>
+        <div className="jobs-header">
           <Typography
             sx={{
               fontSize: "32px",
               fontWeight: 600,
-              mb: { md: "0px", sm: "20px", xs: "20px" }
+              mb: { md: "0px", sm: "20px", xs: "20px" },
             }}
-          >Candidates List</Typography>
-          <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
-            <SearchInput placeholder="search by name, email, phone" setSearch={setSearch} search={search} />
-            <button style={{ marginTop: "16px" }} onClick={() => setOpen(true)}>Logout</button>
+          >
+            Candidates List
+          </Typography>
+          <div
+            style={{ display: "flex", columnGap: "10px", alignItems: "center" }}
+          >
+            <SearchInput
+              placeholder="search by name, email, phone"
+              setSearch={setSearch}
+              search={search}
+            />
+            <button style={{ marginTop: "16px" }} onClick={() => setOpen(true)}>
+              Logout
+            </button>
           </div>
         </div>
-        <div className='dropdowns-parent'>
+        <div className="dropdowns-parent">
           <div className="filter-dropdowns">
             <Dropdown
               placeholder={"Select Country"}
@@ -448,135 +552,290 @@ const Home = () => {
               onChange={handleFilter}
             />
           </div>
-          {filter.field && filter.field !== "" && <div className="filter-dropdowns">
-            <Dropdown
-              placeholder={"Select Position"}
-              label={"Position"}
-              options={positionOptions}
-              value={filter.position}
-              name={"position"}
-              onChange={handleFilter}
-            />
-          </div>}
+          {filter.field && filter.field !== "" && (
+            <div className="filter-dropdowns">
+              <Dropdown
+                placeholder={"Select Position"}
+                label={"Position"}
+                options={positionOptions}
+                value={filter.position}
+                name={"position"}
+                onChange={handleFilter}
+              />
+            </div>
+          )}
         </div>
-        {loading ? <div className='load-conatiner'>
-          <span class="loader"></span>
-        </div> : <div className="table-parent">
-          {data && data.length > 0 ? <table>
-            <thead>
-              {headers.map((header, index) => (
-                <th
-                  key={index}
-                  onClick={() => freezeColumn(index)}
-                  className={`cursor-pointer ${frozenColumn === index ? 'fixed-column' : ''}`}
-                >
-                  <div className='table-headings-box'>
-                    {header === "Actions" ?
-                      <div className='action-cell' style={{ marginLeft: "7px" }}>
-                        <button onClick={xportAll} style={isAnyChecked ? { cursor: "pointer" } : { cursor: "not-allowed" }}>Download Selected</button>
-                        <Checkbox checked={allCheck} onChange={handleAllCheck} />
-                      </div>
-                      : header}
-                    <ArrowRightIcon sx={{
-                      transform: `${frozenColumn === index ? 'rotate(90deg)' : 'rotate(0deg)'}`,
-                      visibility: { md: 'visible', sm: 'hidden', xs: 'visible' },
-                      fontSize: '17px',
-                      color: '#000'
-                    }} />
-                  </div>
-                </th>
-              ))}
-            </thead>
-            <tbody>
-              
-              {data?.map((item, index) => (
-                <tr key={index}>
-                  <td className={getColumnClass(0)}>{item?.name}</td>
-                  <td className={getColumnClass(1)}>{DateMonthYear(item?.created_at)}</td>
-                  <td className={getColumnClass(2)}>{item?.email}</td>
-                  <td className={getColumnClass(3)}>{item?.phone_num}</td>
-                  <td className={getColumnClass(4)}>{item?.cnic}</td>
-                  <td className={getColumnClass(5)}>{capitalizeWords(item?.country)}</td>
-                  <td className={getColumnClass(6)}>{item?.city === null ? "-" : capitalizeWords(item?.city)}</td>
-                  <td className={getColumnClass(7)}>{item?.education}</td>
-                  <td className={getColumnClass(8)}>
-                    <a href={item?.github_profile} target="_blank">
-                      {item?.github_profile}
-                    </a>
-                  </td>
-                  <td className={getColumnClass(9)}>
-                    <a href={item?.linkedin_profile} target="_blank">
-                      {item?.linkedin_profile}
-                    </a>
-                  </td>
-                  <td className={getColumnClass(10)}>{item?.availability}</td>
-                  <td className={getColumnClass(11)}>{item?.experience}</td>
-                  <td className={getColumnClass(12)}>{item?.prefrences}</td>
-                  <td className={getColumnClass(13)}>{item?.salary_expection}</td>
-                  <td className={getColumnClass(14)}>{item?.job_type}</td>
-                  <td className={getColumnClass(15)}>
-                    {
-                      item?.projects?.length > 50 ?
-                      <Tooltip placement="top-start" title={item?.projects}> 
-                        {item?.projects.slice(0,50)}...
-                      </Tooltip>
-                      :
-                      item?.projects
-                    }
-                  </td>
-                  <td className={getColumnClass(16)}>
-                    {item?.field}
-                    {item?.subField && `/ ${item?.subField}`}
-                  </td>
-                  <td className={getColumnClass(17)}>{item?.position}</td>
-                  <td className={getColumnClass(18)}>{
-                    !isValidURL(item?.cv) ?
-                      <button className='td-button' onClick={() => handleGenerateResumeLink(item?.cv)}>Download</button>
-                      : <a href={item?.cv} target="_blank" style={{backgroundColor:"white"}}>
-                        <button className='td-button'>Link</button>
-                      </a>
-                    // item?.cv
-                  }
-                  </td>
-                  <td className={getColumnClass(19)} onClick={() => setRow(item)}>{
-                    item?.revamp_cv
-                      ?
-                      <button className='td-button' onClick={() => setShowModal(true)}>Edit Revamp Resume</button>
-                      :
-                      <button className='td-button' onClick={() => setShowModal(true)}>Upload</button>
-                  }
-                  </td>
-                  <td className={getColumnClass(20)}>{
-                    (!isValidURL(item?.revamp_cv) && !(item?.revamp_cv === null)) ?
-                      <button className='td-button' onClick={() => handleGenerateResumeLink(item?.revamp_cv)}>Download</button>
-                      : <span>No Resume Uploaded</span>
-                  }
-                  </td>
-                  <td className={`action-cell ${getColumnClass(21)}`}>
-                    <button onClick={() => xportSelected(item)}>Download</button>
-                    <Checkbox checked={item?.checked} onChange={() => handleCheck(item)} />
-                  </td>
-                </tr>
-              ))}
+        {loading ? (
+          <div className="load-conatiner">
+            <span class="loader"></span>
+          </div>
+        ) : (
+          <div className="table-parent">
+            {data && data.length > 0 ? (
+              <table>
+                <thead>
+                  {headers.map((header, index) => (
+                    <th
+                      key={index}
+                      onClick={() => freezeColumn(index)}
+                      className={`cursor-pointer ${
+                        frozenColumn === index ? "fixed-column" : ""
+                      }`}
+                    >
+                      <div className="table-headings-box">
+                        {header === "Download Selected" ? (
+                          <div
+                            className="action-cell"
+                            style={{ marginLeft: "7px" }}
+                          >
+                            <button
+                              onClick={xportAll}
+                              style={
+                                isAnyChecked
+                                  ? { cursor: "pointer" }
+                                  : { cursor: "not-allowed" }
+                              }
+                            >
+                              Download Selected
+                            </button>
+                            {!isAdmin && (
+                              <Checkbox
+                                checked={allCheck}
+                                onChange={handleAllCheck}
+                              />
+                            )}
+                          </div>
+                        ) : header === "Actions" ? (
+                          <div className="action-cell">
+                            <button
+                              onClick={() => handleDelete()}
+                              style={
+                                isAnyChecked
+                                  ? { cursor: "pointer" }
+                                  : { cursor: "not-allowed" }
+                              }
+                            >
+                              Delete Selected
+                            </button>
+                            <Checkbox
+                              checked={allCheck}
+                              onChange={handleAllCheck}
+                            />
+                          </div>
+                        ) : (
+                          header
+                        )}
 
-            </tbody>
-          </table> :
-            <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
-        </div>}
+                        {header === "Download Selected" ||
+                        header === "Actions" ? null : (
+                          <ArrowRightIcon
+                            sx={{
+                              transform: `${
+                                frozenColumn === index
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)"
+                              }`,
+                              visibility: {
+                                md: "visible",
+                                sm: "hidden",
+                                xs: "visible",
+                              },
+                              fontSize: "17px",
+                              color: "#000",
+                            }}
+                          />
+                        )}
+                      </div>
+                    </th>
+                  ))}
+                </thead>
+                <tbody>
+                  {data?.map((item, index) => (
+                    <tr key={index}>
+                      <td className={getColumnClass(0)}>{item?.name}</td>
+                      <td className={getColumnClass(1)}>
+                        {DateMonthYear(item?.created_at)}
+                      </td>
+                      <td className={getColumnClass(2)}>{item?.email}</td>
+                      <td className={getColumnClass(3)}>{item?.phone_num}</td>
+                      <td className={getColumnClass(4)}>{item?.cnic}</td>
+                      <td className={getColumnClass(5)}>
+                        {capitalizeWords(item?.country)}
+                      </td>
+                      <td className={getColumnClass(6)}>
+                        {item?.city === null
+                          ? "-"
+                          : capitalizeWords(item?.city)}
+                      </td>
+                      <td className={getColumnClass(7)}>{item?.education}</td>
+                      <td className={getColumnClass(8)}>
+                        <a href={item?.github_profile} target="_blank">
+                          {item?.github_profile}
+                        </a>
+                      </td>
+                      <td className={getColumnClass(9)}>
+                        <a href={item?.linkedin_profile} target="_blank">
+                          {item?.linkedin_profile}
+                        </a>
+                      </td>
+                      <td className={getColumnClass(10)}>
+                        {item?.availability}
+                      </td>
+                      <td className={getColumnClass(11)}>{item?.experience}</td>
+                      <td className={getColumnClass(12)}>{item?.prefrences}</td>
+                      <td className={getColumnClass(13)}>
+                        {item?.salary_expection}
+                      </td>
+                      <td className={getColumnClass(14)}>{item?.job_type}</td>
+                      <td className={getColumnClass(15)}>
+                        {item?.projects?.length > 50 ? (
+                          <Tooltip placement="top-start" title={item?.projects}>
+                            {item?.projects.slice(0, 50)}...
+                          </Tooltip>
+                        ) : (
+                          item?.projects
+                        )}
+                      </td>
+                      <td className={getColumnClass(16)}>
+                        {item?.field}
+                        {item?.subField && `/ ${item?.subField}`}
+                      </td>
+                      <td className={getColumnClass(17)}>{item?.position}</td>
+                      <td className={getColumnClass(18)}>
+                        {
+                          !isValidURL(item?.cv) ? (
+                            <button
+                              className="td-button"
+                              onClick={() => handleGenerateResumeLink(item?.cv)}
+                            >
+                              Download
+                            </button>
+                          ) : (
+                            <a
+                              href={item?.cv}
+                              target="_blank"
+                              style={{ backgroundColor: "white" }}
+                            >
+                              <button className="td-button">Link</button>
+                            </a>
+                          )
+                          // item?.cv
+                        }
+                      </td>
+                      <td
+                        className={getColumnClass(19)}
+                        onClick={() => setRow(item)}
+                      >
+                        {item?.revamp_cv ? (
+                          <button
+                            className="td-button"
+                            onClick={() => setShowModal(true)}
+                          >
+                            Edit Revamp Resume
+                          </button>
+                        ) : (
+                          <button
+                            className="td-button"
+                            onClick={() => setShowModal(true)}
+                          >
+                            Upload
+                          </button>
+                        )}
+                      </td>
+                      <td className={getColumnClass(20)}>
+                        {!isValidURL(item?.revamp_cv) &&
+                        !(item?.revamp_cv === null) ? (
+                          <button
+                            className="td-button"
+                            onClick={() =>
+                              handleGenerateResumeLink(item?.revamp_cv)
+                            }
+                          >
+                            Download
+                          </button>
+                        ) : (
+                          <span>No Resume Uploaded</span>
+                        )}
+                      </td>
+                      <td className={`action-cell ${getColumnClass(21)}`}>
+                        <button onClick={() => xportSelected(item)}>
+                          Download
+                        </button>
+                        {!isAdmin && (
+                          <Checkbox
+                            checked={item?.checked}
+                            onChange={() => handleCheck(item)}
+                          />
+                        )}
+                      </td>
+                      {isAdmin && (
+                        <td className={getColumnClass(22)}>
+                          {
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                columnGap: "10px",
+                              }}
+                            >
+                              <button
+                                onClick={() => handleDelete(item?.id)}
+                                className="td-button"
+                              >
+                                Delete
+                              </button>
+                              <Checkbox
+                                checked={item?.checked}
+                                onChange={() => handleCheck(item)}
+                              />
+                            </div>
+                          }
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <h1 style={{ textAlign: "center", marginTop: "20px" }}>
+                No Applicants Found
+              </h1>
+            )}
+          </div>
+        )}
       </div>
-      <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} modalLoader={modalLoader} description={"Are you sure you want to proceed?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
+      <CustomModal
+        name={"revamp_resume"}
+        filename={revampResume}
+        onChange={handleChange}
+        modalLoader={modalLoader}
+        description={"Are you sure you want to proceed?"}
+        modalOpen={showModal}
+        onClose={() => setShowModal(false)}
+      />
       <ConfirmationModal
         open={open}
         handleClose={() => setOpen(false)}
-        title="Log Out"
+        title="Logout"
         description="Are you sure you want to logout?"
         confirmText="Confirm"
         canceltext="Cancel"
         confirmAction={logout}
         cancelAction={() => setOpen(false)}
       />
+      <ConfirmationModal
+        open={DeleteModal}
+        handleClose={() => setDeleteModal(false)}
+        title="Delete"
+        description="Are you sure you want to delete"
+        confirmText="Delete"
+        canceltext="Cancel"
+        confirmAction={() => handleSupabaseDelete()}
+        cancelAction={() => setDeleteModal(false)}
+        loading={deleteLoader}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
