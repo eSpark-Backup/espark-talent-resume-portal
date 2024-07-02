@@ -19,23 +19,29 @@ import { DateMonthYear } from '@/utility/DataConverter'
 import React, { useCallback, useEffect, useState } from 'react'
 import { toast } from "react-toastify";
 import SearchInput from '@/common/SearchInput';
-import { Checkbox, Tooltip, Typography } from '@mui/material';
+import { Checkbox, Tooltip, Typography, Box, Stack, InputLabel } from '@mui/material';
 import CustomModal from '@/common/Modal';
 import supabase from '@/app/services/supabaseClient';
 import { isValidURL } from '@/utility/URLValidator';
+import DatePicker from "react-datepicker";
+import { CustomInputForDatePicker } from "@/app/components/inputs/datePicker";
 
 const Home = () => {
   const [authed, setAuthed] = useState(false);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading } = useFetchCandidates(authed)
+  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, date, setDate } = useFetchCandidates(authed)
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [row, setRow] = useState(null)
   const [modalLoader, setModalLoader] = useState(false)
   const [frozenColumn, setFrozenColumn] = useState(null);
   const [isAnyChecked, setIsAnyChecked] = useState(false)
+
+  const handleDate = (newValue) => {
+    setDate(newValue);
+  };
 
   const freezeColumn = (index) => {
     if (frozenColumn === index) {
@@ -354,7 +360,10 @@ const Home = () => {
   return (
     <div className='home-main'>
       <div className="jobs-container">
-        <div className='jobs-header'>
+        <Box
+          sx={{ flexDirection: { xs: "column", md: "row" } }}
+          className="jobs-header"
+        >
           <Typography
             sx={{
               fontSize: "32px",
@@ -362,11 +371,56 @@ const Home = () => {
               mb: { md: "0px", sm: "20px", xs: "20px" }
             }}
           >Candidates List</Typography>
-          <div style={{ display: "flex", columnGap: "10px", alignItems: "center" }}>
-            <SearchInput placeholder="search by name, email, phone" setSearch={setSearch} search={search} />
-            <button style={{ marginTop: "16px" }} onClick={() => setOpen(true)}>Logout</button>
-          </div>
-        </div>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "15px",
+              alignItems: "flex-end",
+              flexDirection: { xs: "column", md: "row" },
+              width: { xs: "100%", md: "max-content" },
+            }}
+          >
+            <Stack
+              sx={{ width: "100%" }}
+              alignItems="flex-end"
+              direction="row"
+              gap="15px"
+            >
+              <div>
+                <InputLabel
+                  htmlFor="search"
+                  sx={{
+                    color: "inherit",
+                    "&.Mui-focused": {
+                      color: "inherit",
+                    },
+                  }}
+                >
+                  Search by date
+                </InputLabel>
+                <DatePicker
+                  dateFormat="MM/dd/yyyy"
+                  selected={date}
+                  onChange={handleDate}
+                  isClearable
+                  value={date || "MM/DD/YYYY"}
+                  customInput={<CustomInputForDatePicker />}
+                />
+              </div>
+              <SearchInput
+                placeholder="search by name, email, phone"
+                setSearch={setSearch}
+                search={search}
+              />
+            </Stack>
+            <button
+              className="logout-btn"
+              onClick={() => setOpen(true)}
+            >
+              Logout
+            </button>
+          </Box>
+        </Box>
         <div className='dropdowns-parent'>
           <div className="filter-dropdowns">
             <Dropdown
@@ -563,6 +617,17 @@ const Home = () => {
           </table> :
             <h1 style={{ textAlign: "center", marginTop: "20px" }}>No Applicants Found</h1>}
         </div>}
+        {data && data.length > 0 && (
+              <p
+                style={{
+                  textAlign: "right",
+                  marginTop: "10px",
+                  fontWeight: 900,
+                }}
+              >
+                Total Users: {data.length}
+              </p>
+        )}
       </div>
       <CustomModal name={"revamp_resume"} filename={revampResume} onChange={handleChange} modalLoader={modalLoader} description={"Are you sure you want to proceed?"} modalOpen={showModal} onClose={() => setShowModal(false)} />
       <ConfirmationModal

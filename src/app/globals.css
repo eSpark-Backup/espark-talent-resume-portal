@@ -439,11 +439,10 @@ input[type="checkbox"] {
 .jobs-header{
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
   align-items: center;
 }
 
-.jobs-header button{
+.jobs-header .logout-btn{
   height: 45px;
   background-color: lightgray;
   border: 1px solid white;
@@ -453,6 +452,15 @@ input[type="checkbox"] {
   border-radius: 4px;
   width: 90px;
   font-size: 17px;
+}
+
+.react-datepicker__close-icon::after {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -10px;
+  right: -10px;
 }
 
 .rti--input{
@@ -533,6 +541,11 @@ button.disabled {
   }
 }
 
+@media screen and (max-width:900px){
+  .jobs-header .logout-btn{
+    width: 100% !important;
+  }
+}
 
 @media screen and (min-width:900px){
   .fixed-column{
