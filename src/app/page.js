@@ -625,7 +625,7 @@ const Home = () => {
                   fontWeight: 900,
                 }}
               >
-                Total Users: {data.length}
+                Total Applicants: {data.length}
               </p>
         )}
       </div>
