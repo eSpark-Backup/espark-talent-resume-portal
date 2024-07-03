@@ -11,17 +11,17 @@ export const CustomInputForDatePicker = forwardRef(
         type="reset"
         className="example-custom-input"
         onClick={onClick}
-        value={value}
+        value={value || "MM-DD-YY to MM-DD-YY"}
         ref={ref}
         sx={{
           border: 'none',
-          maxWidth: '180px',
+          width: { xs: '100%', sm: '250px' },
           div: { background: '#fff', height: '44px' },
           input: {
             textAlign: 'center',
             padding: '8px',
             fontWeight: 600,
-            fontSize: '14px'
+            fontSize: '13px'
           },
           '& .css-1v2az6r-MuiInputBase-root-MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
           {

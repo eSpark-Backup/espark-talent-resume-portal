@@ -31,7 +31,7 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([])
   const [allCheck, setAllCheck] = useState(false)
-  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, date, setDate } = useFetchCandidates(authed)
+  const { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, startDate, setStartDate, endDate, setEndDate } = useFetchCandidates(authed)
   const [revampResume, setRevampResume] = useState("")
   const [showModal, setShowModal] = useState(false)
   const [row, setRow] = useState(null)
@@ -39,8 +39,10 @@ const Home = () => {
   const [frozenColumn, setFrozenColumn] = useState(null);
   const [isAnyChecked, setIsAnyChecked] = useState(false)
 
-  const handleDate = (newValue) => {
-    setDate(newValue);
+  const handleRangePicker = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
   };
 
   const freezeColumn = (index) => {
@@ -383,10 +385,10 @@ const Home = () => {
             <Stack
               sx={{ width: "100%" }}
               alignItems="flex-end"
-              direction="row"
+              direction={{ xs: "column", sm: "row" }}
               gap="15px"
             >
-              <div>
+              <Box sx={{ width: '100%', '.react-datepicker-wrapper': { width: { xs: '100%', sm: 'max-content' } } }}>
                 <InputLabel
                   htmlFor="search"
                   sx={{
@@ -399,14 +401,17 @@ const Home = () => {
                   Search by date
                 </InputLabel>
                 <DatePicker
+                  startDate={startDate}
+                  endDate={endDate}
+                  monthsShown={2}
+                  selectsRange
                   dateFormat="MM/dd/yyyy"
-                  selected={date}
-                  onChange={handleDate}
+                  selected={startDate}
+                  onChange={handleRangePicker}
                   isClearable
-                  value={date || "MM/DD/YYYY"}
                   customInput={<CustomInputForDatePicker />}
                 />
-              </div>
+              </Box>
               <SearchInput
                 placeholder="search by name, email, phone"
                 setSearch={setSearch}

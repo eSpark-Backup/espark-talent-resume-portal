@@ -5,7 +5,8 @@ import { useDebounce } from "use-debounce";
 
 
 function useFetchCandidates(authed) {
-    const [date, setDate] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [candidates, setCandidates] = useState([])
@@ -40,9 +41,10 @@ function useFetchCandidates(authed) {
                     query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone_num.ilike.%${search}%`)
                 }
 
-                if (date) {
+                if (startDate && endDate) {
                     query = query
-                        .gte('created_at', moment(date).toISOString())
+                        .gte('created_at', moment(startDate).toISOString())
+                        .lte('created_at', moment(endDate).toISOString())
                 }
 
                 const { data, error } = await query
@@ -61,9 +63,9 @@ function useFetchCandidates(authed) {
         if(authed) {
             fetchAllCandidates();
         }
-    }, [filter, debouncedSearch, authed, date]);
+    }, [filter, debouncedSearch, authed, endDate]);
 
-    return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, date, setDate };
+    return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, startDate, setStartDate, endDate, setEndDate };
 }
 
 export default useFetchCandidates;
