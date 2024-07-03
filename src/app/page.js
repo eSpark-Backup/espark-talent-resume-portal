@@ -577,7 +577,11 @@ const Home = () => {
                   {headers.map((header, index) => (
                     <th
                       key={index}
-                      onClick={() => freezeColumn(index)}
+                      onClick={
+                        header === "Download Selected" || header === "Actions"
+                          ? null
+                          : () => freezeColumn(index)
+                      }
                       className={`cursor-pointer ${
                         frozenColumn === index ? "fixed-column" : ""
                       }`}
@@ -606,9 +610,11 @@ const Home = () => {
                             )}
                           </div>
                         ) : header === "Actions" ? (
-                          <div className="action-cell">
+                          <div className="action-cell del-cell">
                             <button
-                              onClick={() => handleDelete()}
+                              onClick={
+                                isAnyChecked ? () => handleDelete() : null
+                              }
                               style={
                                 isAnyChecked
                                   ? { cursor: "pointer" }
@@ -617,10 +623,12 @@ const Home = () => {
                             >
                               Delete Selected
                             </button>
+                            <div className="del-check">
                             <Checkbox
                               checked={allCheck}
                               onChange={handleAllCheck}
                             />
+                            </div>
                           </div>
                         ) : (
                           header
@@ -780,7 +788,7 @@ const Home = () => {
                             >
                               <button
                                 onClick={() => handleDelete(item?.id)}
-                                className="td-button"
+                                className="td-button del-button"
                               >
                                 Delete
                               </button>
