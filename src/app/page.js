@@ -52,7 +52,7 @@ const Home = () => {
   const [modalLoader, setModalLoader] = useState(false);
   const [frozenColumn, setFrozenColumn] = useState(null);
   const [isAnyChecked, setIsAnyChecked] = useState(false);
-  const AuthInfo = JSON.parse(localStorage.getItem("supabase.auth.token"));
+  const AuthInfo = (typeof window !== 'undefined' && typeof localStorage !== 'undefined') && JSON.parse(localStorage.getItem("supabase.auth.token"));
   const [isAdmin, setIsAdmin] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [deleteLoader, setDeleteLoader] = useState(false);
