@@ -89,6 +89,11 @@ a {
   border-color: #6d6969 !important;
 }
 
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
+  padding: 0 !important;
+  margin: 9px !important;
+}
+
 .card {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 10px;
