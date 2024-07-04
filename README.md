@@ -58,6 +58,8 @@ Enable row level security and create four policies:
 3. Delete: AUTHENTICATED
 4. Update: AUTHENTICATED
 
+Note: Provide the SQL expression for all the policies as TRUE
+
 ## Running the Project
 
 To get started with the project, run the following commands:
