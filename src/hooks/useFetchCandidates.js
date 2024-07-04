@@ -1,9 +1,12 @@
 import supabase from "@/app/services/supabaseClient";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 
 function useFetchCandidates(authed) {
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [candidates, setCandidates] = useState([])
@@ -38,6 +41,12 @@ function useFetchCandidates(authed) {
                     query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone_num.ilike.%${search}%`)
                 }
 
+                if (startDate && endDate) {
+                    query = query
+                        .gte('created_at', moment(startDate).toISOString())
+                        .lte('created_at', moment(endDate).toISOString())
+                }
+
                 const { data, error } = await query
 
                 if (error) {
@@ -54,9 +63,9 @@ function useFetchCandidates(authed) {
         if(authed) {
             fetchAllCandidates();
         }
-    }, [filter, debouncedSearch, authed]);
+    }, [filter, debouncedSearch, authed, endDate]);
 
-    return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading };
+    return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, startDate, setStartDate, endDate, setEndDate };
 }
 
 export default useFetchCandidates;

@@ -22,13 +22,22 @@ import {
 } from "@/constant";
 import useFetchCandidates from "@/hooks/useFetchCandidates";
 import { DateMonthYear } from "@/utility/DataConverter";
-import React, { use, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SearchInput from "@/common/SearchInput";
-import { Checkbox, Tooltip, Typography } from "@mui/material";
+import {
+  Checkbox,
+  Tooltip,
+  Typography,
+  Box,
+  Stack,
+  InputLabel,
+} from "@mui/material";
 import CustomModal from "@/common/Modal";
 import supabase from "@/app/services/supabaseClient";
 import { isValidURL } from "@/utility/URLValidator";
+import DatePicker from "react-datepicker";
+import { CustomInputForDatePicker } from "@/app/components/inputs/datePicker";
 
 const Home = () => {
   const [authed, setAuthed] = useState(false);
@@ -45,6 +54,10 @@ const Home = () => {
     search,
     setSearch,
     setLoading,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   } = useFetchCandidates(authed);
   const [revampResume, setRevampResume] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -52,14 +65,17 @@ const Home = () => {
   const [modalLoader, setModalLoader] = useState(false);
   const [frozenColumn, setFrozenColumn] = useState(null);
   const [isAnyChecked, setIsAnyChecked] = useState(false);
-  const AuthInfo = (typeof window !== 'undefined' && typeof localStorage !== 'undefined') && JSON.parse(localStorage.getItem("supabase.auth.token"));
+  const AuthInfo =
+    typeof window !== "undefined" &&
+    typeof localStorage !== "undefined" &&
+    JSON.parse(localStorage.getItem("supabase.auth.token"));
   const [isAdmin, setIsAdmin] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [deleteLoader, setDeleteLoader] = useState(false);
 
   const handleDelete = async (id) => {
     setDeleteModal(true);
-    setDeleteId(id)
+    setDeleteId(id);
   };
 
   const handleSupabaseDelete = async () => {
@@ -80,30 +96,26 @@ const Home = () => {
       toast.success("Candidate Deleted Successfully");
       setDeleteModal(false);
       setDeleteLoader(false);
-    }
-    else {
+    } else {
       setDeleteLoader(true);
 
-      const selectedData = data.filter(item => item.checked)
-      const ids = selectedData.map(item => item.id)
+      const selectedData = data.filter((item) => item.checked);
+      const ids = selectedData.map((item) => item.id);
       const { _, error } = await supabase
-        .from('Applicants')
+        .from("Applicants")
         .delete()
-        .in('id', ids)
+        .in("id", ids);
       if (error) {
-        console.error(error)
+        console.error(error);
         toast.error("Error while deleting candidates");
-        setDeleteLoader(false)
-        return
+        setDeleteLoader(false);
+        return;
       }
-      setData((prev) =>
-        prev.filter((item) => !ids.includes(item.id))
-      )
-      setDeleteModal(false)
-      toast.success("Candidates Deleted Successfully")
-      setDeleteLoader(false)
-      
-
+      setData((prev) => prev.filter((item) => !ids.includes(item.id)));
+      setDeleteModal(false);
+      setAllCheck(false)
+      toast.success("Candidates Deleted Successfully");
+      setDeleteLoader(false);
     }
   };
 
@@ -114,6 +126,12 @@ const Home = () => {
       setIsAdmin(false);
     }
   }, [AuthInfo]);
+
+  const handleRangePicker = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   const freezeColumn = (index) => {
     if (frozenColumn === index) {
@@ -448,7 +466,10 @@ const Home = () => {
   return (
     <div className="home-main">
       <div className="jobs-container">
-        <div className="jobs-header">
+        <Box
+          sx={{ flexDirection: { xs: "column", md: "row" } }}
+          className="jobs-header"
+        >
           <Typography
             sx={{
               fontSize: "32px",
@@ -458,19 +479,66 @@ const Home = () => {
           >
             Candidates List
           </Typography>
-          <div
-            style={{ display: "flex", columnGap: "10px", alignItems: "center" }}
+          <Box
+            sx={{
+              display: "flex",
+              gap: "15px",
+              alignItems: "flex-end",
+              flexDirection: { xs: "column", md: "row" },
+              width: { xs: "100%", md: "max-content" },
+            }}
           >
-            <SearchInput
-              placeholder="search by name, email, phone"
-              setSearch={setSearch}
-              search={search}
-            />
-            <button style={{ marginTop: "16px" }} onClick={() => setOpen(true)}>
+            <Stack
+              sx={{ width: "100%" }}
+              alignItems="flex-end"
+              direction={{ xs: "column", sm: "row" }}
+              gap="15px"
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  ".react-datepicker-wrapper": {
+                    width: { xs: "100%", sm: "max-content" },
+                  },
+                  ".react-datepicker__close-icon": {
+                    display: endDate ? "table-cell" : "none !important",
+                  },
+                }}
+              >
+                <InputLabel
+                  htmlFor="search"
+                  sx={{
+                    color: "inherit",
+                    "&.Mui-focused": {
+                      color: "inherit",
+                    },
+                  }}
+                >
+                  Search by date
+                </InputLabel>
+                <DatePicker
+                  startDate={startDate}
+                  endDate={endDate}
+                  monthsShown={2}
+                  selectsRange
+                  dateFormat="MM/dd/yyyy"
+                  selected={startDate}
+                  onChange={handleRangePicker}
+                  isClearable
+                  customInput={<CustomInputForDatePicker />}
+                />
+              </Box>
+              <SearchInput
+                placeholder="search by name, email, phone"
+                setSearch={setSearch}
+                search={search}
+              />
+            </Stack>
+            <button className="logout-btn" onClick={() => setOpen(true)}>
               Logout
             </button>
-          </div>
-        </div>
+          </Box>
+        </Box>
         <div className="dropdowns-parent">
           <div className="filter-dropdowns">
             <Dropdown
@@ -587,7 +655,7 @@ const Home = () => {
                       }`}
                     >
                       <div className="table-headings-box">
-                        {header === "Download Selected" ? (
+                      {header === "Download Selected" ? (
                           <div
                             className="action-cell"
                             style={{ marginLeft: "7px" }}
@@ -633,7 +701,6 @@ const Home = () => {
                         ) : (
                           header
                         )}
-
                         {header === "Download Selected" ||
                         header === "Actions" ? null : (
                           <ArrowRightIcon
@@ -800,6 +867,7 @@ const Home = () => {
                           }
                         </td>
                       )}
+
                     </tr>
                   ))}
                 </tbody>
@@ -810,6 +878,17 @@ const Home = () => {
               </h1>
             )}
           </div>
+        )}
+        {data && data.length > 0 && (
+          <p
+            style={{
+              textAlign: "right",
+              marginTop: "10px",
+              fontWeight: 900,
+            }}
+          >
+            Total Applicants: {data.length}
+          </p>
         )}
       </div>
       <CustomModal
