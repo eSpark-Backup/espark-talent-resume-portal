@@ -1,69 +1,67 @@
-## Configuration with supabase
+# Configuration with Supabase
 
-First, you have to create an account on supabase
+First, you need to create an account on Supabase.
 
-Get the below keys: 
+## Getting Started
 
-Project settings > API: 
+1. **Create Supabase Project**
 
-Project URL="xxxxxxxxxxxxxx"
-anon_public_key="xxxxxxxxxxxxxxx"
+   Get the following keys from your Supabase project settings:
 
+   - Project settings > API:
+     - `Project URL="xxxxxxxxxxxxxx"`
+     - `anon_public_key="xxxxxxxxxxxxxxx"`
 
-Now create a table with the following schema: 
+2. **Create Table Schema**
 
-Name  
-id (int8)  null primary key
-created_at timestamp now()  
-name       text null  
-email      text null
-cnic       text null
-linkedin_profile   text null
-salary_expection   text null
-experience         text null
-availability       text null
-prefrences         text null
-education          text null
-github_profile     text null
-city               text null
-field              text null
-subField           text null
-position           text null
-cv                 text null
-phone_num          text null
-tags               text null    define as array
-job_type           text null
-projects           text null
-revamp_cv          text null
-country            text null
+   Create a table with the following schema:
 
+   | Name              | Type      | Constraints             |
+   |-------------------|-----------|-------------------------|
+   | id                | int8      | null primary key        |
+   | created_at        | timestamp | default now()           |
+   | name              | text      | null                    |
+   | email             | text      | null                    |
+   | cnic              | text      | null                    |
+   | linkedin_profile  | text      | null                    |
+   | salary_expection  | text      | null                    |
+   | experience        | text      | null                    |
+   | availability      | text      | null                    |
+   | prefrences        | text      | null                    |
+   | education         | text      | null                    |
+   | github_profile    | text      | null                    |
+   | city              | text      | null                    |
+   | field             | text      | null                    |
+   | subField          | text      | null                    |
+   | position          | text      | null                    |
+   | cv                | text      | null                    |
+   | phone_num         | text      | null                    |
+   | tags              | text[]    | null                    |
+   | job_type          | text      | null                    |
+   | projects          | text      | null                    |
+   | revamp_cv         | text      | null                    |
+   | country           | text      | null                    |
 
-Authentication Configuration
+## Authentication Configuration
 
-Create 2 users with the below email addresses with any strong passwords
+Create two users with the following email addresses and any strong passwords:
 
-1.admin@esparkconsultans.com
-2.hr@esparkconsultans.com
+1. admin@esparkconsultants.com
+2. hr@esparkconsultants.com
 
+## Policies Configuration
 
+Enable row level security and create four policies:
 
-Policies Configuration
+1. Insert: PUBLIC
+2. Select: AUTHENTICATED
+3. Delete: AUTHENTICATED
+4. Update: AUTHENTICATED
 
-Enable the row level security
+## Running the Project
 
-create 4 Policies 
-
-Insert PUBLIC 
-Select AUTHENTICATED
-Delete AUTHENTICATED
-Update AUTHENTICATED
-
-
-## Getting Started 
+To get started with the project, run the following commands:
 
 ```bash
-npm i 
-
+npm i
 npm run dev
-
-```
