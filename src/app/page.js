@@ -388,7 +388,11 @@ const Home = () => {
               direction={{ xs: "column", sm: "row" }}
               gap="15px"
             >
-              <Box sx={{ width: '100%', '.react-datepicker-wrapper': { width: { xs: '100%', sm: 'max-content' } } }}>
+              <Box sx={{
+                  width: '100%',
+                  '.react-datepicker-wrapper': { width: { xs: '100%', sm: 'max-content' } },
+                  '.react-datepicker__close-icon': { display: endDate ? 'table-cell' : 'none !important' }
+                }}>
                 <InputLabel
                   htmlFor="search"
                   sx={{
