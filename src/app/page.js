@@ -113,6 +113,7 @@ const Home = () => {
       }
       setData((prev) => prev.filter((item) => !ids.includes(item.id)));
       setDeleteModal(false);
+      setAllCheck(false)
       toast.success("Candidates Deleted Successfully");
       setDeleteLoader(false);
     }
