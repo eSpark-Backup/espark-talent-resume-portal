@@ -644,13 +644,17 @@ const Home = () => {
                   {headers.map((header, index) => (
                     <th
                       key={index}
-                      onClick={() => freezeColumn(index)}
+                      onClick={
+                        header === "Download Selected" || header === "Actions"
+                          ? null
+                          : () => freezeColumn(index)
+                      }
                       className={`cursor-pointer ${
                         frozenColumn === index ? "fixed-column" : ""
                       }`}
                     >
                       <div className="table-headings-box">
-                        {header === "Actions" ? (
+                      {header === "Download Selected" ? (
                           <div
                             className="action-cell"
                             style={{ marginLeft: "7px" }}
@@ -665,30 +669,56 @@ const Home = () => {
                             >
                               Download Selected
                             </button>
+                            {!isAdmin && (
+                              <Checkbox
+                                checked={allCheck}
+                                onChange={handleAllCheck}
+                              />
+                            )}
+                          </div>
+                        ) : header === "Actions" ? (
+                          <div className="action-cell del-cell">
+                            <button
+                              onClick={
+                                isAnyChecked ? () => handleDelete() : null
+                              }
+                              style={
+                                isAnyChecked
+                                  ? { cursor: "pointer" }
+                                  : { cursor: "not-allowed" }
+                              }
+                            >
+                              Delete Selected
+                            </button>
+                            <div className="del-check">
                             <Checkbox
                               checked={allCheck}
                               onChange={handleAllCheck}
                             />
+                            </div>
                           </div>
                         ) : (
                           header
                         )}
-                        <ArrowRightIcon
-                          sx={{
-                            transform: `${
-                              frozenColumn === index
-                                ? "rotate(90deg)"
-                                : "rotate(0deg)"
-                            }`,
-                            visibility: {
-                              md: "visible",
-                              sm: "hidden",
-                              xs: "visible",
-                            },
-                            fontSize: "17px",
-                            color: "#000",
-                          }}
-                        />
+                        {header === "Download Selected" ||
+                        header === "Actions" ? null : (
+                          <ArrowRightIcon
+                            sx={{
+                              transform: `${
+                                frozenColumn === index
+                                  ? "rotate(90deg)"
+                                  : "rotate(0deg)"
+                              }`,
+                              visibility: {
+                                md: "visible",
+                                sm: "hidden",
+                                xs: "visible",
+                              },
+                              fontSize: "17px",
+                              color: "#000",
+                            }}
+                          />
+                        )}
                       </div>
                     </th>
                   ))}
