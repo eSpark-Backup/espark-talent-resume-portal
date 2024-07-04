@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Configuration with Supabase
+
+First, you need to create an account on Supabase.
 
 ## Getting Started
 
-First, run the development server:
+1. **Create Supabase Project**
+
+   Get the following keys from your Supabase project settings:
+
+   - Project settings > API:
+     - `Project URL="xxxxxxxxxxxxxx"`
+     - `anon_public_key="xxxxxxxxxxxxxxx"`
+
+2. **Create Table Schema**
+
+   Create a table with the following schema:
+
+   | Name              | Type      | Constraints             |
+   |-------------------|-----------|-------------------------|
+   | id                | int8      | null primary key        |
+   | created_at        | timestamp | default now()           |
+   | name              | text      | null                    |
+   | email             | text      | null                    |
+   | cnic              | text      | null                    |
+   | linkedin_profile  | text      | null                    |
+   | salary_expection  | text      | null                    |
+   | experience        | text      | null                    |
+   | availability      | text      | null                    |
+   | prefrences        | text      | null                    |
+   | education         | text      | null                    |
+   | github_profile    | text      | null                    |
+   | city              | text      | null                    |
+   | field             | text      | null                    |
+   | subField          | text      | null                    |
+   | position          | text      | null                    |
+   | cv                | text      | null                    |
+   | phone_num         | text      | null                    |
+   | tags              | text[]    | null                    |
+   | job_type          | text      | null                    |
+   | projects          | text      | null                    |
+   | revamp_cv         | text      | null                    |
+   | country           | text      | null                    |
+
+## Authentication Configuration
+
+Create two users with the following email addresses and any strong passwords:
+
+1. admin@esparkconsultants.com
+2. hr@esparkconsultants.com
+
+## Policies Configuration
+
+Enable row level security and create four policies:
+
+1. Insert: PUBLIC
+2. Select: AUTHENTICATED
+3. Delete: AUTHENTICATED
+4. Update: AUTHENTICATED
+
+Note: Provide the SQL expression for all the policies as TRUE
+
+## Running the Project
+
+To get started with the project, run the following commands:
 
 ```bash
+npm i
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
