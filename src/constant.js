@@ -1,3 +1,5 @@
+export const ADMIN_EMAIL = "admin@esparkconsultants.com";
+
 export const cities = [
     "Abbottabad", "Adezai", "Ahmed Nager", "Ahmadpur East", "Akora Khattak", "Ali Khan", "Alipur", "Alpuri", "Arifwala", "Attock", "Awaran", "Ayubia",
     "Badin", "Banda Daud", "Bannu", "Barkhan", "Batkhela", "Battagram", "Bhalwal", "Bhera", "Bhirkan", "Bhakkar", "Birote", "Bahawalnagar", "Bahawalpur",
