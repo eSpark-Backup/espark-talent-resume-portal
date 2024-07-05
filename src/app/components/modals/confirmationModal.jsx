@@ -14,7 +14,7 @@ const ConfirmationModal = ({
 }) => {
   return (
     <Modal
-      sx={{ overlay: { background: "transparent" }}}
+      sx={{background:"transparent", overlay: { background: "transparent" }}}
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
