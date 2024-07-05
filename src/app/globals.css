@@ -149,13 +149,13 @@ form.form {
 p.upload-btn2 {
   background: #029894;
   color: #fff;
-  padding: 12px 12px;
   border-radius: 5px;
   cursor: pointer;
   height: 40px;
   width: 80px;
   display: flex;
   justify-content: center;
+  padding: 12px 12px !important;
 }
 
 p.filename {
