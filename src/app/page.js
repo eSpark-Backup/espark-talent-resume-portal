@@ -161,6 +161,7 @@ const Home = () => {
     "Salary Expectation",
     "Job Type",
     "Projects",
+    "Tags",
     "Field",
     "Position",
     "CV",
@@ -772,11 +773,20 @@ const Home = () => {
                         )}
                       </td>
                       <td className={getColumnClass(16)}>
+                        {item?.tags?.length > 50 ? (
+                          <Tooltip placement="top-start" title={item?.tags}>
+                            {item?.tags.slice(0, 50)}...
+                          </Tooltip>
+                        ) : (
+                          item?.tags
+                        )}
+                      </td>
+                      <td className={getColumnClass(17)}>
                         {item?.field}
                         {item?.subField && `/ ${item?.subField}`}
                       </td>
-                      <td className={getColumnClass(17)}>{item?.position}</td>
-                      <td className={getColumnClass(18)}>
+                      <td className={getColumnClass(18)}>{item?.position}</td>
+                      <td className={getColumnClass(19)}>
                         {
                           !isValidURL(item?.cv) ? (
                             <button
@@ -798,7 +808,7 @@ const Home = () => {
                         }
                       </td>
                       <td
-                        className={getColumnClass(19)}
+                        className={getColumnClass(20)}
                         onClick={() => setRow(item)}
                       >
                         {item?.revamp_cv ? (
@@ -817,7 +827,7 @@ const Home = () => {
                           </button>
                         )}
                       </td>
-                      <td className={getColumnClass(20)}>
+                      <td className={getColumnClass(21)}>
                         {!isValidURL(item?.revamp_cv) &&
                         !(item?.revamp_cv === null) ? (
                           <button
@@ -832,7 +842,7 @@ const Home = () => {
                           <span>No Resume Uploaded</span>
                         )}
                       </td>
-                      <td className={`action-cell ${getColumnClass(21)}`}>
+                      <td className={`action-cell ${getColumnClass(22)}`}>
                         <button onClick={() => xportSelected(item)}>
                           Download
                         </button>
@@ -844,7 +854,7 @@ const Home = () => {
                         )}
                       </td>
                       {isAdmin && (
-                        <td className={getColumnClass(22)}>
+                        <td className={getColumnClass(23)}>
                           {
                             <div
                               style={{
