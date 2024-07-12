@@ -8,7 +8,7 @@ import { useDebounce } from "use-debounce";
 function useFetchCandidates(authed) {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [candidates, setCandidates] = useState([])
     const [filter, setFilter] = useState({
@@ -62,12 +62,15 @@ function useFetchCandidates(authed) {
 
             if (error) {
                 setError('Error fetching applicants');
+                setLoading(false);
             } else {
                 setCandidates(data)
+                setLoading(false);
 
             }
         } catch (error) {
             setError('Error fetching applicants');
+            setLoading(false);
         }
     };
 

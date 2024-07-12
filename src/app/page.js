@@ -91,17 +91,18 @@ const Home = () => {
         toast.error("Error while deleting candidate");
         return;
       }
-      const updatedData = data[0];
-      setData((prev) => prev.filter((item) => item.id !== updatedData?.id));
-      toast.success("Candidate Deleted Successfully");
-      setDeleteModal(false);
-      setDeleteLoader(false);
+      if (data) {
+        const updatedData = data[0];
+        setData((prev) => prev.filter((item) => item.id !== updatedData?.id));
+        toast.success("Candidate Deleted Successfully");
+        setDeleteModal(false);
+        setDeleteLoader(false);
+      }
     } else {
       setDeleteLoader(true);
-
       const selectedData = data.filter((item) => item.checked);
       const ids = selectedData.map((item) => item.id);
-      const { _, error } = await supabase
+      const { data: NewData, error } = await supabase
         .from("Applicants")
         .delete()
         .in("id", ids);
@@ -111,11 +112,13 @@ const Home = () => {
         setDeleteLoader(false);
         return;
       }
+     if (NewData) {
       setData((prev) => prev.filter((item) => !ids.includes(item.id)));
       setDeleteModal(false);
       setAllCheck(false)
       toast.success("Candidates Deleted Successfully");
       setDeleteLoader(false);
+     }
     }
   };
 
@@ -433,6 +436,9 @@ const Home = () => {
       position: "",
       job_type: "",
     });
+    setSearch("");
+    setStartDate("");
+    setEndDate("")
     setOpen(false);
   };
 
@@ -640,7 +646,7 @@ const Home = () => {
           </div>
         ) : (
           <div className="table-parent">
-            {data && data.length > 0 ? (
+            {data && data.length > 0 && !loading ? (
               <table>
                 <thead>
                   {headers.map((header, index) => (
@@ -651,12 +657,11 @@ const Home = () => {
                           ? null
                           : () => freezeColumn(index)
                       }
-                      className={`cursor-pointer ${
-                        frozenColumn === index ? "fixed-column" : ""
-                      }`}
+                      className={`cursor-pointer ${frozenColumn === index ? "fixed-column" : ""
+                        }`}
                     >
                       <div className="table-headings-box">
-                      {header === "Download Selected" ? (
+                        {header === "Download Selected" ? (
                           <div
                             className="action-cell"
                             style={{ marginLeft: "7px" }}
@@ -693,24 +698,23 @@ const Home = () => {
                               Delete Selected
                             </button>
                             <div className="del-check">
-                            <Checkbox
-                              checked={allCheck}
-                              onChange={handleAllCheck}
-                            />
+                              <Checkbox
+                                checked={allCheck}
+                                onChange={handleAllCheck}
+                              />
                             </div>
                           </div>
                         ) : (
                           header
                         )}
                         {header === "Download Selected" ||
-                        header === "Actions" ? null : (
+                          header === "Actions" ? null : (
                           <ArrowRightIcon
                             sx={{
-                              transform: `${
-                                frozenColumn === index
+                              transform: `${frozenColumn === index
                                   ? "rotate(90deg)"
                                   : "rotate(0deg)"
-                              }`,
+                                }`,
                               visibility: {
                                 md: "visible",
                                 sm: "hidden",
@@ -829,7 +833,7 @@ const Home = () => {
                       </td>
                       <td className={getColumnClass(21)}>
                         {!isValidURL(item?.revamp_cv) &&
-                        !(item?.revamp_cv === null) ? (
+                          !(item?.revamp_cv === null) ? (
                           <button
                             className="td-button"
                             onClick={() =>
