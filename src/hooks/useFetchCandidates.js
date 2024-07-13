@@ -79,7 +79,7 @@ function useFetchCandidates(authed) {
     }
 }, [filter, debouncedSearch, authed, endDate]);
 
-return { candidates, loading, error, filter, setFilter, search, setSearch, setLoading, startDate, setStartDate, endDate, setEndDate };
+return { candidates, setCandidates, loading, error, filter, setFilter, search, setSearch, setLoading, startDate, setStartDate, endDate, setEndDate };
 }
 
 export default useFetchCandidates;

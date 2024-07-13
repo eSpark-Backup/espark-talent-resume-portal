@@ -47,6 +47,7 @@ const Home = () => {
   const [allCheck, setAllCheck] = useState(false);
   const {
     candidates,
+    setCandidates,
     loading,
     error,
     filter,
@@ -93,7 +94,7 @@ const Home = () => {
       }
       if (data) {
         const updatedData = data[0];
-        setData((prev) => prev.filter((item) => item.id !== updatedData?.id));
+        setCandidates((prev) => prev.filter((item) => item.id !== updatedData?.id));
         toast.success("Candidate Deleted Successfully");
         setDeleteModal(false);
         setDeleteLoader(false);
@@ -113,7 +114,7 @@ const Home = () => {
         return;
       }
      if (NewData) {
-      setData((prev) => prev.filter((item) => !ids.includes(item.id)));
+      setCandidates((prev) => prev.filter((item) => !ids.includes(item.id)));
       setDeleteModal(false);
       setAllCheck(false)
       toast.success("Candidates Deleted Successfully");
