@@ -887,11 +887,17 @@ const Home = () => {
                   ))}
                 </tbody>
               </table>
-            ) : (
+            ) : data.length == 0 ? (
               <h1 style={{ textAlign: "center", marginTop: "20px" }}>
                 No Applicants Found
               </h1>
-            )}
+            )
+            : (
+              <div className="load-conatiner">
+              <span class="loader"></span>
+              </div>
+            )
+          }
           </div>
         )}
         {data && data.length > 0 && (
