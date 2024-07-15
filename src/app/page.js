@@ -258,6 +258,7 @@ const Home = () => {
       "Phone No",
       "Job Type",
       "Projects",
+      "Country",
       "Resume",
     ];
     headers.forEach((header, index) => {
@@ -317,6 +318,7 @@ const Home = () => {
       "Phone No",
       "Job Type",
       "Projects",
+      "Country",
       "Resume",
     ];
     headers.forEach((header, index) => {
