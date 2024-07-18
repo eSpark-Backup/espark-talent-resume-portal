@@ -474,10 +474,11 @@ const Home = () => {
   const capitalizeWords = (str) => {
     if (!str) return "";
     return str
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .split(/(\s|-)/)
+      .map((word) => (word.match(/[\s-]/) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+      .join("");
   };
+  
   return (
     <div className="home-main">
       <div className="jobs-container">
@@ -790,11 +791,11 @@ const Home = () => {
                         {item?.availability}
                       </td>
                       <td className={getColumnClass(11)}>{item?.experience}</td>
-                      <td className={getColumnClass(12)}>{item?.prefrences}</td>
+                      <td className={getColumnClass(12)}>{capitalizeWords(item?.prefrences)}</td>
                       <td className={getColumnClass(13)}>
                         {item?.salary_expection}
                       </td>
-                      <td className={getColumnClass(14)}>{item?.job_type}</td>
+                      <td className={getColumnClass(14)}>{capitalizeWords(item?.job_type)}</td>
                       <td className={getColumnClass(15)}>
                         {item?.projects?.length > 50 ? (
                           <Tooltip placement="top-start" title={item?.projects}>
