@@ -790,13 +790,13 @@ const Home = () => {
                       <td className={getColumnClass(11)}>
                         {item?.availability}
                       </td>
-                      <td className={getColumnClass(11)}>{item?.experience}</td>
-                      <td className={getColumnClass(12)}>{capitalizeWords(item?.prefrences)}</td>
-                      <td className={getColumnClass(13)}>
+                      <td className={getColumnClass(12)}>{item?.experience}</td>
+                      <td className={getColumnClass(13)}>{capitalizeWords(item?.prefrences)}</td>
+                      <td className={getColumnClass(14)}>
                         {item?.salary_expection}
                       </td>
-                      <td className={getColumnClass(14)}>{capitalizeWords(item?.job_type)}</td>
-                      <td className={getColumnClass(15)}>
+                      <td className={getColumnClass(15)}>{capitalizeWords(item?.job_type)}</td>
+                      <td className={getColumnClass(16)}>
                         {item?.projects?.length > 50 ? (
                           <Tooltip placement="top-start" title={item?.projects}>
                             {item?.projects.slice(0, 50)}...
