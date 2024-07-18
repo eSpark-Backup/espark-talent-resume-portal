@@ -19,6 +19,7 @@ import {
   subField,
   COUNTRIES_OPTIONS,
   ADMIN_EMAIL,
+  genderOptions,
 } from "@/constant";
 import useFetchCandidates from "@/hooks/useFetchCandidates";
 import { DateMonthYear } from "@/utility/DataConverter";
@@ -153,10 +154,11 @@ const Home = () => {
     "Date",
     "Email",
     "Phone Number",
-    "CNIC",
+    "Gender",
     "Country",
     "City",
     "Education",
+    "Major",
     "Github Profile",
     "LinkedIn Profile",
     "Availability",
@@ -244,13 +246,14 @@ const Home = () => {
       "Name",
       "Date",
       "Email",
-      "CNIC",
+      "Gender",
       "LinkedIn URL",
       "Exp Sallary",
       "Experience",
       "Availability",
       "Preference",
       "Education",
+      "Major",
       "Github URL",
       "City",
       "Department",
@@ -304,13 +307,14 @@ const Home = () => {
       "Name",
       "Date",
       "Email",
-      "CNIC",
+      "Gender",
       "LinkedIn URL",
       "Exp Sallary",
       "Experience",
       "Availability",
       "Preference",
       "Education",
+      "Major",
       "Github URL",
       "City",
       "Department",
@@ -438,6 +442,7 @@ const Home = () => {
       field: "",
       position: "",
       job_type: "",
+      gender: ""
     });
     setSearch("");
     setStartDate("");
@@ -642,6 +647,16 @@ const Home = () => {
               />
             </div>
           )}
+           <div className="filter-dropdowns">
+            <Dropdown
+              placeholder={"Select Gender"}
+              label={"Gender"}
+              options={genderOptions}
+              value={filter.gender}
+              name={"gender"}
+              onChange={handleFilter}
+            />
+          </div>
         </div>
         {loading ? (
           <div className="load-conatiner">
@@ -741,7 +756,12 @@ const Home = () => {
                       </td>
                       <td className={getColumnClass(2)}>{item?.email}</td>
                       <td className={getColumnClass(3)}>{item?.phone_num}</td>
-                      <td className={getColumnClass(4)}>{item?.cnic}</td>
+                      {/* <td className={getColumnClass(4)}>{item?.cnic}</td> */}
+                      <td className={getColumnClass(4)}>
+                      {item?.gender === null
+                          ? "-"
+                          : capitalizeWords(item?.gender)}
+                      </td>
                       <td className={getColumnClass(5)}>
                         {capitalizeWords(item?.country)}
                       </td>
@@ -751,6 +771,11 @@ const Home = () => {
                           : capitalizeWords(item?.city)}
                       </td>
                       <td className={getColumnClass(7)}>{item?.education}</td>
+                      <td className={getColumnClass(7)}>
+                      {item?.major === null
+                          ? "-"
+                          : capitalizeWords(item?.major)}
+                      </td>
                       <td className={getColumnClass(8)}>
                         <a href={item?.github_profile} target="_blank">
                           {item?.github_profile}

@@ -631,6 +631,21 @@ export const designationOptions = [
     },
 ];
 
+export const genderOptions = [
+    {
+      value: 'male',
+      label: 'Male',
+    },
+    {
+      value: 'female',
+      label: 'Female',
+    },
+    {
+      value: 'prefer not to say',
+      label: 'Prefer Not To Say',
+    },
+  ];
+
 
 
 
