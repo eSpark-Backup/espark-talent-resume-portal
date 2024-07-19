@@ -407,7 +407,7 @@ const Home = () => {
 
     // update the UI
     const updatedData = data[0];
-    setData((prev) =>
+    setCandidates((prev) =>
       prev.map((item) => {
         if (item.id === updatedData?.id) {
           return updatedData;
