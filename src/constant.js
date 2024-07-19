@@ -231,7 +231,7 @@ const COUNTRIES = [
     'Yemen',
     'Zambia',
     'Zimbabwe',
-  ];
+];
 
 
 export const citiesWithLabelValue = cities.map(city => ({
@@ -280,6 +280,14 @@ export const availibilityOptions = [
 
 export const educationOption = [
     {
+        label: 'Diploma',
+        value: 'Diploma',
+    },
+    {
+        label: 'Matriculate',
+        value: 'Matriculate',
+    },
+    {
         label: "Intermediate",
         value: "Intermediate"
     },
@@ -296,16 +304,16 @@ export const educationOption = [
 export const jobTypeOptions = [
 
     {
-        label:"Full Time",
-        value:"full-time"
+        label: "Full Time",
+        value: "full-time"
     },
     {
-        label:"Part Time",
-        value:"part-time"
+        label: "Part Time",
+        value: "part-time"
     },
     {
-        label:"Contract",
-        value:"contract"
+        label: "Contract",
+        value: "contract"
     }
 ]
 
@@ -633,18 +641,18 @@ export const designationOptions = [
 
 export const genderOptions = [
     {
-      value: 'male',
-      label: 'Male',
+        value: 'male',
+        label: 'Male',
     },
     {
-      value: 'female',
-      label: 'Female',
+        value: 'female',
+        label: 'Female',
     },
     {
-      value: 'prefer not to say',
-      label: 'Prefer Not To Say',
+        value: 'prefer not to say',
+        label: 'Prefer Not To Say',
     },
-  ];
+];
 
 
 

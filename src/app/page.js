@@ -60,7 +60,7 @@ const Home = () => {
     setStartDate,
     endDate,
     setEndDate,
-  } = useFetchCandidates(authed);
+  } = useFetchCandidates(authed, setAllCheck);
   const [revampResume, setRevampResume] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [row, setRow] = useState(null);

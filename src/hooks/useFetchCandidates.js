@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 
-function useFetchCandidates(authed) {
+function useFetchCandidates(authed, setAllCheck) {
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [loading, setLoading] = useState(false);
@@ -64,14 +64,17 @@ function useFetchCandidates(authed) {
             if (error) {
                 setError('Error fetching applicants');
                 setLoading(false);
+                setAllCheck(false);
             } else {
                 setCandidates(data)
                 setLoading(false);
+                setAllCheck(false);
 
             }
         } catch (error) {
             setError('Error fetching applicants');
             setLoading(false);
+            setAllCheck(false);
         }
     };
 
