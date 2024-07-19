@@ -292,12 +292,12 @@ export const educationOption = [
         value: "Intermediate"
     },
     {
-        label: "Bachelor",
-        value: "Bachelor"
+        label: 'Bachelors',
+        value: 'Bachelors',
     },
     {
-        label: "Master",
-        value: "Master"
+        label: 'Masters',
+        value: 'Masters',
     },
 ]
 
