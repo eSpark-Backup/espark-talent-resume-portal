@@ -19,6 +19,7 @@ import {
   subField,
   COUNTRIES_OPTIONS,
   ADMIN_EMAIL,
+  genderOptions,
 } from "@/constant";
 import useFetchCandidates from "@/hooks/useFetchCandidates";
 import { DateMonthYear } from "@/utility/DataConverter";
@@ -153,10 +154,11 @@ const Home = () => {
     "Date",
     "Email",
     "Phone Number",
-    "CNIC",
+    "Gender",
     "Country",
     "City",
     "Education",
+    "Major",
     "Github Profile",
     "LinkedIn Profile",
     "Availability",
@@ -244,7 +246,6 @@ const Home = () => {
       "Name",
       "Date",
       "Email",
-      "CNIC",
       "LinkedIn URL",
       "Exp Sallary",
       "Experience",
@@ -259,6 +260,8 @@ const Home = () => {
       "Job Type",
       "Projects",
       "Country",
+      "Gender",
+      "Major",
       "Resume",
     ];
     headers.forEach((header, index) => {
@@ -304,7 +307,6 @@ const Home = () => {
       "Name",
       "Date",
       "Email",
-      "CNIC",
       "LinkedIn URL",
       "Exp Sallary",
       "Experience",
@@ -319,6 +321,8 @@ const Home = () => {
       "Job Type",
       "Projects",
       "Country",
+      "Gender",
+      "Major",
       "Resume",
     ];
     headers.forEach((header, index) => {
@@ -438,6 +442,7 @@ const Home = () => {
       field: "",
       position: "",
       job_type: "",
+      gender: ""
     });
     setSearch("");
     setStartDate("");
@@ -469,10 +474,11 @@ const Home = () => {
   const capitalizeWords = (str) => {
     if (!str) return "";
     return str
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .split(/(\s|-)/)
+      .map((word) => (word.match(/[\s-]/) ? word : word.charAt(0).toUpperCase() + word.slice(1)))
+      .join("");
   };
+  
   return (
     <div className="home-main">
       <div className="jobs-container">
@@ -642,6 +648,16 @@ const Home = () => {
               />
             </div>
           )}
+           <div className="filter-dropdowns">
+            <Dropdown
+              placeholder={"Select Gender"}
+              label={"Gender"}
+              options={genderOptions}
+              value={filter.gender}
+              name={"gender"}
+              onChange={handleFilter}
+            />
+          </div>
         </div>
         {loading ? (
           <div className="load-conatiner">
@@ -741,7 +757,12 @@ const Home = () => {
                       </td>
                       <td className={getColumnClass(2)}>{item?.email}</td>
                       <td className={getColumnClass(3)}>{item?.phone_num}</td>
-                      <td className={getColumnClass(4)}>{item?.cnic}</td>
+                      {/* <td className={getColumnClass(4)}>{item?.cnic}</td> */}
+                      <td className={getColumnClass(4)}>
+                      {item?.gender === null
+                          ? "-"
+                          : capitalizeWords(item?.gender)}
+                      </td>
                       <td className={getColumnClass(5)}>
                         {capitalizeWords(item?.country)}
                       </td>
@@ -752,25 +773,30 @@ const Home = () => {
                       </td>
                       <td className={getColumnClass(7)}>{item?.education}</td>
                       <td className={getColumnClass(8)}>
+                      {item?.major === null
+                          ? "-"
+                          : capitalizeWords(item?.major)}
+                      </td>
+                      <td className={getColumnClass(9)}>
                         <a href={item?.github_profile} target="_blank">
                           {item?.github_profile}
                         </a>
                       </td>
-                      <td className={getColumnClass(9)}>
+                      <td className={getColumnClass(10)}>
                         <a href={item?.linkedin_profile} target="_blank">
                           {item?.linkedin_profile}
                         </a>
                       </td>
-                      <td className={getColumnClass(10)}>
+                      <td className={getColumnClass(11)}>
                         {item?.availability}
                       </td>
-                      <td className={getColumnClass(11)}>{item?.experience}</td>
-                      <td className={getColumnClass(12)}>{item?.prefrences}</td>
-                      <td className={getColumnClass(13)}>
+                      <td className={getColumnClass(12)}>{item?.experience}</td>
+                      <td className={getColumnClass(13)}>{capitalizeWords(item?.prefrences)}</td>
+                      <td className={getColumnClass(14)}>
                         {item?.salary_expection}
                       </td>
-                      <td className={getColumnClass(14)}>{item?.job_type}</td>
-                      <td className={getColumnClass(15)}>
+                      <td className={getColumnClass(15)}>{capitalizeWords(item?.job_type)}</td>
+                      <td className={getColumnClass(16)}>
                         {item?.projects?.length > 50 ? (
                           <Tooltip placement="top-start" title={item?.projects}>
                             {item?.projects.slice(0, 50)}...
@@ -779,7 +805,7 @@ const Home = () => {
                           item?.projects
                         )}
                       </td>
-                      <td className={getColumnClass(16)}>
+                      <td className={getColumnClass(17)}>
                         {item?.tags?.length > 50 ? (
                           <Tooltip placement="top-start" title={item?.tags}>
                             {item?.tags.slice(0, 50)}...
@@ -788,12 +814,12 @@ const Home = () => {
                           item?.tags
                         )}
                       </td>
-                      <td className={getColumnClass(17)}>
+                      <td className={getColumnClass(18)}>
                         {item?.field}
                         {item?.subField && `/ ${item?.subField}`}
                       </td>
-                      <td className={getColumnClass(18)}>{item?.position}</td>
-                      <td className={getColumnClass(19)}>
+                      <td className={getColumnClass(19)}>{item?.position}</td>
+                      <td className={getColumnClass(20)}>
                         {
                           !isValidURL(item?.cv) ? (
                             <button
@@ -815,7 +841,7 @@ const Home = () => {
                         }
                       </td>
                       <td
-                        className={getColumnClass(20)}
+                        className={getColumnClass(21)}
                         onClick={() => setRow(item)}
                       >
                         {item?.revamp_cv ? (
@@ -834,7 +860,7 @@ const Home = () => {
                           </button>
                         )}
                       </td>
-                      <td className={getColumnClass(21)}>
+                      <td className={getColumnClass(22)}>
                         {!isValidURL(item?.revamp_cv) &&
                           !(item?.revamp_cv === null) ? (
                           <button
@@ -849,7 +875,7 @@ const Home = () => {
                           <span>No Resume Uploaded</span>
                         )}
                       </td>
-                      <td className={`action-cell ${getColumnClass(22)}`}>
+                      <td className={`action-cell ${getColumnClass(23)}`}>
                         <button onClick={() => xportSelected(item)}>
                           Download
                         </button>
@@ -861,7 +887,7 @@ const Home = () => {
                         )}
                       </td>
                       {isAdmin && (
-                        <td className={getColumnClass(23)}>
+                        <td className={getColumnClass(24)}>
                           {
                             <div
                               style={{

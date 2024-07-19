@@ -106,6 +106,10 @@ a {
   align-items: center;
 }
 
+.css-3t6vy6-menu {
+  z-index: 9999 !important;
+}
+
 .modal.card {
   min-height: auto !important;
 }
@@ -572,7 +576,7 @@ button.disabled {
   .fixed-column{
   position: sticky;
   left: 0;
-  z-index: 100;
+  z-index: 1;
   background-color: white;
   }
   .cursor-pointer {
