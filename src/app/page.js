@@ -637,7 +637,7 @@ const Home = () => {
           <div className="filter-dropdowns">
             <Dropdown
               placeholder="Select Position"
-              label="Position"
+              label="Search Position"
               options={positionOptions}
               value={filter.position}
               name="position"
