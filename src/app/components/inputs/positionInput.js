@@ -40,16 +40,18 @@ const PositionInput = ({
         sx={{
           '& .MuiOutlinedInput-root': {
             height: '56px',
-            backgroundColor: 'white',
+            backgroundColor: '#fff',
+            borderColor: '#2684FF',
             '&:hover': {
-              backgroundColor: '#e6e9eb',
+              backgroundColor: '#fff',
+              borderColor: '#2684FF',
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#e6e9eb',
+              borderColor: '#2684FF',
             },
             '&.Mui-focused': {
               backgroundColor: '#fff',
-              borderColor: '#e6e9eb',
+              borderColor: '#2684FF',
             },
           },
           '& input': {
