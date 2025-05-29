@@ -13,10 +13,8 @@ import {
   educationOption,
   jobTypeOptions,
   expOptions,
-  // field,
-  positionBysubfields,
+  field,
   prefOptions,
-  subField,
   COUNTRIES_OPTIONS,
   ADMIN_EMAIL,
   genderOptions,
@@ -33,124 +31,183 @@ import {
   Box,
   Stack,
   InputLabel,
+  TextField,
 } from '@mui/material';
 import CustomModal from '@/common/Modal';
 import supabase from '@/app/services/supabaseClient';
 import { isValidURL } from '@/utility/URLValidator';
 import DatePicker from 'react-datepicker';
 import { CustomInputForDatePicker } from '@/app/components/inputs/datePicker';
+import PositionInput from './components/inputs/positionInput';
 
 const Home = () => {
+  // State to track if the user is authenticated
   const [authed, setAuthed] = useState(false);
+
+  // State to control whether a modal or drawer is open
   const [open, setOpen] = useState(false);
+
+  // State to control visibility of the delete confirmation modal
   const [DeleteModal, setDeleteModal] = useState(false);
+
+  // State to hold the fetched candidate data array
   const [data, setData] = useState([]);
+
+  // State to track if the "select all" checkbox is checked
   const [allCheck, setAllCheck] = useState(false);
+
+  // Custom hook to fetch candidates with various states and filters
   const {
-    candidates,
-    setCandidates,
-    loading,
-    error,
-    filter,
-    setFilter,
-    search,
-    setSearch,
-    setLoading,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
+    candidates, // List of candidates fetched
+    setCandidates, // Function to update candidates list
+    loading, // Loading state during fetch
+    error, // Error state if fetch fails
+    filter, // Filter value for candidates
+    setFilter, // Function to update filter
+    search, // Search query string
+    setSearch, // Function to update search query
+    setLoading, // Function to update loading state
+    startDate, // Filter start date
+    setStartDate, // Function to update start date
+    endDate, // Filter end date
+    setEndDate, // Function to update end date
   } = useFetchCandidates(authed, setAllCheck);
+
+  // State to hold the resume content or path to be revamped/edited
   const [revampResume, setRevampResume] = useState('');
+
+  // State to control visibility of a modal (e.g., for editing or details)
   const [showModal, setShowModal] = useState(false);
+
+  // State to hold the data of the currently selected row
   const [row, setRow] = useState(null);
+
+  // Loader state for showing loading spinner inside a modal
   const [modalLoader, setModalLoader] = useState(false);
+
+  // State to hold which column should remain frozen (sticky) in a table
   const [frozenColumn, setFrozenColumn] = useState(null);
+
+  // State to check if any checkbox in the list is checked
   const [isAnyChecked, setIsAnyChecked] = useState(false);
+
+  // Retrieve authentication info from localStorage safely
   const AuthInfo =
     typeof window !== 'undefined' &&
     typeof localStorage !== 'undefined' &&
     JSON.parse(localStorage.getItem('supabase.auth.token'));
+
+  // State to check if the authenticated user is an admin
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // State to hold the ID of the candidate selected for deletion
   const [deleteId, setDeleteId] = useState(null);
+
+  // Loader state while performing the delete operation
   const [deleteLoader, setDeleteLoader] = useState(false);
 
+  // Function to open delete modal and set the candidate ID to be deleted
   const handleDelete = async (id) => {
     setDeleteModal(true);
     setDeleteId(id);
   };
-
+  // Function to handle deleting candidates from the database using Supabase
   const handleSupabaseDelete = async () => {
+    // If a single candidate ID is set for deletion
     if (deleteId) {
-      setDeleteLoader(true);
+      setDeleteLoader(true); // Show loader during deletion
+
+      // Call Supabase to delete the candidate with the matching id
       const { data, error } = await supabase
         .from('Applicants')
         .delete()
         .eq('id', deleteId);
+
       if (error) {
-        console.error(error);
-        setDeleteLoader(false);
-        toast.error('Error while deleting candidate');
-        return;
+        console.error(error); // Log error to console
+        setDeleteLoader(false); // Hide loader
+        toast.error('Error while deleting candidate'); // Show error toast notification
+        return; // Exit early on error
       }
+
       if (data) {
-        const updatedData = data[0];
+        const updatedData = data[0]; // Supabase returns deleted data array, take the first item
+
+        // Remove the deleted candidate from the local state to update UI
         setCandidates((prev) =>
           prev.filter((item) => item.id !== updatedData?.id)
         );
-        toast.success('Candidate Deleted Successfully');
-        setDeleteModal(false);
-        setDeleteLoader(false);
+
+        toast.success('Candidate Deleted Successfully'); // Show success message
+        setDeleteModal(false); // Close the delete confirmation modal
+        setDeleteLoader(false); // Hide loader
       }
     } else {
-      setDeleteLoader(true);
+      // If no specific deleteId, delete multiple candidates that are checked
+
+      setDeleteLoader(true); // Show loader
+
+      // Filter candidates that are selected (checked)
       const selectedData = data.filter((item) => item.checked);
+
+      // Extract IDs of all checked candidates
       const ids = selectedData.map((item) => item.id);
+
+      // Call Supabase to delete all candidates whose id is in the selected IDs list
       const { data: NewData, error } = await supabase
         .from('Applicants')
         .delete()
         .in('id', ids);
+
       if (error) {
-        console.error(error);
-        toast.error('Error while deleting candidates');
-        setDeleteLoader(false);
-        return;
+        console.error(error); // Log any error
+        toast.error('Error while deleting candidates'); // Show error toast
+        setDeleteLoader(false); // Hide loader
+        return; // Exit early on error
       }
+
       if (NewData) {
+        // Remove all deleted candidates from local state
         setCandidates((prev) => prev.filter((item) => !ids.includes(item.id)));
-        setDeleteModal(false);
-        setAllCheck(false);
-        toast.success('Candidates Deleted Successfully');
-        setDeleteLoader(false);
+
+        setDeleteModal(false); // Close delete modal
+        setAllCheck(false); // Uncheck "select all" checkbox
+        toast.success('Candidates Deleted Successfully'); // Show success message
+        setDeleteLoader(false); // Hide loader
       }
     }
   };
 
+  // useEffect to check if the authenticated user is an admin by comparing email with predefined ADMIN_EMAIL
   useEffect(() => {
     if (AuthInfo?.currentSession?.user?.email === ADMIN_EMAIL) {
-      setIsAdmin(true);
+      setIsAdmin(true); // User is admin
     } else {
-      setIsAdmin(false);
+      setIsAdmin(false); // User is not admin
     }
-  }, [AuthInfo]);
-
+  }, [AuthInfo]); // Re-run whenever AuthInfo changes
+  // Handler for when the date range picker changes its value
+  // Receives an array of two dates [start, end]
   const handleRangePicker = (dates) => {
     const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
+    setStartDate(start); // Update the start date filter state
+    setEndDate(end); // Update the end date filter state
   };
 
+  // Toggles freezing (locking) a specific column by its index
   const freezeColumn = (index) => {
     if (frozenColumn === index) {
-      setFrozenColumn(null);
+      setFrozenColumn(null); // Unfreeze if already frozen
     } else {
-      setFrozenColumn(index);
+      setFrozenColumn(index); // Freeze the clicked column
     }
   };
 
+  // Returns a CSS class name if the column index matches the frozen column
   const getColumnClass = (index) =>
     frozenColumn === index ? 'fixed-column' : '';
 
+  // Table headers for the candidate data columns
   const headers = [
     'Name',
     'Date',
@@ -178,72 +235,104 @@ const Home = () => {
     'Download Selected',
   ];
 
+  // Add 'Actions' column header if the user is admin
   if (isAdmin) {
     headers.push('Actions');
   }
 
+  // Handles toggling the checked state of a single candidate item in the data list
   const handleCheck = (obj) => {
     const temp = data.map((item) => {
       if (item.id === obj.id) {
+        // Toggle checked property for the matching candidate
         return { ...item, checked: !item.checked };
       }
       return { ...item };
     });
-    setData(temp);
+    setData(temp); // Update data state with toggled checked state
   };
 
+  // Handles toggling the "select all" checkbox and applies the checked state to all candidates
   const handleAllCheck = () => {
     if (allCheck) {
-      setAllCheck(false);
-      setData(candidates.map((item) => ({ ...item, checked: false })));
+      setAllCheck(false); // Uncheck "select all"
+      setData(candidates.map((item) => ({ ...item, checked: false }))); // Uncheck all candidates
     } else {
-      setAllCheck(true);
-      setData(candidates.map((item) => ({ ...item, checked: true })));
+      setAllCheck(true); // Check "select all"
+      setData(candidates.map((item) => ({ ...item, checked: true }))); // Check all candidates
     }
   };
 
+  // Effect hook to update data and loading state whenever there is an error, candidates update, or position filter changes
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error(error); // Show error toast if there is an error fetching candidates
     }
-    setLoading(true);
-    setData(candidates.map((item) => ({ ...item, checked: false })));
-    setLoading(false);
-  }, [error, candidates]);
+    setLoading(true); // Set loading state true while updating data
 
+    // Initialize data with candidates, adding a 'checked' property set to false for each
+    setData(candidates.map((item) => ({ ...item, checked: false })));
+
+    setLoading(false); // Set loading false after updating data
+  }, [error, candidates, filter.position]);
+  // Export all selected candidates to an Excel file
   const xportAll = useCallback(async () => {
-    const columnIndexToRemove = 0;
+    const columnIndexToRemove = 0; // Index of the column to remove (e.g., first column key)
+
+    // Filter out candidates that are checked (selected)
     const selectedData = data.filter((item) => item.checked);
+
+    // If no candidates selected, update state and exit
     if (selectedData.length <= 0) {
       setIsAnyChecked(false);
       return;
     }
-    setIsAnyChecked(true);
+
+    setIsAnyChecked(true); // Indicate at least one candidate is selected
+
+    // Map selected data to remove unwanted keys and add resume URL
     const finalArr = selectedData.map((item) => {
       const { checked, id, name, ...rest } = item;
       return { id, name, ...rest, resume: process.env.PORTAL_LIVE_URL };
     });
+
+    // Format each row for Excel export
     const formattedData = finalArr.map((row) => {
       const newRow = { ...row };
+
+      // Remove the property of the first column key by index
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
+
+      // Format the created_at date using a helper function
       newRow.created_at = DateMonthYear(newRow?.created_at);
+
+      // If subField exists, merge it with field and then remove subField
       if (newRow.subField) {
         newRow.field = `${newRow.field} / ${newRow.subField}`;
         delete newRow.subField;
       } else {
         delete newRow.subField;
       }
+
+      // Remove unwanted keys that should not appear in export
       delete newRow.cv;
       delete newRow.revamp_cv;
       delete newRow.tags;
+
+      // Format the resume field as a clickable hyperlink in Excel
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
         v: newRow?.resume,
       };
+
       return newRow;
     });
+
+    // Create a worksheet from JSON data
     const ws = utils.json_to_sheet(formattedData);
+
+    // Define headers for the Excel sheet columns
     const headers = [
       'Name',
       'Date',
@@ -266,45 +355,74 @@ const Home = () => {
       'Major',
       'Resume',
     ];
+
+    // Manually assign headers to the first row of worksheet
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: 's' };
     });
+
+    // Create a new workbook and append the worksheet
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Data');
+
+    // Save the workbook to a file named 'data.xlsx'
     writeFileXLSX(wb, 'data.xlsx');
   });
 
+  // Export a single selected candidate to an Excel file
   const xportSelected = useCallback(async (object) => {
+    // Create a shallow copy of the candidate object and add resume URL
     const obj = {
       id: object.id,
       name: object.name,
       ...object,
       resume: process.env.PORTAL_LIVE_URL,
     };
+
+    // Remove checked property which is irrelevant for export
     delete obj.checked;
+
+    // Wrap object in an array to use same logic as bulk export
     const arr = [obj];
     const columnIndexToRemove = 0;
+
+    // Format data similarly as in bulk export
     const formattedData = arr.map((row) => {
       const newRow = { ...row };
+
+      // Remove first key column
       delete newRow[Object.keys(newRow)[columnIndexToRemove]];
+
+      // Format created_at date
       newRow.created_at = DateMonthYear(newRow?.created_at);
+
+      // Handle subField merging/removal
       if (newRow.subField) {
         newRow.field = `${newRow.field} / ${newRow.subField}`;
         delete newRow.subField;
       } else {
         delete newRow.subField;
       }
+
+      // Remove unwanted keys
       delete newRow.cv;
       delete newRow.revamp_cv;
       delete newRow.tags;
+
+      // Format resume hyperlink
       newRow.resume = {
         f: `HYPERLINK("${newRow?.resume}", "Click Here")`,
         t: 'n',
         v: newRow?.resume,
       };
+
       return newRow;
     });
+
+    // Create worksheet from formatted data
     const ws = utils.json_to_sheet(formattedData);
+
+    // Define headers for columns (same as bulk export)
     const headers = [
       'Name',
       'Date',
@@ -327,40 +445,60 @@ const Home = () => {
       'Major',
       'Resume',
     ];
+
+    // Set headers in worksheet first row
     headers.forEach((header, index) => {
       ws[String.fromCharCode(65 + index) + 1] = { v: header, t: 's' };
     });
+
+    // Create new workbook, append worksheet, and save file named after candidate's name
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, 'Data');
     writeFileXLSX(wb, `${obj?.name}.xlsx`);
   });
-
+  // Handles updating filters based on filter name and value
   const handleFilter = (name, value) => {
+    // Create a newValue object with label and value properties
+    let newValue = { label: value, value: value };
+
+    // Special case for 'position' filter: empty strings should reset the filter
+    if (name == 'position') {
+      if (newValue.label == '' && newValue.value == '') {
+        newValue = '';
+      }
+      // Update only the position filter while keeping other filters intact
+      setFilter((prev) => ({
+        ...prev,
+        [name]: newValue,
+      }));
+      return;
+    }
+
+    // Special case for 'field' filter: reset position when field changes
+    if (name == 'field') {
+      setFilter((prev) => ({
+        ...prev,
+        [name]: value,
+        position: '',
+      }));
+      return;
+    }
+
+    // Default case: update the filter value for the given name
     setFilter((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const [positionOptions, setPositionOptions] = useState(null);
-  useEffect(() => {
-    const subFieldOptions = Object.values(subField)
-      .flat()
-      .map((item) => ({ label: item.label, value: item.value }));
-    const positionBySubFieldOptions = Object.values(positionBysubfields)
-      .flat()
-      .map((item) => ({ label: item.label, value: item.value }));
-    const mergedOptions = [...subFieldOptions, ...positionBySubFieldOptions];
-    const sortedOptions = mergedOptions.sort((a, b) =>
-      a.label.localeCompare(b.label)
-    );
-    setPositionOptions(sortedOptions);
-  }, []);
-
+  // Generates a downloadable/openable resume link from a given resume key
   const handleGenerateResumeLink = async (resumeKey) => {
     try {
+      // Request signed URL for the resume file from the backend API
       const data = await fetch(`/api?resume=${resumeKey}`);
       const { url } = await data.json();
+
+      // Verify URL is valid by attempting to fetch it
       const res = await fetch(url);
       if (!res?.ok && res?.status === 403) {
         toast.error(
@@ -374,6 +512,7 @@ const Home = () => {
         return;
       }
 
+      // Open the resume link in a new browser tab
       window.open(url, '_blank');
     } catch (error) {
       console.error(error);
@@ -381,20 +520,25 @@ const Home = () => {
     }
   };
 
+  // Handles file upload for updating the revamp CV for a candidate
   const handleChange = async (name, value) => {
-    setModalLoader(true);
+    setModalLoader(true); // Show loader during upload process
+
+    // Create a FormData object to hold the file data
     const formData = new FormData();
     formData.append('file', value);
 
+    // Send POST request to backend API for file upload
     const response = await fetch('/api', {
       method: 'POST',
       body: formData,
     });
 
+    // Get file key returned by API after successful upload
     const { fileKey } = await response.json();
     const id = row?.id;
 
-    // update Supabase with the new file key
+    // Update the revamp_cv field in the Supabase database for the candidate
     const { data, error } = await supabase
       .from('Applicants')
       .update({
@@ -409,7 +553,7 @@ const Home = () => {
       return;
     }
 
-    // update the UI
+    // Update the candidate list UI with the updated candidate data
     const updatedData = data[0];
     setCandidates((prev) =>
       prev.map((item) => {
@@ -421,10 +565,11 @@ const Home = () => {
     );
 
     toast.success('File uploaded successfully');
-    setShowModal(false);
-    setModalLoader(false);
+    setShowModal(false); // Close the modal after upload
+    setModalLoader(false); // Hide loader
   };
 
+  // Check if user is authenticated based on localStorage value
   const checkAuth = () => {
     const auth = localStorage.getItem('auth');
     if (auth) {
@@ -434,9 +579,12 @@ const Home = () => {
     }
   };
 
+  // Logout user: clear auth token, reset filters and UI states
   const logout = () => {
     localStorage.removeItem('auth');
-    checkAuth();
+    checkAuth(); // Recheck auth after removing token
+
+    // Reset all filters to empty/default values
     setFilter({
       city: '',
       experience: '',
@@ -447,26 +595,27 @@ const Home = () => {
       position: '',
       job_type: '',
       gender: '',
+      country: '',
     });
-    setSearch('');
-    setStartDate('');
-    setEndDate('');
-    setOpen(false);
+
+    setSearch(''); // Clear search input
+    setStartDate(null); // Clear start date filter
+    setEndDate(null); // Clear end date filter
+    setOpen(false); // Close any open modals or dropdowns
   };
 
+  // On component mount, check user authentication status
   useEffect(() => {
     checkAuth();
   }, []);
 
+  // Whenever 'data' updates, check if any candidate is selected (checked)
   useEffect(() => {
     const anyChecked = data?.filter((item) => item?.checked);
-    if (anyChecked.length <= 0) {
-      setIsAnyChecked(false);
-    } else {
-      setIsAnyChecked(true);
-    }
+    setIsAnyChecked(anyChecked.length > 0);
   }, [data]);
 
+  // If not authenticated, show login modal only
   if (!authed) {
     return (
       <div className="login">
@@ -475,6 +624,7 @@ const Home = () => {
     );
   }
 
+  // Capitalizes the first letter of each word in a string, preserving spaces and hyphens
   const capitalizeWords = (str) => {
     if (!str) return '';
     return str
@@ -530,7 +680,7 @@ const Home = () => {
                 }}
               >
                 <InputLabel
-                  htmlFor="search"
+                  htmlFor="date-range"
                   sx={{
                     color: 'inherit',
                     '&.Mui-focused': {
@@ -541,6 +691,7 @@ const Home = () => {
                   Search by date
                 </InputLabel>
                 <DatePicker
+                  id="date-range"
                   startDate={startDate}
                   endDate={endDate}
                   monthsShown={2}
@@ -636,14 +787,25 @@ const Home = () => {
           </div>
           <div className="filter-dropdowns">
             <Dropdown
-              placeholder="Select Position"
-              label="Search Position"
-              options={positionOptions}
-              value={filter.position}
-              name="position"
+              placeholder={'Select Field'}
+              label={'Field'}
+              options={field}
+              value={filter.field}
+              name={'field'}
               onChange={handleFilter}
             />
           </div>
+          {filter.field && filter.field !== '' && (
+            <div className="filter-dropdowns">
+              <PositionInput
+                name="position"
+                label="Position"
+                placeholder="Add Position (you are intrested in)"
+                value={filter.position.value}
+                onChange={handleFilter}
+              />
+            </div>
+          )}
           <div className="filter-dropdowns">
             <Dropdown
               placeholder={'Select Gender'}
@@ -657,7 +819,7 @@ const Home = () => {
         </div>
         {loading ? (
           <div className="load-conatiner">
-            <span class="loader"></span>
+            <span className="loader"></span>
           </div>
         ) : (
           <div className="table-parent">
@@ -818,7 +980,7 @@ const Home = () => {
                       </td>
                       <td className={getColumnClass(18)}>
                         {item?.field}
-                        {item?.subField && `/ ${item?.subField}`}
+                        {/* {item?.subField && `/ ${item?.subField}`} */}
                       </td>
                       <td className={getColumnClass(19)}>{item?.position}</td>
                       <td className={getColumnClass(20)}>
@@ -922,7 +1084,7 @@ const Home = () => {
               </h1>
             ) : (
               <div className="load-conatiner">
-                <span class="loader"></span>
+                <span className="loader"></span>
               </div>
             )}
           </div>
