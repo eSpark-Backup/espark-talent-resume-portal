@@ -211,7 +211,7 @@ const Home = () => {
     setLoading(true);
     setData(candidates.map((item) => ({ ...item, checked: false })));
     setLoading(false);
-  }, [error, candidates]);
+  }, [error, candidates, filter.position]);
 
   const xportAll = useCallback(async () => {
     const columnIndexToRemove = 0;
@@ -447,10 +447,11 @@ const Home = () => {
       position: '',
       job_type: '',
       gender: '',
+      country: '',
     });
     setSearch('');
-    setStartDate('');
-    setEndDate('');
+    setStartDate(null);
+    setEndDate(null);
     setOpen(false);
   };
 
@@ -530,7 +531,7 @@ const Home = () => {
                 }}
               >
                 <InputLabel
-                  htmlFor="search"
+                  htmlFor="date-range"
                   sx={{
                     color: 'inherit',
                     '&.Mui-focused': {
@@ -541,6 +542,7 @@ const Home = () => {
                   Search by date
                 </InputLabel>
                 <DatePicker
+                  id="date-range"
                   startDate={startDate}
                   endDate={endDate}
                   monthsShown={2}
@@ -646,19 +648,11 @@ const Home = () => {
           </div>
           {filter.field && filter.field !== '' && (
             <div className="filter-dropdowns">
-              {/* <Dropdown
-                placeholder={'Select Position'}
-                label={'Position'}
-                // options={positionOptions}
-                value={filter.position}
-                name={'position'}
-                onChange={handleFilter}
-              /> */}
-              <Typography sx>{'Position'}</Typography>
+              <Typography>{'Position'}</Typography>
               <DropdownInput
-                placeholder={'Select Position'}
+                placeholder="Select Position"
                 value={filter.position}
-                name={'position'}
+                name="position"
                 onChange={handleFilter}
               />
             </div>
@@ -676,7 +670,7 @@ const Home = () => {
         </div>
         {loading ? (
           <div className="load-conatiner">
-            <span class="loader"></span>
+            <span className="loader"></span>
           </div>
         ) : (
           <div className="table-parent">
@@ -941,7 +935,7 @@ const Home = () => {
               </h1>
             ) : (
               <div className="load-conatiner">
-                <span class="loader"></span>
+                <span className="loader"></span>
               </div>
             )}
           </div>

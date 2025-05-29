@@ -1,47 +1,33 @@
-import { Stack, Typography, Tooltip, Box, TextField } from '@mui/material';
+import {
+  Stack,
+  Typography,
+  Tooltip,
+  Box,
+  TextField,
+  Autocomplete,
+} from '@mui/material';
 import React from 'react';
-import Select from 'react-select';
 import InfoIcon from '@mui/icons-material/Info';
 
 const DropdownInput = ({
   name,
   label,
   placeholder,
-  options,
+  options = [],
   onChange,
-  value,
+  value = '',
   className,
   tooltip,
   showTooltip,
 }) => {
-  const customInputStyles = {
-    '& .MuiOutlinedInput-root': {
-      height: '56px',
-      backgroundColor: 'white',
-      '&:hover': {
-        backgroundColor: '#e6e9eb',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#e6e9eb',
-      },
-      '&.Mui-focused': {
-        backgroundColor: '#fff',
-        borderColor: '#e6e9eb',
-      },
-    },
-    '& input': {
-      color: 'black',
-    },
-  };
-  console.log('value:', value);
+  // Convert all options to string for consistency
+  const optionLabels = options.map((opt) =>
+    typeof opt === 'string' ? opt : opt?.label || ''
+  );
+
   return (
     <Stack className={className} gap={1}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         {label && <Typography style={{ color: 'black' }}>{label}</Typography>}
         {showTooltip && (
           <Tooltip placement="top-start" title={tooltip}>
@@ -57,17 +43,47 @@ const DropdownInput = ({
         )}
       </Box>
 
-      <TextField
-        placeholder={placeholder}
-        options={options}
-        isSearchable={true}
-        isClearable={true}
-        onChange={(e) => onChange(name, e)}
-        variant="outlined"
-        sx={customInputStyles}
-        fullWidth
-        // options={positionOptions}
+      <Autocomplete
+        freeSolo
+        options={optionLabels}
         value={value}
+        onChange={(event, newValue) => {
+          // Handle selection from the dropdown
+          onChange(name, newValue || '');
+        }}
+        onInputChange={(event, newInputValue) => {
+          // Handle typing into the input
+          if (event?.type === 'change') {
+            onChange(name, newInputValue);
+          }
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            placeholder={placeholder}
+            variant="outlined"
+            fullWidth
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                height: '56px',
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: '#e6e9eb',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#e6e9eb',
+                },
+                '&.Mui-focused': {
+                  backgroundColor: '#fff',
+                  borderColor: '#e6e9eb',
+                },
+              },
+              '& input': {
+                color: 'black',
+              },
+            }}
+          />
+        )}
       />
     </Stack>
   );
