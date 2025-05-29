@@ -40,7 +40,7 @@ import supabase from '@/app/services/supabaseClient';
 import { isValidURL } from '@/utility/URLValidator';
 import DatePicker from 'react-datepicker';
 import { CustomInputForDatePicker } from '@/app/components/inputs/datePicker';
-import DropdownInput from './components/inputs/dropdownInput';
+import PositionInput from './components/inputs/positionInput';
 
 const Home = () => {
   const [authed, setAuthed] = useState(false);
@@ -338,6 +338,17 @@ const Home = () => {
   });
 
   const handleFilter = (name, value) => {
+    if (name == 'position') {
+      let newValue = { label: value, value: value };
+      if (newValue.label == '' && newValue.value == '') {
+        newValue = '';
+      }
+      setFilter((prev) => ({
+        ...prev,
+        [name]: newValue,
+      }));
+      return;
+    }
     setFilter((prev) => ({
       ...prev,
       [name]: value,
@@ -648,11 +659,11 @@ const Home = () => {
           </div>
           {filter.field && filter.field !== '' && (
             <div className="filter-dropdowns">
-              <Typography>{'Position'}</Typography>
-              <DropdownInput
-                placeholder="Select Position"
-                value={filter.position}
+              <PositionInput
                 name="position"
+                label="Position"
+                placeholder="Add Position (you are intrested in)"
+                value={filter.position.value}
                 onChange={handleFilter}
               />
             </div>
