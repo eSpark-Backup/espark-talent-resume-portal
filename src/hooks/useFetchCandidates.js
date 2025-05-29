@@ -116,8 +116,6 @@ function useFetchCandidates(authed, setAllCheck) {
       fetchAllCandidates();
     }
 
-    // Log the current filter state for debugging
-    console.log(filter, 'filter;');
   }, [filter, debouncedSearch, authed, endDate]);
 
   // Return state and functions for external usage
