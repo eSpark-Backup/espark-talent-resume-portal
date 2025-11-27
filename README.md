@@ -1,6 +1,6 @@
-# Configuration with Supabase 
+# Configuration with Supabase
 
-First, you need to create an account on Supabase.
+First, you need to create an account on Supabase..
 
 ## Getting Started
 
