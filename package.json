@@ -30,7 +30,7 @@
     "react-select": "^5.8.0",
     "react-tag-input-component": "^2.0.2",
     "react-toastify": "^10.0.5",
-    "use-debounce": "^10.0.0",
+    "use-debounce": "^10.1.1",
     "uuid": "^9.0.1",
     "xlsx": "^0.18.5"
   }
