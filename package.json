@@ -16,7 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.2",
-    "@supabase/supabase-js": "^1.35.6",
+    "@supabase/supabase-js": "^2.108.2",
     "dotenv": "^16.4.5",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
