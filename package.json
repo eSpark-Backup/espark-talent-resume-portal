@@ -15,7 +15,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^9.1.1",
-    "@mui/material": "^5.15.2",
+    "@mui/material": "^9.1.1",
     "@supabase/supabase-js": "^2.108.2",
     "dotenv": "^16.4.5",
     "moment": "^2.30.1",
