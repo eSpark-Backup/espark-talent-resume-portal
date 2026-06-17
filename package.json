@@ -23,7 +23,7 @@
     "next": "16.2.9",
     "react": "^19",
     "react-datepicker": "^4.8.0",
-    "react-dom": "^18",
+    "react-dom": "^19",
     "react-loader-spinner": "^6.1.6",
     "react-number-format": "^5.3.4",
     "react-phone-input-2": "^2.15.1",
