@@ -20,7 +20,7 @@
     "dotenv": "^16.4.5",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
-    "next": "16.2.9",
+    "next": "16.2.12",
     "react": "^19",
     "react-datepicker": "^4.8.0",
     "react-dom": "^19",
